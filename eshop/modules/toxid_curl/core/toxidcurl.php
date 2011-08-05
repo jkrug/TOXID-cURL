@@ -93,7 +93,14 @@ class toxidCurl extends oxSuperCfg
 			return '<strong style="color:red;">TOXID: Please add part, you want to display!</strong>';
 		}else{
 			$aXpathSnippets = $this->_oSxToxid->xpath('//'.$snippet.'[1]');
-			return $aXpathSnippets[0];
+            $sText = $aXpathSnippets[0];
+            $sShopId = $this->getConfig()->getActiveShop()->getId();
+            $sLangId = oxLang::getInstance()->getBaseLanguage();
+            $sText = oxUtilsView::getInstance()->parseThroughSmarty(
+                $sText,
+                $snippet.'_'.$sShopId.'_'.$sLangId
+            );
+			return $sText;
 		}
 	}
 	
