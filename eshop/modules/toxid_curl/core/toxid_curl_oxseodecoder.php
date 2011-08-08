@@ -19,9 +19,6 @@ class toxid_curl_oxseodecoder extends toxid_curl_oxseodecoder_parent
 	
 	public function decodeUrl( $sSeoUrl )
     {
-        $oStr = getStr();
-        $sBaseUrl = $this->getConfig()->getShopURL();
-		$sSeoSnippet = $this->getConfig()->getConfigParam('sToxidCurlSeoSnippets');
 		// check, if SeoUrl starts with t3contenturl
 		$blIsToxidPage = $this->detectToxidAndLang($sSeoUrl);
         if( !$blIsToxidPage )
