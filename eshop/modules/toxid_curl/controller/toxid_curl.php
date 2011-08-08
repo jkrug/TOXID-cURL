@@ -23,18 +23,16 @@ class toxid_curl extends oxUBase
      * Current view template
      * @var string
      */
-	// use the following line for OXID eShop > 4.5
     protected $_sThisTemplate = 'page/info/toxid_curl.tpl';
-	
-	// use the following line for OXID eShop < 4.5
-    //protected $_sThisTemplate = 'toxid_curl.tpl';
 
     /**
      * regular render function
      */
-    public function render() {
-		parent::render();
-
-		return $this->_sThisTemplate;
+    public function render()
+    {
+        if ( version_compare(oxConfig::getInstance()->getVersion(), '4.5.0') < 0 ) {
+            $this->_sThisTemplate = 'toxid_curl.tpl';
+        }
+		return parent::render();
 	}
 }
