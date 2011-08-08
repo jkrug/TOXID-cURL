@@ -130,16 +130,18 @@ class toxidCurl extends oxSuperCfg
 		
 		$requestInfo = curl_getinfo($curl_handle);
 
-		switch ($requestInfo[http_code])
+		switch ($requestInfo['http_code'])
 		{
 			case 500:
 				header ("HTTP/1.1 500 Internal Server Error");
 				header ('Location: '.$this->getConfig()->getShopHomeURL());
-				exit();
+				oxUtils::getInstance()->showMessageAndExit('');
+                break;
 			case 404:
 				header ("HTTP/1.1 404 Not Found");
 				header ('Location: '.$this->getConfig()->getShopHomeURL());
-				exit();
+                oxUtils::getInstance()->showMessageAndExit('');
+                break;
 		}
 
         // close curl resource to free up system resources
