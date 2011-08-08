@@ -169,7 +169,7 @@ class toxidCurl extends oxSuperCfg
 	protected function _getToxidLangSource()
 	{
 		$langUrls = $this->getConfig()->getConfigParam('aToxidCurlSource');
-		$sLangSource = $langUrls[oxLang::getInstance()->getTplLanguage()];
+		$sLangSource = $langUrls[oxLang::getInstance()->getBaseLanguage()];
 		return $sLangSource;
 	}
 	
@@ -179,7 +179,7 @@ class toxidCurl extends oxSuperCfg
 	protected function _getToxidLangSeoSnippet()
 	{
 		$langSeoSnippets = $this->getConfig()->getConfigParam('aToxidCurlSeoSnippets');
-		$sLangSeoSnippet = $langSeoSnippets[oxLang::getInstance()->getTplLanguage()];
+		$sLangSeoSnippet = $langSeoSnippets[oxLang::getInstance()->getBaseLanguage()];
 		return $sLangSeoSnippet;
 	}
 }
