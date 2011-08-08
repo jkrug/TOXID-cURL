@@ -49,6 +49,18 @@ class toxidCurl extends oxSuperCfg
     private $_sPageContent = null;
 	
     /**
+     * stores URL from which typo3 content is loaded.
+     * @var string
+     */
+    protected $_sSourceUrlByLang = null;
+
+    /**
+     * Stores URI to which typo3 urls will be converted, so it will be loaded in oxid
+     * @var string
+     */
+    protected $_sRewriteStartUrl = null;
+
+    /**
      * resturns a single instance of this class
      *
      * @return toxidCurl
@@ -167,24 +179,35 @@ class toxidCurl extends oxSuperCfg
 		$should    = 'href="'.$target;
 		$this->_sPageContent = preg_replace($actual, $should, $this->_sPageContent);
 	}
-	
-	/**
-	 * returns string with language specific sourceUrl
-	 */	
-	protected function _getToxidLangSource()
+
+    /**
+     * returns string with language specific sourceUrl
+     * @param bool $blReset reset object value, and get url again
+     * @return string
+     */
+	protected function _getToxidLangSource($blReset = false)
 	{
+        if ($this->_sSourceUrlByLang !== null && !$blReset) {
+            return $this->_sSourceUrlByLang;
+        }
 		$langUrls = $this->getConfig()->getConfigParam('aToxidCurlSource');
-		$sLangSource = $langUrls[oxLang::getInstance()->getBaseLanguage()];
-		return $sLangSource;
+		$this->_sSourceUrlByLang = $langUrls[oxLang::getInstance()->getBaseLanguage()];
+		return $this->_sSourceUrlByLang;
 	}
-	
-	/**
-	 * returns string with language specific toxidSeoSnippet
-	 */	
-	protected function _getToxidLangSeoSnippet()
+
+    /**
+     * returns string with language specific toxidSeoSnippet
+     * @param bool $blReset reset object value, and get url again
+     * @return string
+     */
+	protected function _getToxidLangSeoSnippet($blReset = false)
 	{
+        if ($this->_sRewriteStartUrl !== null && !$blReset) {
+            return $this->_sRewriteStartUrl;
+        }
+
 		$langSeoSnippets = $this->getConfig()->getConfigParam('aToxidCurlSeoSnippets');
-		$sLangSeoSnippet = $langSeoSnippets[oxLang::getInstance()->getBaseLanguage()];
-		return $sLangSeoSnippet;
+		$this->_sRewriteStartUrl = $langSeoSnippets[oxLang::getInstance()->getBaseLanguage()];
+		return $this->_sRewriteStartUrl;
 	}
 }
