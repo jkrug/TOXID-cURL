@@ -43,8 +43,6 @@ class toxid_curl_oxviewconfig extends toxid_curl_oxviewconfig_parent
      */
     public function getToxid()
     {
-        $oToxid = toxidCurl::getInstance();
-        $oToxid->loadCmsPage();
-        return $oToxid;
+        return toxidCurl::getInstance();
     }
 }

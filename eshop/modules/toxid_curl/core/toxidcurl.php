@@ -64,22 +64,23 @@ class toxidCurl extends oxSuperCfg
     }
 	
 	/**
-     * initial load of the Content
+     * content will be loaded on first usage needed
+     * @deprecated
      */
-    public function loadCmsPage()
-	{
-		$this->_generateCache();
-	}
+    public function loadCmsPage() {}
 	
 	/**
      * should later generate Cache
      */
-    protected function _generateCache()
+    protected function _generateCache($blReset = false)
 	{
-		$this->_readURL();
+		if ($this->_oSxToxid !== null && !$blReset) {
+            return $this->_oSxToxid;
+        }
+        $this->_readURL();
 		$this->_rewriteUrls();
-		$source = $this->_getToxidLangSource();
 		$this->_oSxToxid = simplexml_load_string($this->_sPageContent);
+        return $this->_oSxToxid;
 
 	}
 	
@@ -88,20 +89,22 @@ class toxidCurl extends oxSuperCfg
      */
     public function getCmsSnippet($snippet=null)
 	{
+        $this->_generateCache();
 		if($snippet == null)
 		{
 			return '<strong style="color:red;">TOXID: Please add part, you want to display!</strong>';
-		}else{
-			$aXpathSnippets = $this->_oSxToxid->xpath('//'.$snippet.'[1]');
-            $sText = $aXpathSnippets[0];
-            $sShopId = $this->getConfig()->getActiveShop()->getId();
-            $sLangId = oxLang::getInstance()->getBaseLanguage();
-            $sText = oxUtilsView::getInstance()->parseThroughSmarty(
-                $sText,
-                $snippet.'_'.$sShopId.'_'.$sLangId
-            );
-			return $sText;
 		}
+
+        $aXpathSnippets = $this->_oSxToxid->xpath('//'.$snippet.'[1]');
+        $sText = $aXpathSnippets[0];
+        $sShopId = $this->getConfig()->getActiveShop()->getId();
+        $sLangId = oxLang::getInstance()->getBaseLanguage();
+        $sText = oxUtilsView::getInstance()->parseThroughSmarty(
+            $sText,
+            $snippet.'_'.$sShopId.'_'.$sLangId
+        );
+        return $sText;
+
 	}
 	
 	/**
@@ -126,7 +129,7 @@ class toxidCurl extends oxSuperCfg
         $this->_sPageContent = curl_exec($curl_handle);
 		
 		$requestInfo = curl_getinfo($curl_handle);
-		
+
 		switch ($requestInfo[http_code])
 		{
 			case 500:
