@@ -125,24 +125,14 @@ class toxidCurl extends oxSuperCfg
 	protected function _readUrl()
 	{
 		$source = $this->_getToxidLangSource();
-
 		$page = $this->getConfig()->getConfigParam('sToxidCurlPage');
-
 		$param = $this->getConfig()->getConfigParam('sToxidCurlUrlParam');
-		
-		$curl_handle = curl_init();
-		
-		// set URL
-        curl_setopt($curl_handle, CURLOPT_URL, $source.$page.$param);
 
-        //return the transfer as a string
-        curl_setopt($curl_handle, CURLOPT_RETURNTRANSFER, 1);
-		
-        $this->_sPageContent = curl_exec($curl_handle);
-		
-		$requestInfo = curl_getinfo($curl_handle);
+		$aPage = $this->_getRemoteContent($source.$page.$param);
 
-		switch ($requestInfo['http_code'])
+        $this->_sPageContent = $aPage['content'];
+		
+		switch ($aPage['info']['http_code'])
 		{
 			case 500:
 				header ("HTTP/1.1 500 Internal Server Error");
@@ -155,10 +145,31 @@ class toxidCurl extends oxSuperCfg
                 oxUtils::getInstance()->showMessageAndExit('');
                 break;
 		}
-
-        // close curl resource to free up system resources
-        curl_close($curl_handle); 
 	}
+
+    /**
+     * returns array with result of http get. array structure:
+     * array (
+     *   [content] => '<html></html>',
+     *   [info] => array (
+     *     [http_code] => 200,
+     *     ...
+     *   )
+     * )
+     * @param $sUrl
+     * @return array
+     */
+    protected function _getRemoteContent($sUrl)
+    {
+        $aResult = array();
+        $curl_handle = curl_init();
+        curl_setopt($curl_handle, CURLOPT_URL, $sUrl);
+        curl_setopt($curl_handle, CURLOPT_RETURNTRANSFER, 1);
+        $aResult['content'] = curl_exec($curl_handle);
+        $aResult['info']    = curl_getinfo($curl_handle);
+        curl_close($curl_handle);
+        return $aResult;
+    }
 	
 	/**
 	 * returns string with toxidStartUrl
