@@ -61,6 +61,18 @@ class toxidCurl extends oxSuperCfg
     protected $_sRewriteStartUrl = null;
 
     /**
+     * stores search url by active language
+     * @var string
+     */
+    protected $_sSearchUrl = null;
+
+    /**
+     * stores search results
+     * @var array
+     */
+    protected $_aSearchCache = array();
+
+    /**
      * resturns a single instance of this class
      *
      * @return toxidCurl
@@ -223,4 +235,43 @@ class toxidCurl extends oxSuperCfg
 		$this->_sRewriteStartUrl = $langSeoSnippets[oxLang::getInstance()->getBaseLanguage()];
 		return $this->_sRewriteStartUrl;
 	}
+
+    /**
+     * returns typo3 search URL
+     * @param bool $blReset reset object value, and get url again
+     * @return string
+     */
+	protected function _getToxidSearchUrl($blReset = false)
+	{
+        if ($this->_sSearchUrl !== null && !$blReset) {
+            return $this->_sSearchUrl;
         }
+
+		$langSeoSnippets = $this->getConfig()->getConfigParam('aToxidSearchUrl');
+		$this->_sSearchUrl = $langSeoSnippets[oxLang::getInstance()->getBaseLanguage()];
+		return $this->_sSearchUrl;
+	}
+
+    /**
+     * runs search by  given keywords in typo3, and returns results as html
+     * @param $sKeywords
+     * @return string
+     */
+    public function getSearchResult($sKeywords)
+    {
+        if (isset($this->_aSearchCache[$sKeywords])) {
+            return $this->_aSearchCache[$sKeywords];
+        }
+        $this->_aSearchCache[$sKeywords] = '';
+        $sSearchStartUrl = $this->_getToxidSearchUrl();
+
+        $aSearchResults = $this->_getRemoteContent($sSearchStartUrl.$sKeywords);
+
+        if ($aSearchResults['info']['http_code'] == 200) {
+            $sSearchResult = $aSearchResults['content'];
+            $sSearchResult = $this->_rewriteUrls($sSearchResult);
+            $this->_aSearchCache[$sKeywords] = $sSearchResult;
+        }
+        return $this->_aSearchCache[$sKeywords];
+    }
+}
