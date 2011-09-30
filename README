@@ -73,9 +73,29 @@ It is STRONGLY recommended to wrap your snippets/parts in CDATA to prevent XML-m
    [{assign var='toxid' value=$oViewConf->getToxid()}] 
    [{ $toxid->getCmsSnippet(part1) }]
    
-   
 #####
-7) Adjust your templates!
+7) to use search functionality, config.inc.php mus contain search urls:
+
+        // typo3 search url
+        $this->aToxidSearchUrl	= array(
+            '0' => 'http://www.marmalade.de/nc/suche.html?tx_indexedsearch[sword]=',
+            '1' => 'http://www.marmalade.de/nc/suche.html?tx_indexedsearch[sword]=',
+        );
+
+    keep in mind, that search keywords will be attached in the end
+
+    and in tpl/search.tpl (if you use basic theme), or tpl/page/search/search.tpl add following code:
+
+    [{assign var='toxid' value=$oViewConf->getToxid()}]
+    [{assign var='typo3result' value=$toxid->getSearchResult($oView->getSearchParamForHtml())}]
+    [{if $typo3result}]
+      <div>
+        [{$typo3result}]
+      </div>
+    [{/if}]
+
+#####
+8) Adjust your templates!
 
 
 #########################
