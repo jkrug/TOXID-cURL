@@ -90,7 +90,7 @@ class toxidCurl extends oxSuperCfg
             return $this->_oSxToxid;
         }
         $this->_readURL();
-		$this->_rewriteUrls();
+		$this->_sPageContent = $this->_rewriteUrls($this->_sPageContent);
 		$this->_oSxToxid = simplexml_load_string($this->_sPageContent);
         return $this->_oSxToxid;
 
@@ -178,17 +178,19 @@ class toxidCurl extends oxSuperCfg
 	{
 		return preg_replace('#index.php\??$#', '', $this->getConfig()->getShopHomeURL()).$this->_getToxidLangSeoSnippet();
 	}
-	
-	/**
-	 * returns string from CMS-page with corrected URLs
-	 */	
-	protected function _rewriteUrls()
+
+    /**
+     * rewrites given string URL's, which belongs to typo3 and configured in aToxidCurlSource
+     * @param string $sContent
+     * @return string with changed URL's 
+     */
+	protected function _rewriteUrls($sContent)
 	{
 		$target      = $this->getConfig()->getConfigParam('sShopURL').$this->_getToxidLangSeoSnippet().'/';
 		$source    = str_replace('.','\.',$this->_getToxidLangSource());
 		$actual    = '%href="'.$source.'(?=.*?.html)%';
 		$should    = 'href="'.$target;
-		$this->_sPageContent = preg_replace($actual, $should, $this->_sPageContent);
+		return preg_replace($actual, $should, $sContent);
 	}
 
     /**
@@ -221,4 +223,4 @@ class toxidCurl extends oxSuperCfg
 		$this->_sRewriteStartUrl = $langSeoSnippets[oxLang::getInstance()->getBaseLanguage()];
 		return $this->_sRewriteStartUrl;
 	}
-}
+        }
