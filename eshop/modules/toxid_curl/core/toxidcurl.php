@@ -127,8 +127,13 @@ class toxidCurl extends oxSuperCfg
             $sText,
             $snippet.'_'.$sShopId.'_'.$sLangId
         );
-        return $sText;
-
+		
+		if($this->getConfig()->getConfigParam('iUtfMode') !== 1)
+		{
+			return utf8_decode($sText);
+		} else {
+			return $sText;
+		}
 	}
 	
 	/**
@@ -141,6 +146,8 @@ class toxidCurl extends oxSuperCfg
 		$param = $this->getConfig()->getConfigParam('sToxidCurlUrlParam');
 
 		$aPage = $this->_getRemoteContent($source.$page.$param);
+		
+		//$aPage = utf8_decode($aPage);
 
         $this->_sPageContent = $aPage['content'];
 		
