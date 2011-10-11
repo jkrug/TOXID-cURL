@@ -2,8 +2,8 @@
 
     <div id="toxid_curl_main" style="margin:0 5px;">
 		<h1>Hey! Welcome to TOXID!</h1>
-		[{ $toxid_curl_cmp->getCmsSnippet(content) }]
-		[{ $toxid_curl_cmp->getCmsSnippet() }]
+		[{assign var='toxid' value=$oViewConf->getToxid()}] 
+		[{ $toxid->getCmsSnippet(content) }]
 	</div>
 
 [{ include file="_footer.tpl" }]

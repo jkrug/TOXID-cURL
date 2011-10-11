@@ -17,7 +17,7 @@
 # Installation / Config #
 #########################
 
-1) copy files from "copy_this" to your shop
+1) copy files from "eshop" to your shop
 
 #####
 2) Add autloader to modules/functions.php
@@ -98,14 +98,18 @@ It is STRONGLY recommended to wrap your snippets/parts in CDATA to prevent XML-m
 8) Adjust your templates!
 
 
-#########################
-#     What will come    #
-#########################
+######################################
+#     What we already implemented    #
+######################################
 
+1) done: Multi-Language-Support
+2) done: Caching
+3) done: Add products as CMS-Content, rendered by OXID
+
+###############################
+#        What will come       #
+###############################
 Version 2
-1) Multi-Language-Support
-2) Caching
-3) Add products as CMS-Content, rendered by OXID
 4) Configuration via admin-area
 5) Demo-Templates
 

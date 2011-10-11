@@ -3,7 +3,8 @@
     [{assign var="tpl" value=$oViewConf->getActTplName()}]
 
     <div id="toxid_curl_main" style="margin:0 5px;width:580px;">
-		[{ $toxid_curl_cmp->getCmsSnippet(content) }]
+		[{assign var='toxid' value=$oViewConf->getToxid()}] 
+		[{ $toxid->getCmsSnippet(content) }]
 	</div>
 [{/capture}]
 [{include file="layout/page.tpl" sidebar="Left"}]
