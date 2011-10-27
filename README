@@ -59,7 +59,10 @@ It is STRONGLY recommended to wrap your snippets/parts in CDATA to prevent XML-m
 								'1' => 'http://yourcmspage.com/en/',
 							  );
 	// Additional Params for URL
-	$this->sToxidCurlUrlParam = '';
+	$this->aToxidCurlUrlParams = array(
+								'0' => '?type=1',
+								'1' => '?type=1',
+							  );
 
 	// FOR BACKWARDS COMPATABILITY UNCOMENT
 	// template variable name, with will be accessible like [{$toxid_curl_cmp->getCmsSnippet('text1')}]
