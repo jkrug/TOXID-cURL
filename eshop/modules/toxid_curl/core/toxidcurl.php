@@ -130,6 +130,7 @@ class toxidCurl extends oxSuperCfg
 		
 		if($this->getConfig()->getConfigParam('iUtfMode') !== 1)
 		{
+			$sText = str_replace('€', '&euro;', $sText);
 			return utf8_decode($sText);
 		} else {
 			return $sText;
@@ -143,7 +144,8 @@ class toxidCurl extends oxSuperCfg
 	{
 		$source = $this->_getToxidLangSource();
 		$page = $this->getConfig()->getConfigParam('sToxidCurlPage');
-		$param = $this->getConfig()->getConfigParam('sToxidCurlUrlParam');
+		$param = $this->_getToxidLangUrlParam();
+		//$param = $this->getConfig()->getConfigParam('sToxidCurlUrlParam');
 
 		$aPage = $this->_getRemoteContent($source.$page.$param);
 		
@@ -228,6 +230,22 @@ class toxidCurl extends oxSuperCfg
 	}
 
     /**
+     * returns string with language specific toxidUrlParam
+     * @param bool $blReset reset object value, and get url again
+     * @return string
+     */
+	protected function _getToxidLangUrlParam($blReset = false)
+	{
+        if ($this->_sToxidLangUrlParam !== null && !$blReset) {
+            return $this->_sToxidLangUrlParam;
+        }
+
+		$langUrlParam = $this->getConfig()->getConfigParam('aToxidCurlUrlParams');
+		$this->_sToxidLangUrlParam = $langUrlParam[oxLang::getInstance()->getBaseLanguage()];
+		return $this->_sToxidLangUrlParam;
+	}
+
+    /**
      * returns string with language specific toxidSeoSnippet
      * @param bool $blReset reset object value, and get url again
      * @return string
@@ -279,6 +297,12 @@ class toxidCurl extends oxSuperCfg
             $sSearchResult = $this->_rewriteUrls($sSearchResult);
             $this->_aSearchCache[$sKeywords] = $sSearchResult;
         }
-        return $this->_aSearchCache[$sKeywords];
+		
+        if($this->getConfig()->getConfigParam('iUtfMode') !== 1)
+		{
+			return utf8_decode($this->_aSearchCache[$sKeywords]);
+		} else {
+			return $this->_aSearchCache[$sKeywords];
+		}
     }
 }
