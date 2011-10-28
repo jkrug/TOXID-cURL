@@ -16,43 +16,44 @@
  
 class toxid_curl_oxseodecoder extends toxid_curl_oxseodecoder_parent
 {
-	
-	public function decodeUrl( $sSeoUrl )
+    
+    public function decodeUrl( $sSeoUrl )
     {
-		// check, if SeoUrl starts with t3contenturl
-		$blIsToxidPage = $this->detectToxidAndLang($sSeoUrl);
+        // check, if SeoUrl starts with t3contenturl
+        $blIsToxidPage = $this->detectToxidAndLang($sSeoUrl);
         if( !$blIsToxidPage )
-		{
-			return parent::decodeUrl($sSeoUrl);
-		}else{
-			$aRet['cl'] = 'toxid_curl';
-			$aRet['lang'] = $blIsToxidPage['lang'];
-			$toxidUrl =  $blIsToxidPage['url'];
-			$this->getConfig()->setConfigParam('sToxidCurlPage',$toxidUrl);
-			return $aRet;
-		}
+        {
+            return parent::decodeUrl($sSeoUrl);
+        }else{
+            $aRet['cl'] = 'toxid_curl';
+            $aRet['lang'] = $blIsToxidPage['lang'];
+            oxLang::getInstance()->setBaseLanguage($aRet['lang']);
+            $toxidUrl =  $blIsToxidPage['url'];
+            $this->getConfig()->setConfigParam('sToxidCurlPage',$toxidUrl);
+            return $aRet;
+        }
     }
 
 
-	/**
-	 * detect if page is toxidPage
-	 * if so, return array with langId and URL part
-	 */
-	protected function detectToxidAndLang($sSeoUrl){
-		$seoSnippets = $this->getConfig()->getConfigParam('aToxidCurlSeoSnippets');
-		foreach($seoSnippets as $langId => $snippet)
-		{
-			if(strpos( $sSeoUrl, $snippet.'/') !== FALSE)
-			{
-				$aUrlSplit = explode($snippet.'/', $sSeoUrl);
-				$toxidInfo = array(
-								'lang' => $langId,
-								'url' => $aUrlSplit[1],
-							 );
-				return $toxidInfo;
-			}
-		}
-		// if nothing was found, return false
-		return false;
-	}
+    /**
+     * detect if page is toxidPage
+     * if so, return array with langId and URL part
+     */
+    protected function detectToxidAndLang($sSeoUrl){
+        $seoSnippets = $this->getConfig()->getConfigParam('aToxidCurlSeoSnippets');
+        foreach($seoSnippets as $langId => $snippet)
+        {
+            if(strpos( $sSeoUrl, $snippet.'/') !== FALSE)
+            {
+                $aUrlSplit = explode($snippet.'/', $sSeoUrl);
+                $toxidInfo = array(
+                                'lang' => $langId,
+                                'url' => $aUrlSplit[1],
+                             );
+                return $toxidInfo;
+            }
+        }
+        // if nothing was found, return false
+        return false;
+    }
 }
