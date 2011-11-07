@@ -153,8 +153,8 @@ class toxidCurl extends oxSuperCfg
 
         if($this->getConfig()->getConfigParam('iUtfMode') !== 1)
         {
-            $sText = str_replace('�', '&euro;', $sText);
-            return utf8_decode($sText);
+            $sText = iconv("UTF-8", "ISO-8859-15", $sText);
+            return $sText;
         } else {
             return $sText;
         }
