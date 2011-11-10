@@ -1,20 +1,29 @@
-#########################
-#      What it is     #
+################################
+#   TOXID cURL version 1.2.0   #
+################################
+#
+# Please notice: We are developing on GitHub.
+# To be sure to get the latest version, look there
+# https://github.com/jkrug/TOXID-cURL
+#
+#
+
+What it is
 #########################
 1) Renders CMS-pages and Navigation in OXID from any XML-Source
 
 2) adjusts link-urls from source
 
-#########################
-#    What it is NOT   #
+
+What it is NOT
 #########################
 1) NO Single-Sign-On (so no restriced pages are possible)
    See TOXID with OxAPI
    
 2) NO out-of-the-box solution
 
-#########################
-# Installation / Config #
+
+Installation / Config
 #########################
 
 1) copy files from "eshop" to your shop
@@ -101,16 +110,15 @@ It is STRONGLY recommended to wrap your snippets/parts in CDATA to prevent XML-m
 8) Adjust your templates!
 
 
-######################################
-#     What we already implemented    #
+What we already implemented
 ######################################
 
 1) done: Multi-Language-Support
 2) done: Caching
 3) done: Add products as CMS-Content, rendered by OXID
 
-###############################
-#        What will come       #
+
+What will come
 ###############################
 Version 2
 4) Configuration via admin-area
