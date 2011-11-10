@@ -10,8 +10,6 @@
  * @link      http://marmalade.de
  * @package   core
  * @copyright (C) marmalade.de 2011
- * @version   TOXID cURL 1.1.0
- * @version   toxidcurl.php 2011-05-28 18:02 jkrug $
  */
 
 /**

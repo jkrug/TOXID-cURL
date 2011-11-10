@@ -10,8 +10,6 @@
  * @link      http://marmalade.de
  * @package   core
  * @copyright (C) marmalade.de 2011
- * @version   TOXID cURL 1.0.4
- * @version   toxid_curl_autoloader.php 2011-04-28 00:06 jkrug $
  */
 
 	function toxidAutoloader($sClass) {
