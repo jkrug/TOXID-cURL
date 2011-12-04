@@ -146,16 +146,18 @@ class toxidCurl extends oxSuperCfg
         $sLangId = oxLang::getInstance()->getBaseLanguage();
         $sText = oxUtilsView::getInstance()->parseThroughSmarty(
             $sText,
-            $snippet.'_'.$sShopId.'_'.$sLangId
+            $snippet.'_'.$sShopId.'_'.$sLangId,
+            null,
+            true
         );
 
         if($this->getConfig()->getConfigParam('iUtfMode') !== 1)
         {
-			$sText= str_replace("“", "\"", $sText);
-			$sText= str_replace("„", "\"", $sText);
-			$sText= str_replace("’", "'", $sText);
-			$sText= str_replace("´", "'", $sText);
-			$sText= str_replace("–", "-", $sText);
+			$sText= str_replace("ï¿½", "\"", $sText);
+			$sText= str_replace("ï¿½", "\"", $sText);
+			$sText= str_replace("ï¿½", "'", $sText);
+			$sText= str_replace("ï¿½", "'", $sText);
+			$sText= str_replace("ï¿½", "-", $sText);
 			$sText = iconv("UTF-8", "ISO-8859-15", $sText);
             return $sText;
         } else {
