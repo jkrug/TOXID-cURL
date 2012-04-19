@@ -181,8 +181,6 @@ class toxidCurl extends oxSuperCfg
         $param = $this->_getToxidLangUrlParam();
 
         $aPage = $this->_getRemoteContent($source.$page.$param);
-        
-        $this->_sPageContent = $aPage['content'];
 
         switch ($aPage['info']['http_code'])
         {
@@ -197,8 +195,12 @@ class toxidCurl extends oxSuperCfg
                 oxUtils::getInstance()->showMessageAndExit('');
                 break;
         }
-
-        return $this->_sPageContent;
+		
+		// Especially for Wordpress-Frickel-Heinze
+		// Kill everything befor the <?xml
+		$this->_sPageContent = preg_replace('/.*<\?xml/ms', '<?xml', $aPage['content']);
+				
+		return $this->_sPageContent;
 
     }
 
