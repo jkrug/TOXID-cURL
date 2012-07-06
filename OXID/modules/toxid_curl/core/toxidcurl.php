@@ -158,7 +158,7 @@ class toxidCurl extends oxSuperCfg
 			$sText= str_replace("�", "'", $sText);
 			$sText= str_replace("�", "'", $sText);
 			$sText= str_replace("�", "-", $sText);
-			$sText = iconv("UTF-8", "ISO-8859-15", $sText);
+			$sText = mb_convert_encoding($sText, 'ISO-8859-15', 'UTF-8');
             return $sText;
         } else {
             return $sText;
