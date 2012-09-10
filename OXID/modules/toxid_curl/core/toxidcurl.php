@@ -133,11 +133,16 @@ class toxidCurl extends oxSuperCfg
      * @param bool $blMultiLang
      * @return string
      */
-    public function getCmsSnippet($snippet=null, $blMultiLang = false)
+    public function getCmsSnippet($snippet=null, $blMultiLang = false, $customPage = null)
     {
         if($snippet == null) {
             return '<strong style="color:red;">TOXID: Please add part, you want to display!</strong>';
         }
+
+        if ($customPage != '') {
+            $this->_aCustomPage = $customPage;
+        }
+
         $sText = $this->_getSnippetFromXml($snippet);
         $sText = $this->_rewriteUrls($sText, null, $blMultiLang);
 
@@ -150,6 +155,8 @@ class toxidCurl extends oxSuperCfg
             null,
             true
         );
+
+        $this->_aCustomPage = null;
 
         if($this->getConfig()->getConfigParam('iUtfMode') !== 1)
         {
@@ -179,8 +186,8 @@ class toxidCurl extends oxSuperCfg
         $source = $this->_getToxidLangSource();
         $page = $this->getConfig()->getConfigParam('sToxidCurlPage');
         $param = $this->_getToxidLangUrlParam();
-
-        $aPage = $this->_getRemoteContent($source.$page.$param);
+        $custom  = $this->_getToxidCustomPage();
+        $aPage = $this->_getRemoteContent($source.$custom.$page.$param);
 
         switch ($aPage['info']['http_code'])
         {
@@ -325,6 +332,14 @@ class toxidCurl extends oxSuperCfg
         }
         
         return $this->_aRewriteStartUrl[$iLangId];
+    }
+
+    /**
+     * returns string with the currently defined custom url
+     */
+    protected function _getToxidCustomPage()
+    {
+        return ($this->_aCustomPage !== null) ? $this->_aCustomPage : '';
     }
 
     /**
