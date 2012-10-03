@@ -35,7 +35,11 @@ Installation / Config
 	
 	
 #####	
-3) Add the following module-entries in your configuration
+3) OXID eShop from Version 4.6
+	Activate module in admin
+
+   OXID eShop Version < 4.6
+	Add the following module-entries in your configuration
 
 	oxseodecoder => toxid_curl/core/toxid_curl_oxseodecoder
 	oxviewconfig => toxid_curl/core/toxid_curl_oxviewconfig
@@ -54,7 +58,7 @@ It is STRONGLY recommended to wrap your snippets/parts in CDATA to prevent XML-m
 
 
 #####
-5) Configure your System in config.ini.php
+5) Configure your System in config.inc.php
 
 	// your URL-Snippet to dectect TOXID-Pages
 	$this->aToxidCurlSeoSnippets = array(
