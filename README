@@ -19,7 +19,7 @@ What it is NOT
 #########################
 1) NO Single-Sign-On (so no restriced pages are possible)
    See TOXID with OxAPI
-   
+
 2) NO out-of-the-box solution
 
 
@@ -32,9 +32,9 @@ Installation / Config
 2) Add autloader to modules/functions.php
 
 	require_once('toxid_curl/toxid_curl_autoloader.php');
-	
-	
-#####	
+
+
+#####
 3) OXID eShop from Version 4.6
 	Activate module in admin
 
@@ -44,8 +44,8 @@ Installation / Config
 	oxseodecoder => toxid_curl/core/toxid_curl_oxseodecoder
 	oxviewconfig => toxid_curl/core/toxid_curl_oxviewconfig
 
-	
-#####	
+
+#####
 4) Set up your CMS to deliver the pages in UTF-8 XML-format
 
 	<?xml version="1.0"?>
@@ -53,7 +53,7 @@ Installation / Config
 		<part1></part1>
 		<part2></part2>
 	</toxid>
-	
+
 It is STRONGLY recommended to wrap your snippets/parts in CDATA to prevent XML-mistaktes
 
 
@@ -65,7 +65,7 @@ It is STRONGLY recommended to wrap your snippets/parts in CDATA to prevent XML-m
 									'0' => 'toxid-curl',
 									'1' => 'toxid-curl-en',
 								  );
-	
+
 	// URL to your CMS
 	$this->aToxidCurlSource	= array(
 								'0' => 'http://yourcmspage.com/',
@@ -77,18 +77,24 @@ It is STRONGLY recommended to wrap your snippets/parts in CDATA to prevent XML-m
 								'1' => '?type=1',
 							  );
 
+    // If actual Site is an SSL-site, replace first URL with second URL (only replaces image-source-attributes)
+    $this->aToxidCurlSslPicReplacement = array(
+        '0' => array('http://yourcmspage.com/', 'https://yourcmspage.com'),
+        '1' => array('http://yourcmspage.com/en/', 'https://yourcmspage.com/en/'),
+    );
+
 	// FOR BACKWARDS COMPATABILITY UNCOMENT
 	// template variable name, with will be accessible like [{$toxid_curl_cmp->getCmsSnippet('text1')}]
 	// $this->sTplVariable = 'toxid_curl_cmp';
-	
 
-		
-#####	
+
+
+#####
 6) now you can call your snippets via the component like this
 
-   [{assign var='toxid' value=$oViewConf->getToxid()}] 
+   [{assign var='toxid' value=$oViewConf->getToxid()}]
    [{ $toxid->getCmsSnippet(part1) }]
-   
+
 #####
 7) to use search functionality, config.inc.php mus contain search urls:
 
