@@ -39,11 +39,11 @@ If you want to use it for any older version of OXID eShop, checkout the previous
 
 Installation & configuration
 ----------------------------
-1.    copy files from the OXID directory to your shop root
+**1 copy files from the OXID directory to your shop root**
 
-2.    Activate module in admin
+**2 Activate module in admin**
 
-3.    Set up your CMS to deliver the pages in UTF-8 XML-format
+**3 Set up your CMS to deliver the pages in UTF-8 XML-format**
 
             <?xml version="1.0"?>
             <toxid>
@@ -53,7 +53,7 @@ Installation & configuration
 
 It is STRONGLY recommended to wrap your snippets/parts in CDATA to prevent XML-mistaktes
 
-5.    Configure your System in config.inc.php
+**5 Configure your System in config.inc.php**
 
             // your URL-Snippet to dectect TOXID-Pages
             $this->aToxidCurlSeoSnippets = array(
@@ -75,13 +75,15 @@ It is STRONGLY recommended to wrap your snippets/parts in CDATA to prevent XML-m
                 '0' => array('http://yourcmspage.com/', 'https://yourcmspage.com'),
                 '1' => array('http://yourcmspage.com/en/', 'https://yourcmspage.com/en/'),
             );
+            //If you don't want to rewrite your URLs
+            $this->toxidDontRewriteUrls= true;
 
-6.    now you can call your snippets via the component like this
+**6 now you can call your snippets via the component like this**
 
             [{assign var='toxid' value=$oViewConf->getToxid()}]
             [{ $toxid->getCmsSnippet(part1) }]
 
-7.    to use search functionality, config.inc.php mus contain search urls:
+**7 to use search functionality, config.inc.php mus contain search urls:**
 
             // typo3 search url
             $this->aToxidSearchUrl	= array(
@@ -100,7 +102,7 @@ and in tpl/search.tpl (if you use basic theme), or tpl/page/search/search.tpl ad
                 </div>
             [{/if}]
 
-8.    Adjust your templates!
+**8 Adjust your templates!**
 
 
 What we already implemented

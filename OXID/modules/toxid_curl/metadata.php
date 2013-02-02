@@ -6,9 +6,9 @@
  *
  * @category TOXID
  * @package  TOXID
- * @author   Joscha Krug <krug | at | marmalade.de>
+ * @author   Joscha Krug <support@marmalade.de>
  * @license  MIT License http://www.opensource.org/licenses/mit-license.html
- * @version  GIT: <$Id$>
+ * @version  1.5.1
  * @link     http://toxid.org
  * @link     https://github.com/jkrug/TOXID-cURL
  */
@@ -23,7 +23,7 @@ $aModule = array(
     'email'         => 'support@marmalade.de',
     'url'           => 'http://www.marmalade.de',
     'thumbnail'     => 'toxid.jpg',
-    'version'       => '1.5.0',
+    'version'       => '1.5.1',
     'author'        => 'marmalade GmbH :: Joscha Krug',
     'extend'        => array(
         'oxseodecoder' => 'toxid_curl/core/toxid_curl_oxseodecoder',

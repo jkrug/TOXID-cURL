@@ -270,7 +270,11 @@ class toxidCurl extends oxSuperCfg
      */
     protected function _rewriteUrls($sContent, $iLangId = null, $blMultiLang = false)
     {
-
+        if ($this->getConfig()->getConfigParam('toxidDontRewriteUrls') == true)
+        {
+            return $sContent;
+        }
+        
         if ($blMultiLang == false) {
             if ($iLangId === null) {
                 $iLangId = oxLang::getInstance()->getBaseLanguage();
