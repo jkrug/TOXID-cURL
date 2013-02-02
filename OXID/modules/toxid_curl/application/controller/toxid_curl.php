@@ -21,7 +21,7 @@ class toxid_curl extends oxUBase
      * Current view template
      * @var string
      */
-    protected $_sThisTemplate = 'page/info/toxid_curl.tpl';
+    protected $_sThisTemplate = 'toxid_curl.tpl';
 
     /**
      * regular render function
