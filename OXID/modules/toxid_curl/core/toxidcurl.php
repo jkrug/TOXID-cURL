@@ -158,6 +158,23 @@ class toxidCurl extends oxSuperCfg
 
         $this->_aCustomPage = null;
 
+        /* if actual site is ssl-site, replace all image-sources with ssl-urls */
+        if ($this->getConfig()->isSsl()) {
+
+            $sslRepArray = $this->getConfig()->getConfigParam('aToxidCurlSslPicReplacement');
+            $sslRepUrls = $sslRepArray[$sLangId];
+
+            if (is_array($sslRepUrls)) {
+
+                $oldSrc = $sslRepUrls[0];
+                $newSrc = $sslRepUrls[1];
+
+                if ($oldSrc != "" && $newSrc != "") {
+                    $sText= str_replace('src="'.$oldSrc, 'src="'.$newSrc, $sText);
+                }
+            }
+        }
+
         if($this->getConfig()->getConfigParam('iUtfMode') !== 1)
         {
 			$sText= str_replace("�", "\"", $sText);
@@ -182,7 +199,7 @@ class toxidCurl extends oxSuperCfg
         if ($this->_sPageContent !== null && !$blReset) {
             return $this->_sPageContent;
         }
-        
+
         $source = $this->_getToxidLangSource();
         $page = $this->getConfig()->getConfigParam('sToxidCurlPage');
         $param = $this->_getToxidLangUrlParam();
@@ -202,11 +219,11 @@ class toxidCurl extends oxSuperCfg
                 oxUtils::getInstance()->showMessageAndExit('');
                 break;
         }
-		
+
 		// Especially for Wordpress-Frickel-Heinze
 		// Kill everything befor the <?xml
 		$this->_sPageContent = preg_replace('/.*<\?xml/ms', '<?xml', $aPage['content']);
-				
+
 		return $this->_sPageContent;
 
     }
@@ -253,6 +270,10 @@ class toxidCurl extends oxSuperCfg
      */
     protected function _rewriteUrls($sContent, $iLangId = null, $blMultiLang = false)
     {
+        if ($this->getConfig()->getConfigParam('toxidDontRewriteUrls') == true)
+        {
+            return $sContent;
+        }
         
         if ($blMultiLang == false) {
             if ($iLangId === null) {
@@ -276,7 +297,7 @@ class toxidCurl extends oxSuperCfg
 			}
 			unset($match);
         }
-        
+
         return $sContent;
     }
 
@@ -330,7 +351,7 @@ class toxidCurl extends oxSuperCfg
         if ($iLangId === null) {
             $iLangId = oxLang::getInstance()->getBaseLanguage();
         }
-        
+
         return $this->_aRewriteStartUrl[$iLangId];
     }
 
