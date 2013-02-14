@@ -47,6 +47,27 @@ class toxidCurl extends oxSuperCfg
     private $_sPageContent = null;
 
     /**
+     * string with XML-content-title
+     *
+     * @var string
+     */
+    public $_sPageTitle = null;
+    
+    /**
+     * string with XML-content-description
+     *
+     * @var string
+     */
+    public $_sPageDescription = null;
+        
+    /**
+     * string with XML-content-keywords
+     *
+     * @var string
+     */
+    public $_sPageKeywords = null;
+    
+    /**
      * stores URL from which typo3 content is loaded.
      * @var array
      */
@@ -146,6 +167,11 @@ class toxidCurl extends oxSuperCfg
         $sText = $this->_getSnippetFromXml($snippet);
         $sText = $this->_rewriteUrls($sText, null, $blMultiLang);
 
+        $sPageTitle = $this->_rewriteUrls($this->_getSnippetFromXml('//metadata//title', null, $blMultiLang));
+
+        $sPageDescription = $this->_rewriteUrls($this->_getSnippetFromXml('//metadata//description', null, $blMultiLang));
+
+        $sPageKeywords = $this->_rewriteUrls($this->_getSnippetFromXml('//metadata//keywords', null, $blMultiLang));
 
         $sShopId = $this->getConfig()->getActiveShop()->getId();
         $sLangId = oxLang::getInstance()->getBaseLanguage();
@@ -156,6 +182,27 @@ class toxidCurl extends oxSuperCfg
             true
         );
 
+        $this->_sPageTitle = oxUtilsView::getInstance()->parseThroughSmarty(
+            $sPageTitle,
+            '//metadata//title_'.$sShopId.'_'.$sLangId,
+            null,
+            true
+        );
+        
+        $this->_sPageDescription = oxUtilsView::getInstance()->parseThroughSmarty(
+            $sPageDescription,
+            '//metadata//description_'.$sShopId.'_'.$sLangId,
+            null,
+            true
+        );
+
+        $this->_sPageKeywords = oxUtilsView::getInstance()->parseThroughSmarty(
+            $sPageKeywords,
+            '//metadata//keywords_'.$sShopId.'_'.$sLangId,
+            null,
+            true
+        );
+        
         $this->_aCustomPage = null;
 
         /* if actual site is ssl-site, replace all image-sources with ssl-urls */
@@ -177,12 +224,12 @@ class toxidCurl extends oxSuperCfg
 
         if($this->getConfig()->getConfigParam('iUtfMode') !== 1)
         {
-			$sText= str_replace("�", "\"", $sText);
-			$sText= str_replace("�", "\"", $sText);
-			$sText= str_replace("�", "'", $sText);
-			$sText= str_replace("�", "'", $sText);
-			$sText= str_replace("�", "-", $sText);
-			$sText = mb_convert_encoding($sText, 'ISO-8859-15', 'UTF-8');
+            $sText= str_replace("�", "\"", $sText);
+            $sText= str_replace("�", "\"", $sText);
+            $sText= str_replace("�", "'", $sText);
+            $sText= str_replace("�", "'", $sText);
+            $sText= str_replace("�", "-", $sText);
+            $sText = mb_convert_encoding($sText, 'ISO-8859-15', 'UTF-8');
             return $sText;
         } else {
             return $sText;
@@ -220,11 +267,11 @@ class toxidCurl extends oxSuperCfg
                 break;
         }
 
-		// Especially for Wordpress-Frickel-Heinze
-		// Kill everything befor the <?xml
-		$this->_sPageContent = preg_replace('/.*<\?xml/ms', '<?xml', $aPage['content']);
+        // Especially for Wordpress-Frickel-Heinze
+        // Kill everything befor the <?xml
+        $this->_sPageContent = preg_replace('/.*<\?xml/ms', '<?xml', $aPage['content']);
 
-		return $this->_sPageContent;
+        return $this->_sPageContent;
 
     }
 
@@ -292,10 +339,10 @@ class toxidCurl extends oxSuperCfg
             $source = $this->_getToxidLangSource($iLangId);
             $pattern = '%href=(\'|")' . $source . '[^"\']*(/|\.html|\.php|\.asp)(\?[^"\']*)?(\'|")%';
             preg_match_all($pattern, $sContent, $matches, PREG_SET_ORDER);
-			foreach ($matches as $match) {
-				$sContent = str_replace($match[0], str_replace($source, $target, $match[0]), $sContent);
-			}
-			unset($match);
+            foreach ($matches as $match) {
+                $sContent = str_replace($match[0], str_replace($source, $target, $match[0]), $sContent);
+            }
+            unset($match);
         }
 
         return $sContent;
