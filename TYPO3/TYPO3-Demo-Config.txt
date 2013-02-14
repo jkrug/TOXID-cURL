@@ -21,6 +21,32 @@ lib.content = COA
 lib.content.wrap = <content><![CDATA[|]]></content>
 lib.content.10 < styles.content.get
 
+lib.metadata = COA
+lib.metadata {
+	wrap = <metadata>|</metadata>
+	10 = TEXT
+	10.cObject = TEXT
+	10.cObject {
+		data = register:newsKeywords
+		ifEmpty.field = keywords
+		wrap = <keywords><![CDATA[|]]></keywords>
+	}
+	20 = TEXT
+	20.cObject = TEXT
+	20.cObject {
+		data = register:newsTitle
+		ifEmpty.field = title
+		wrap = <title><![CDATA[|]]></title>
+	}
+	30 = TEXT
+	30.cObject = TEXT
+	30.cObject {
+		data = register:newsSubheader
+		ifEmpty.field = description
+		wrap = <description><![CDATA[|]]></description>
+	}
+}
+
 ########## PAGE ##########
 page = PAGE
 page.typeNum = 0
@@ -36,4 +62,5 @@ page.config {
 }
 page.10 < lib.mainnav
 page.20 < lib.content
+page.30 < lib.metadata
 page.wrap = <?xml version="1.0" encoding="utf-8"?><toxid>|</toxid>
