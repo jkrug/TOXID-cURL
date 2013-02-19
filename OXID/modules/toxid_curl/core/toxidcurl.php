@@ -128,7 +128,10 @@ class toxidCurl extends oxSuperCfg
         if ($this->_oSxToxid !== null && !$blReset) {
             return $this->_oSxToxid;
         }
-        $this->_oSxToxid = simplexml_load_string($this->_getXmlFromTypo3($blReset));
+        if ($this->_getXmlFromTypo3($blReset) !== null)
+            $this->_oSxToxid = simplexml_load_string($this->_getXmlFromTypo3($blReset));
+        else
+            return null;
         return $this->_oSxToxid;
 
     }
@@ -141,7 +144,10 @@ class toxidCurl extends oxSuperCfg
     protected function _getSnippetFromXml($sSnippet)
     {
         $oTypo3Xml = $this->_getXmlObject();
-        $aXpathSnippets = $oTypo3Xml->xpath('//'.$sSnippet.'[1]');
+        if ($oTypo3Xml !== null)
+            $aXpathSnippets = $oTypo3Xml->xpath('//'.$sSnippet.'[1]');
+        else
+            return null;
         $sText = $aXpathSnippets[0];
 
         return $sText;
@@ -168,9 +174,7 @@ class toxidCurl extends oxSuperCfg
         $sText = $this->_rewriteUrls($sText, null, $blMultiLang);
 
         $sPageTitle = $this->_rewriteUrls($this->_getSnippetFromXml('//metadata//title', null, $blMultiLang));
-
         $sPageDescription = $this->_rewriteUrls($this->_getSnippetFromXml('//metadata//description', null, $blMultiLang));
-
         $sPageKeywords = $this->_rewriteUrls($this->_getSnippetFromXml('//metadata//keywords', null, $blMultiLang));
 
         $sShopId = $this->getConfig()->getActiveShop()->getId();
@@ -259,6 +263,9 @@ class toxidCurl extends oxSuperCfg
                 header ("HTTP/1.1 500 Internal Server Error");
                 header ('Location: '.$this->getConfig()->getShopHomeURL());
                 oxUtils::getInstance()->showMessageAndExit('');
+                break;
+            case 301:
+                return null;
                 break;
             case 404:
                 header ("HTTP/1.1 404 Not Found");
