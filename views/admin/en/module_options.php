@@ -11,6 +11,6 @@
 $sLangName  = "Deutsch";
 $aLang = array(
     'charset'                                   => 'utf-8',
-    'SHOP_MODULE_GROUP_toxid_config_not_here'   => 'Konfiguration unter Erweiterungen > TOXID Einstellungen',
-    'SHOP_MODULE_noConfigHere'                  => 'Die Konfiguration ist nicht hier zu finden!',
+    'SHOP_MODULE_GROUP_toxid_config_not_here'   => 'Configuration in Extensions > TOXID Configuration',
+    'SHOP_MODULE_noConfigHere'                  => 'You won\'t find the configuration here!',
 );
