@@ -9,7 +9,7 @@
  * @link      http://toxid.org
  * @link      http://marmalade.de
  * @package   core
- * @copyright (C) marmalade.de 2011
+ * @copyright (C) marmalade.de 2011-2013
  */
 
 /**
@@ -173,9 +173,10 @@ class toxidCurl extends oxSuperCfg
 
         $sPageKeywords = $this->_rewriteUrls($this->_getSnippetFromXml('//metadata//keywords', null, $blMultiLang));
 
-        $sShopId = $this->getConfig()->getActiveShop()->getId();
+        $oConf   = $this->getConfig();
+        $sShopId = $oConf->getActiveShop()->getId();
         $sLangId = oxLang::getInstance()->getBaseLanguage();
-        $sText = oxUtilsView::getInstance()->parseThroughSmarty(
+        $sText   = oxUtilsView::getInstance()->parseThroughSmarty(
             $sText,
             $snippet.'_'.$sShopId.'_'.$sLangId,
             null,
@@ -206,15 +207,15 @@ class toxidCurl extends oxSuperCfg
         $this->_aCustomPage = null;
 
         /* if actual site is ssl-site, replace all image-sources with ssl-urls */
-        if ($this->getConfig()->isSsl()) {
+        if ($oConf->isSsl()) {
 
-            $sslRepArray = $this->getConfig()->getConfigParam('aToxidCurlSslPicReplacement');
-            $sslRepUrls = $sslRepArray[$sLangId];
+            $aSslUrl = $oConf->getShopConfVar('aToxidCurlSourceSsl', $sShopId);
+            $sSslUrl = $aSslUrl[$sLangId];
 
-            if (is_array($sslRepUrls)) {
+            if (!empty($sSslUrl)) {
 
-                $oldSrc = $sslRepUrls[0];
-                $newSrc = $sslRepUrls[1];
+                $oldSrc = $this->_getToxidLangSource($sLangId);
+                $newSrc = $sSslUrl;
 
                 if ($oldSrc != "" && $newSrc != "") {
                     $sText= str_replace('src="'.$oldSrc, 'src="'.$newSrc, $sText);
@@ -222,7 +223,7 @@ class toxidCurl extends oxSuperCfg
             }
         }
 
-        if($this->getConfig()->getConfigParam('iUtfMode') !== 1)
+        if($oConf->getConfigParam('iUtfMode') !== 1)
         {
             $sText= str_replace("�", "\"", $sText);
             $sText= str_replace("�", "\"", $sText);
