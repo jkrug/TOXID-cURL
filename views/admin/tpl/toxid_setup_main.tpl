@@ -18,7 +18,7 @@ function _groupExp(el) {
 <form name="transfer" id="transfer" action="[{ $oViewConf->getSelfLink() }]" method="post">
     [{ $oViewConf->getHiddenSid() }]    
     <input type="hidden" name="oxid" value="[{ $oxid }]">
-    <input type="hidden" name="cl" value="toxid_setup">
+    <input type="hidden" name="cl" value="toxid_setup_main">
     <input type="hidden" name="fnc" value="">
     <input type="hidden" name="actshop" value="[{$oViewConf->getActiveShopId()}]">
     <input type="hidden" name="updatenav" value="">
@@ -26,7 +26,7 @@ function _groupExp(el) {
 </form>
 <form name="myedit" id="myedit" action="[{ $oViewConf->getSelfLink() }]" method="post">
     [{ $oViewConf->getHiddenSid() }]
-    <input type="hidden" name="cl" value="toxid_setup">
+    <input type="hidden" name="cl" value="toxid_setup_main">
     <input type="hidden" name="fnc" value="">
     <input type="hidden" name="language" value="[{ $actlang }]">
     <div class="groupExp">
@@ -36,7 +36,7 @@ function _groupExp(el) {
                 <dd>
                     <table>
                         <tr>
-                            <td valign="top" style="width:500px;padding-right:50px;">
+                            <td valign="top" style="width:500px;padding-right:30px;">
                                 <a href="http://www.marmalade.de/?pk_campaign=toxidBackend&pk_kwd=Imagelink" target="_blank" style="float:left;margin:0 20px 10px 0">
                                     <img src="../modules/toxid_curl/toxid.jpg" width="90px" />
                                 </a>
@@ -48,24 +48,29 @@ function _groupExp(el) {
                                     <img alt="" border="0" src="https://www.paypalobjects.com/de_DE/DE/i/btn/btn_donate_SM.gif">
                                 </a>
                             </td>
+                            <td valign="top" style="padding-right:30px">
+                                <b>[{oxmultilang ident='TOXID_INTEGRATIONPARTNER'}]</b>
+                                <ul>
+                                    <li><a href="http://www.marmalade.de/?pk_campaign=toxidBackend&pk_kwd=Integrationpartner" target="_blank">marmalade GmbH</a></li>
+                                    <li><a href="http://www.gn2-netwerk.de/" target="_blank">GN2 Netwerk</a></li>
+                                    <li><a href="http://www.marmalade.de/agentur/agentur/impressum/?pk_campaign=toxidBackend&pk_kwd=IntegrationpartnerGesucht" target="_blank">[{oxmultilang ident='TOXID_BECOME_PARTNER'}]</a></li>
+                                </ul>
+                            </td>
+                            <td valign="top" style="padding-right:30px">
+                                <b>Contributors</b>
+                                <ul>
+                                    <li><a href="https://github.com/dajoho" target="_blank">dajoho</a></li>
+                                    <li><a href="https://github.com/vanilla-thunder" target="_blank">vanilla-thunder</a></li>
+                                    <li><a href="https://github.com/Tr0nYx" target="_blank">Tr0nYx</a></li>
+                                    <li><a href="https://github.com/pixelkrieg" target="_blank">pixelkrieg</a></li>
+                                    <li><a href="https://github.com/wanis" target="_blank">wanis</a></li>
+                                </ul>
+                            </td>
                             <td valign="top">
-                                    <b>Contributors:</b>
-                                    <ul>
-                                        <li><a href="https://github.com/dajoho" target="_blank">dajoho</a></li>
-                                        <li><a href="https://github.com/vanilla-thunder" target="_blank">vanilla-thunder</a></li>
-                                        <li><a href="https://github.com/Tr0nYx" target="_blank">Tr0nYx</a></li>
-                                        <li><a href="https://github.com/pixelkrieg" target="_blank">pixelkrieg</a></li>
-                                        <li><a href="https://github.com/wanis" target="_blank">wanis</a></li>
-                                        
-                                    </ul>
-                                    
-                                    <b>
-                                        <br />
-                                        Supporter:
-                                    </b>
-                                    <ul>
-                                        <li>[{oxmultilang ident='TOXID_LOOKING_FOR'}]</li>
-                                    </ul>
+                                <b>Supporter</b>
+                                <ul>
+                                    <li>[{oxmultilang ident='TOXID_LOOKING_FOR'}]</li>
+                                </ul>
                             </td>
                          </tr>
                     </table>

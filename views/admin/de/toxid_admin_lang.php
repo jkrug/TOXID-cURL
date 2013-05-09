@@ -20,4 +20,6 @@ $aLang = array(
     'TOXID_DONT_REWRITE'        => 'URLs nicht umschreiben - Aufrufe führen auf externe CMS-Seite',
     'TOXID_LOOKING_FOR'         => 'gesucht!',
     'TOXID_GENERAL'             => 'Allgemein',
+    'TOXID_BECOME_PARTNER'      => 'Partner werden',
+    'TOXID_INTEGRATIONPARTNER'  => 'Integrationspartner',
 );
