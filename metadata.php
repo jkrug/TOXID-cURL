@@ -30,16 +30,17 @@ $aModule = array(
     'thumbnail'     => 'toxid.jpg',
     'version'       => '2.0',
     'author'        => 'marmalade GmbH :: Joscha Krug',
-    'extend'        => array(
+    'extend' => array(
         'oxseodecoder'              => 'toxid_curl/core/toxid_curl_oxseodecoder',
         'oxviewconfig'              => 'toxid_curl/core/toxid_curl_oxviewconfig',
+        'oxutilsview'               => 'toxid_curl/core/toxid_curl_oxutilsview'
     ),
-    'templates'     => array(
+    'templates' => array(
         'toxid_curl.tpl'            => 'toxid_curl/views/azure/toxid_curl.tpl',
         'product.tpl'               => 'toxid_curl/views/azure/product.tpl',
         'toxid_setup_main.tpl'      => 'toxid_curl/views/admin/tpl/toxid_setup_main.tpl',
     ),
-    'files'         => array(
+    'files' => array(
         'toxid_curl'                => 'toxid_curl/controller/toxid_curl.php',
         'toxid_curl_oxseodecoder'   => 'toxid_curl/core/toxid_curl_oxseodecoder.php',
         'toxid_curl_oxviewconfig'   => 'toxid_curl/core/toxid_curl_oxviewconfig.php',
@@ -47,11 +48,16 @@ $aModule = array(
         'toxid_setup'               => 'toxid_curl/controller/admin/toxid_setup.php',
         'toxid_setup_main'          => 'toxid_curl/controller/admin/toxid_setup_main.php',
         'toxid_setup_list'          => 'toxid_curl/controller/admin/toxid_setup_list.php',
+        'toxid_curl_events'         => 'toxid_curl/core/toxid_curl_events.php',
     ),
     'settings' => array(
         array(
             'group' => 'toxid_config_not_here',
             'name'  => 'noConfigHere',
         ),
+    ),
+    'events' => array(
+        'onActivate'    => 'toxid_curl_events::onActivate',
+        'onDeactivate'  => 'toxid_curl_events::onDeactivate'
     )
 );
