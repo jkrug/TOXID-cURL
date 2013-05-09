@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OX>
+  <OXMENU id="NAVIGATION_ESHOPADMIN">
+      <MAINMENU id="mxextensions">
+            <SUBMENU id="toxid_setup" cl="toxid_setup" list="toxid_setup_list">
+                <TAB id="toxid_setup_main" cl="toxid_setup_main" />
+            </SUBMENU>
+        </MAINMENU>
+  </OXMENU>
+</OX>

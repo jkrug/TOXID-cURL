@@ -116,8 +116,4 @@ What we already implemented
 
 *    demo templates for CMS
 
-
-What will come
---------------
-*    Configuration via admin-area
-
+*    done: Configuration via admin-area
