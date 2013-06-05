@@ -39,7 +39,7 @@ If you want to use it for any older version of OXID eShop, checkout the previous
 
 Installation & configuration
 ----------------------------
-**1 copy files from the module to /modules/toxid_curl/ **
+**1 copy files from the module to /modules/toxid_curl/**
 
 **2 Activate module in admin**
 
