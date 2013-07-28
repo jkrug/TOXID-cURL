@@ -16,7 +16,7 @@
 
 class toxid_curl_oxutilsview extends toxid_curl_oxutilsview_parent
 {
-    public function _fillCommonSmartyProperties($oSmarty)
+    protected function _fillCommonSmartyProperties($oSmarty)
     {
         parent::_fillCommonSmartyProperties($oSmarty);
 
