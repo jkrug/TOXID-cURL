@@ -14,7 +14,7 @@
  * @package   core
  */
 
-class toxid_events extends oxI18n {
+class toxid_curl_events.php extends oxI18n {
 
 	public static function onActivate() {
 
