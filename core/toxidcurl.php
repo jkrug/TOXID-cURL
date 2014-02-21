@@ -266,6 +266,10 @@ class toxidCurl extends oxSuperCfg
                 header ('Location: '.$this->getConfig()->getShopHomeURL());
                 oxUtils::getInstance()->showMessageAndExit('');
                 break;
+            case 0:
+                header ('Location: '.$this->getConfig()->getShopHomeURL());
+                oxUtils::getInstance()->showMessageAndExit('');
+                break;
         }
 
         // Especially for Wordpress-Frickel-Heinze
