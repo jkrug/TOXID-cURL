@@ -29,29 +29,6 @@ class toxid_curl extends oxUBase
      */
     protected $_aSourceUrlByLang = null;
     
-    /**
-     * sets canonical URL to the default Blog URL
-     *
-     * if the blog is accessible through (T)OXID & Typo3, this should be a good way to prevent duplicate content
-     * @var string
-     */
-    public function getCanonicalUrl()
-    {
-        if ($this->_aSourceUrlByLang === null) {
-            $this->_aSourceUrlByLang = $this->getConfig()->getConfigParam('aToxidCurlSource');
-        }
-
-        $this->_aSeoUrls = $this->getConfig()->getConfigParam('aToxidCurlSeoSnippets');
-        
-        if ($iLangId === null) {
-            $iLangId = oxLang::getInstance()->getBaseLanguage();
-        }
-        
-        $this->_sUrl = $this->_aSeoUrls[$iLangId];
-        $sRegUri = preg_replace("/^\/".$this->_sUrl."\//i","",$_SERVER["REQUEST_URI"]);
-
-        return $this->_aSourceUrlByLang[$iLangId].$sRegUri;
-    }
     
     /**
      * Template variable getter. Returns tag title
