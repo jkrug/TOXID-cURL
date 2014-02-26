@@ -53,7 +53,7 @@ function _groupExp(el) {
                                 <ul>
                                     <li><a href="http://www.marmalade.de/?pk_campaign=toxidBackend&pk_kwd=Integrationpartner" target="_blank">marmalade GmbH</a></li>
                                     <li><a href="http://www.gn2-netwerk.de/" target="_blank">GN2 Netwerk</a></li>
-                                    <li><a href="http://www.marmalade.de/agentur/agentur/impressum/?pk_campaign=toxidBackend&pk_kwd=IntegrationpartnerGesucht" target="_blank">[{oxmultilang ident='TOXID_BECOME_PARTNER'}]</a></li>
+                                    <li><a href="http://www.marmalade.de/agentur/impressum/?pk_campaign=toxidBackend&pk_kwd=IntegrationpartnerGesucht" target="_blank">[{oxmultilang ident='TOXID_BECOME_PARTNER'}]</a></li>
                                 </ul>
                             </td>
                             <td valign="top" style="padding-right:30px">
