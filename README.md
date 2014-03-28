@@ -53,7 +53,16 @@ Installation & configuration
 
 It is STRONGLY recommended to wrap your snippets/parts in CDATA to prevent XML-mistaktes
 
+For Wordpress, change the "Permalinks" settings to use SEO URLs, e.g. by entry name (http://blog.mysite.com/content1) and make sure to adjust the Wordpress .htaccess to allow URL Rewriting.
+
 **5 Configure your System in Extensions > TOXID Configuration**
+
+Specifically, add the URLs to your CMS and enter a URL in "URL Identifier / SEO-Snippet:", e.g. "Blog".
+Even if you only use one language, enter a value for the other language, too! Otherwise, the internet might explode, 
+or at least you will get the blog contents for every page in your shop :)
+
+Also, make sure you add a "/" at the end of your CMS URL, e.g. "http://blog.mysite.com/", otherwise you will get double-slashes
+in your blog URLs ("../Blog//foo-bar").
 
 **6 now you can call your snippets via the component like this**
 

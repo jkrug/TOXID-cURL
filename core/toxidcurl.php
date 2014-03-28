@@ -223,14 +223,16 @@ class toxidCurl extends oxSuperCfg
             }
         }
 
-        if($oConf->getConfigParam('iUtfMode') !== 1)
+        $sShopCharset = oxRegistry::getLang()->translateString('charset');
+        $strEnc = mb_detect_encoding($sText, "UTF-8,ISO-8859-1,$sShopCharset");
+        if($oConf->getConfigParam('iUtfMode') != 1)
         {
             $sText= str_replace("�", "\"", $sText);
             $sText= str_replace("�", "\"", $sText);
             $sText= str_replace("�", "'", $sText);
             $sText= str_replace("�", "'", $sText);
             $sText= str_replace("�", "-", $sText);
-            $sText = mb_convert_encoding($sText, 'ISO-8859-15', 'UTF-8');
+            $sText = mb_convert_encoding($sText, $strEnc, 'UTF-8');
             return $sText;
         } else {
             return $sText;
