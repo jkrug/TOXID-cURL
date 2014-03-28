@@ -31,7 +31,7 @@ What it is NOT
 
 System requirements
 -------------------
-From version 1.5 on, the minumum OXID version should be 4.6
+From version 1.5 on, the minimum OXID version should be 4.6
 Thats because we could drop the autoloader and keep nearly all stuff in the module directory.
 Also the basic theme is not longer supportet.
 
@@ -59,7 +59,7 @@ For Wordpress, change the "Permalinks" settings to use SEO URLs, e.g. by entry n
 
 Specifically, add the URLs to your CMS and enter a URL in "URL Identifier / SEO-Snippet:", e.g. "Blog".
 Even if you only use one language, enter a value for the other language, too! Otherwise, the internet might explode, 
-or at least you will get the blog contents for every page in your shop :)
+or at least you will get the blog contents for every page in your shop. :)
 
 Also, make sure you add a "/" at the end of your CMS URL, e.g. "http://blog.mysite.com/", otherwise you will get double-slashes
 in your blog URLs ("../Blog//foo-bar").
