@@ -24,7 +24,7 @@ class toxid_curl_events extends oxI18n {
 		$dir = $cfg->getConfigParam("sCompileDir")."*";
 		foreach (glob($dir) as $item) {
 			if (!is_dir($item)) {
-				unlink($item);
+				@unlink($item);
 			}
 		}
 
@@ -45,7 +45,7 @@ class toxid_curl_events extends oxI18n {
 		$dir = $cfg->getConfigParam("sCompileDir")."*";
 		foreach (glob($dir) as $item) {
 			if (!is_dir($item)) {
-				unlink($item);
+				@unlink($item);
 			}
 		}
 	}
