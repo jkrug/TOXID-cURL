@@ -43,6 +43,6 @@ class toxid_curl_oxviewconfig extends toxid_curl_oxviewconfig_parent
      */
     public function getToxid()
     {
-        return toxidCurl::getInstance();
+        return oxRegistry::get('toxidcurl');
     }
 }
