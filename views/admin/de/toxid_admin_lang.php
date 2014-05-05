@@ -22,4 +22,7 @@ $aLang = array(
     'TOXID_GENERAL'             => 'Allgemein',
     'TOXID_BECOME_PARTNER'      => 'Partner werden',
     'TOXID_INTEGRATIONPARTNER'  => 'Integrationspartner',
+    'TOXID_CACHE_TTL'                   => 'Cache-Lebensdauer (Standard: 3600 s)',
+    'TOXID_CACHE_RANDOMIZE'             => 'Cache-Lebensdauer zufällig streuen um ',
+    'TOXID_CACHE_RANDOMIZE_HELP'        => 'Um bei vielen mit Toxid zu ladenden Elementen pro  Seite zu verhindern, dass nach Ablauf des Caches ein Seitenaufruf sehr viele Aufrufe zum CMS produziert, sollte die Cache-Lebensdauer pro Element leicht von der Cache-Lebensdauer-Einstellung abweichen. Dazu sollte sie eine zufällige Komponente enhalten, die hier eingestellt werden kann. Bei einer Cache-Lebensdauer von 600 Sekunden bedeuten 10% Streuung, dass die tatsächliche Cache-Lebensdauer für jedes Element zwischen 540 und 660 Sekunden liegen kann.',
 );

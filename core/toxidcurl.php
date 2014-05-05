@@ -98,6 +98,12 @@ class toxidCurl extends oxSuperCfg
     protected $_aSearchCache = array();
 
     /**
+     * Stores the http code returned on the last request
+     * @var int
+     */
+    protected $_iHttpCode = false;
+
+    /**
      * Deprecated!
      * resturns a single instance of this class
      *
@@ -130,7 +136,18 @@ class toxidCurl extends oxSuperCfg
         if ($this->_oSxToxid !== null && !$blReset) {
             return $this->_oSxToxid;
         }
-        $this->_oSxToxid = simplexml_load_string($this->_getXmlFromTypo3($blReset));
+        
+        // Fetch XML content from Typo3, then check the return code before
+        // parsing it through SimpleXML
+        $sXmlFromT3 = $this->_getXmlFromTypo3($blReset);
+        if ( $this->getHttpCode() == 200 ) {
+            if ( ( $this->_oSxToxid = @simplexml_load_string($sXmlFromT3) ) === false ) {
+                $this->_oSxToxid = false;
+            }
+        } else {
+            $this->_oSxToxid = false;
+        }
+        
         return $this->_oSxToxid;
 
     }
@@ -138,37 +155,51 @@ class toxidCurl extends oxSuperCfg
     /**
      * returns snippet text from xml object
      * @param $sSnippet
+     * @param bool $blReset Reset and run new HTTP request
      * @return SimpleXMLElement
      */
-    protected function _getSnippetFromXml($sSnippet)
+    protected function _getSnippetFromXml($sSnippet, $blReset = false)
     {
-        $oTypo3Xml = $this->_getXmlObject();
-        $aXpathSnippets = $oTypo3Xml->xpath('//'.$sSnippet.'[1]');
-        $sText = $aXpathSnippets[0];
+        $oTypo3Xml = $this->_getXmlObject($blReset);
+        
+        // Check if returned object is actually valid and has not returned an error,
+        // else return empty string.
+        if ( $oTypo3Xml !== false ) {
+            $aXpathSnippets = $oTypo3Xml->xpath('//'.$sSnippet.'[1]');
+            $sText = (string)$aXpathSnippets[0];
+        } else {
+            $sText = '';
+        }
 
         return $sText;
-
     }
 
     /**
      * returns the called snippet
      * @param string $snippet
      * @param bool $blMultiLang
+     * @param string $customPage
      * @return string
      */
     public function getCmsSnippet($snippet=null, $blMultiLang = false, $customPage = null)
     {
         if($snippet == null) {
-            return '<strong style="color:red;">TOXID: Please add part, you want to display!</strong>';
+            return '<strong style="color:red;">TOXID: Please specify the content snippet to fetch and display!</strong>';
         }
-
+        
+        // Allow a Toxid instance to fetch multiple pages
+        $blReset = false;
+        if ( $customPage != $this->_aCustomPage ) {
+            $blReset = true;
+        }
+        
         if ($customPage != '') {
             $this->_aCustomPage = $customPage;
         }
-
-        $sText = $this->_getSnippetFromXml($snippet);
+        
+        $sText = $this->_getSnippetFromXml($snippet, $blReset);
         $sText = $this->_rewriteUrls($sText, null, $blMultiLang);
-
+        
         $sPageTitle = $this->_rewriteUrls($this->_getSnippetFromXml('//metadata//title', null, $blMultiLang));
 
         $sPageDescription = $this->_rewriteUrls($this->_getSnippetFromXml('//metadata//description', null, $blMultiLang));
@@ -179,7 +210,8 @@ class toxidCurl extends oxSuperCfg
         $sShopId = $oConf->getActiveShop()->getId();
         $sLangId = oxLang::getInstance()->getBaseLanguage();
         $sText   = oxUtilsView::getInstance()->parseThroughSmarty(
-            $sText,
+            // Decode entities to allow inclusion of Smarty tags in fetched content
+            html_entity_decode($sText),
             $snippet.'_'.$sShopId.'_'.$sLangId,
             null,
             true
@@ -206,7 +238,9 @@ class toxidCurl extends oxSuperCfg
             true
         );
         
-        $this->_aCustomPage = null;
+        // Commented out so we don't forget the last page from call to call; enables 
+        // multiple uses of the same toxid instance
+        // $this->_aCustomPage = null;
 
         /* if actual site is ssl-site, replace all image-sources with ssl-urls */
         if ($oConf->isSsl()) {
@@ -235,10 +269,9 @@ class toxidCurl extends oxSuperCfg
             $sText= str_replace("�", "'", $sText);
             $sText= str_replace("�", "-", $sText);
             $sText = mb_convert_encoding($sText, $strEnc, 'UTF-8');
-            return $sText;
-        } else {
-            return $sText;
         }
+        
+        return $sText;
     }
 
     /**
@@ -256,25 +289,33 @@ class toxidCurl extends oxSuperCfg
         $page = $this->getConfig()->getConfigParam('sToxidCurlPage');
         $param = $this->_getToxidLangUrlParam();
         $custom  = $this->_getToxidCustomPage();
-        $aPage = $this->_getRemoteContent($source.$custom.$page.$param);
-
-        switch ($aPage['info']['http_code'])
-        {
-            case 500:
-                header ("HTTP/1.1 500 Internal Server Error");
-                header ('Location: '.$this->getConfig()->getShopHomeURL());
-                oxUtils::getInstance()->showMessageAndExit('');
-                break;
-            case 404:
-                header ("HTTP/1.1 404 Not Found");
-                header ('Location: '.$this->getConfig()->getShopHomeURL());
-                oxUtils::getInstance()->showMessageAndExit('');
-                break;
-            case 0:
-                header ('Location: '.$this->getConfig()->getShopHomeURL());
-                oxUtils::getInstance()->showMessageAndExit('');
-                break;
+        
+        $sUrl = $source.$custom.$page.$param;
+        
+        // Check if we have this page, as identified by its URL, in cache.
+        // If not, get content and commit response to file cache, using the 
+        // cache TTL and randomization set by the user in the backend options.
+        $oConf   = $this->getConfig();
+        $sShopId = $oConf->getActiveShop()->getId();
+        $sLangId = oxLang::getInstance()->getBaseLanguage();
+        $sCacheName = 'toxid_'.$sShopId.'_'.$sLangId.'_'.md5($sUrl);
+        
+        $aPage = oxRegistry::get('oxUtils')->fromFileCache( $sCacheName );
+        if ( !$aPage || !is_array($aPage) || empty($aPage) ) {
+            $aPage = $this->_getRemoteContent($sUrl);
+            
+            if ( !($iCacheTTL = $this->getConfig()->getConfigParam('iToxidCacheTTL')) ) {
+                $iCacheTTL = 600;
+            }
+            if ( !($iCacheRandomize = $this->getConfig()->getConfigParam('iToxidCacheRandomize')) ) {
+                $iCacheRandomize = 10;
+            }
+            
+            $iRandomTTL = mt_rand( floor( $iCacheTTL * (1 - $iCacheRandomize/100) ), ceil( $iCacheTTL * (1 + $iCacheRandomize/100) ) );
+            oxRegistry::get('oxUtils')->toFileCache( $sCacheName, $aPage, (int)$iRandomTTL );
         }
+        
+        $this->_iHttpCode = $aPage['info']['http_code'];
 
         // Especially for Wordpress-Frickel-Heinze
         // Kill everything befor the <?xml
@@ -464,5 +505,15 @@ class toxidCurl extends oxSuperCfg
         } else {
             return $this->_aSearchCache[$sKeywords];
         }
+    }
+    
+    /**
+     * Returns the HTTP response code of the latest query
+     *
+     * @return int
+     */
+    public function getHttpCode()
+    {
+        return $this->_iHttpCode;
     }
 }

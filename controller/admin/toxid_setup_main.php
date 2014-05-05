@@ -2,6 +2,40 @@
 
 class toxid_setup_main extends oxAdminView
 {
+    protected $_aStandardSettings = array(
+        array(  'name'      => 'aToxidCurlSource',
+                'type'      => 'arr',
+                'global'    => false,
+            ),
+        array(  'name'      => 'aToxidCurlSourceSsl',
+                'type'      => 'arr',
+                'global'    => false,
+            ),
+        array(  'name'      => 'aToxidSearchUrl',
+                'type'      => 'arr',
+                'global'    => false,
+            ),
+        array(  'name'      => 'aToxidCurlUrlParams',
+                'type'      => 'arr',
+                'global'    => false,
+            ),
+        array(  'name'      => 'aToxidCurlSeoSnippets',
+                'type'      => 'arr',
+                'global'    => false,
+            ),
+        array(  'name'      => 'toxidDontRewriteUrls',
+                'type'      => 'bl',
+                'global'    => false,
+            ),
+        array(  'name'      => 'iToxidCacheTTL',
+                'type'      => 'str',
+                'global'    => false,
+            ),
+        array(  'name'      => 'iToxidCacheRandomize',
+                'type'      => 'str',
+                'global'    => false,
+            ),
+    );
     
     protected $_sThisTemplate = 'toxid_setup_main.tpl';
 
@@ -10,12 +44,13 @@ class toxid_setup_main extends oxAdminView
     public function render()
     {
         $oConf = oxRegistry::getConfig();
-        $this->_aViewData['aToxidCurlSource']       = $oConf->getShopConfVar('aToxidCurlSource');
-        $this->_aViewData['aToxidCurlSourceSsl']    = $oConf->getShopConfVar('aToxidCurlSourceSsl');
-        $this->_aViewData['aToxidSearchUrl']        = $oConf->getShopConfVar('aToxidSearchUrl');
-        $this->_aViewData['aToxidCurlUrlParams']    = $oConf->getShopConfVar('aToxidCurlUrlParams');
-        $this->_aViewData['aToxidCurlSeoSnippets']  = $oConf->getShopConfVar('aToxidCurlSeoSnippets');
-        $this->_aViewData['toxidDontRewriteUrls']   = $oConf->getShopConfVar('toxidDontRewriteUrls');
+        
+        foreach ( $this->_aStandardSettings as $aSetting ) {
+            // For global settings, the associated shop id is the base shop id.
+            $iTargetShopId = $aSetting['global'] ? $oConf->getBaseShopId() : $sShopId;
+            $this->_aViewData[ $aSetting['name'] ] = $oConf->getShopConfVar( $aSetting['name'], $iTargetShopId, self::CONFIG_MODULE_NAME );
+        }
+        
         return parent::render();
     }
 
@@ -26,17 +61,19 @@ class toxid_setup_main extends oxAdminView
     public function save()
     {
         $oConf = oxRegistry::getConfig();
+        
         $aParams = $oConf->getParameter( "editval" );
         if($aParams['toxidDontRewriteUrls'] != '1')
         {
             $aParams['toxidDontRewriteUrls'] = 0;
         }
+        
         $sShopId = $oConf->getShopId();
-        $oConf->saveShopConfVar( 'arr', 'aToxidCurlSource', $aParams['aToxidCurlSource'], $sShopId, self::CONFIG_MODULE_NAME );
-        $oConf->saveShopConfVar( 'arr', 'aToxidCurlSourceSsl', $aParams['aToxidCurlSourceSsl'], $sShopId, self::CONFIG_MODULE_NAME );
-        $oConf->saveShopConfVar( 'arr', 'aToxidSearchUrl', $aParams['aToxidSearchUrl'], $sShopId, self::CONFIG_MODULE_NAME );
-        $oConf->saveShopConfVar( 'arr', 'aToxidCurlUrlParams', $aParams['aToxidCurlUrlParams'], $sShopId, self::CONFIG_MODULE_NAME );
-        $oConf->saveShopConfVar( 'arr', 'aToxidCurlSeoSnippets', $aParams['aToxidCurlSeoSnippets'], $sShopId, self::CONFIG_MODULE_NAME );
-        $oConf->saveShopConfVar( 'bl', 'toxidDontRewriteUrls', $aParams['toxidDontRewriteUrls'], $sShopId, self::CONFIG_MODULE_NAME );
+        
+        foreach ( $this->_aStandardSettings as $aSetting ) {
+            // For global settings, the associated shop id is the base shop id.
+            $iTargetShopId = $aSetting['global'] ? $oConf->getBaseShopId() : $sShopId;
+            $oConf->saveShopConfVar( $aSetting['type'], $aSetting['name'], $aParams[ $aSetting['name'] ], $iTargetShopId, self::CONFIG_MODULE_NAME );
+        }
     }
 }
