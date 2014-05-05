@@ -22,4 +22,7 @@ $aLang = array(
     'TOXID_GENERAL'             => 'General',
     'TOXID_BECOME_PARTNER'      => 'Become a partner',
     'TOXID_INTEGRATIONPARTNER'  => 'Integration partners',
+	'TOXID_CACHE_TTL'			        => 'Cache time to live (Default: 3600 s)',
+    'TOXID_CACHE_RANDOMIZE'             => 'Cache time to live randomization',
+    'TOXID_CACHE_RANDOMIZE_HELP'        => 'To prevent large amounts of request being sent to Typo3 when the cache expires in shops with numerous Toxid calls, the cache lifetime should be randomized for each content object. A randomization of 10% means a cache lifetime of 600 seconds would result in effective lifetimes between 540 and 660 seconds.',
 );

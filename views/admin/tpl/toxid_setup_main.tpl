@@ -132,8 +132,33 @@ function _groupExp(el) {
                     [{/foreach}]
                     <fieldset>
                         <legend>[{oxmultilang ident="TOXID_GENERAL"}]</legend>
+						<div>
                         <input type="checkbox" name="editval[toxidDontRewriteUrls]" value="1" [{if $toxidDontRewriteUrls}]checked="checked"[{/if}]>
                         [{oxmultilang ident="TOXID_DONT_REWRITE"}]
+						</div>
+                        
+						<br />
+                        
+						<table>
+							<tr>
+								<td class="edittext">
+									[{oxmultilang ident="TOXID_CACHE_TTL"}]:
+								</td>
+								<td class="edittext">
+									<input type="text" name="editval[iToxidCacheTTL]" value="[{$iToxidCacheTTL}]">
+								</td>
+							</tr>
+							<tr>
+								<td class="edittext">
+									[{oxmultilang ident="TOXID_CACHE_RANDOMIZE"}]:
+								</td>
+								<td class="edittext">
+									<input type="text" name="editval[iToxidCacheRandomize]" value="[{$iToxidCacheRandomize}]">%
+                                    [{oxinputhelp ident="TOXID_CACHE_RANDOMIZE_HELP"}]
+								</td>
+							</tr>
+						</table>
+
                     </fieldset>
                 </dd>
             </dl>
