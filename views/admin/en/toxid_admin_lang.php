@@ -23,3 +23,9 @@ $aLang = array(
     'TOXID_BECOME_PARTNER'      => 'Become a partner',
     'TOXID_INTEGRATIONPARTNER'  => 'Integration partners',
 );
+
+if (oxRegistry::getConfig()->getConfigParam('iUtfMode') === 0) {
+    foreach ($aLang as $k=>$v) {
+        $aLang[$k] = utf8_decode($v);
+    }
+}
