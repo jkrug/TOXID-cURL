@@ -226,15 +226,9 @@ class toxidCurl extends oxSuperCfg
         }
 
         $sShopCharset = oxRegistry::getLang()->translateString('charset');
-        $strEnc = mb_detect_encoding($sText, "UTF-8,ISO-8859-1,$sShopCharset");
-        if($oConf->getConfigParam('iUtfMode') != 1)
+        if($oConf->getConfigParam('iUtfMode') === 0)
         {
-            $sText= str_replace("�", "\"", $sText);
-            $sText= str_replace("�", "\"", $sText);
-            $sText= str_replace("�", "'", $sText);
-            $sText= str_replace("�", "'", $sText);
-            $sText= str_replace("�", "-", $sText);
-            $sText = mb_convert_encoding($sText, $strEnc, 'UTF-8');
+            $sText = utf8_decode($sText);
             return $sText;
         } else {
             return $sText;
