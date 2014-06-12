@@ -192,20 +192,14 @@ class toxidCurl extends oxSuperCfg
         $this->_aCustomPage = null;
 
         /* if actual site is ssl-site, replace all image-sources with ssl-urls */
-        if ($oConf->isSsl()) {
-
+        if ($oConf->isSsl())
+        {
+            
             $aSslUrl = $oConf->getShopConfVar('aToxidCurlSourceSsl', $sShopId);
             $sSslUrl = $aSslUrl[$sLangId];
-
-            if (!empty($sSslUrl)) {
-
-                $oldSrc = $this->_getToxidLangSource($sLangId);
-                $newSrc = $sSslUrl;
-
-                if ($oldSrc != "" && $newSrc != "") {
-                    $sText= str_replace('src="'.$oldSrc, 'src="'.$newSrc, $sText);
-                }
-            }
+            $oldSrc = $this->_getToxidLangSource($sLangId);
+            
+            $sText = $this->replaceNonSslUrls( $sText, $sSslUrl, $oldSrc );
         }
 
         $sShopCharset = oxRegistry::getLang()->translateString('charset');
@@ -218,6 +212,22 @@ class toxidCurl extends oxSuperCfg
         }
     }
 
+    private function replaceNonSslUrl( $sText, $sSslUrl, $oldSrc )
+    {
+        if (!empty($sSslUrl))
+        {
+
+            $newSrc = $sSslUrl;
+
+            if ($oldSrc != "" && $newSrc != "")
+            {
+                $sText= str_replace('src="'.$oldSrc, 'src="'.$newSrc, $sText);
+            }
+        }
+        
+        return $sText;
+    }
+    
     /**
      * returns raw string from typo3 CMS-page
      * @param bool $blReset set to true if you want to fetch content again
