@@ -207,7 +207,7 @@ class toxidCurl
      * @param string $oldSrc
      * @return string
      */
-    private function replaceNonSslUrl( $sText, $sSslUrl, $oldSrc )
+    private function replaceNonSslUrls( $sText, $sSslUrl, $oldSrc )
     {
         if (!empty($sSslUrl))
         {
