@@ -16,7 +16,7 @@
  * toxid Class
  *
  */
-class toxidCurl extends oxSuperCfg
+class toxidCurl
 {
     private $_initialized = false;
     private $_smartyParser;
@@ -32,13 +32,6 @@ class toxidCurl extends oxSuperCfg
         return $this->_initialized;
     }
 
-
-    /**
-     * toxidCurl class instance.
-     *
-     * @var toxidcurl instance
-     */
-    private static $_instance = null;
 
     /**
      * array of content snippets
@@ -113,12 +106,6 @@ class toxidCurl extends oxSuperCfg
     protected $_aSearchCache = array();
 
     /**
-     * content will be loaded on first usage needed
-     * @deprecated
-     */
-    public function loadCmsPage() {}
-
-    /**
      * returns SimpleXMLElement object from Typo3 xml
      * @param bool $blReset
      * @return SimpleXMLElement
@@ -186,20 +173,14 @@ class toxidCurl extends oxSuperCfg
         $this->_aCustomPage = null;
 
         /* if actual site is ssl-site, replace all image-sources with ssl-urls */
-        if ($oConf->isSsl()) {
-
+        if ($oConf->isSsl())
+        {
+            
             $aSslUrl = $oConf->getShopConfVar('aToxidCurlSourceSsl', $sShopId);
             $sSslUrl = $aSslUrl[$sLangId];
-
-            if (!empty($sSslUrl)) {
-
-                $oldSrc = $this->_getToxidLangSource($sLangId);
-                $newSrc = $sSslUrl;
-
-                if ($oldSrc != "" && $newSrc != "") {
-                    $sText= str_replace('src="'.$oldSrc, 'src="'.$newSrc, $sText);
-                }
-            }
+            $oldSrc = $this->_getToxidLangSource($sLangId);
+            
+            $sText = $this->replaceNonSslUrls( $sText, $sSslUrl, $oldSrc );
         }
 
         $sShopCharset = oxRegistry::getLang()->translateString('charset');
@@ -211,7 +192,31 @@ class toxidCurl extends oxSuperCfg
             return $sText;
         }
     }
+    
+    /**
+     * Replaces Links to SSL-Links if configured.
+     * 
+     * @param string $sText
+     * @param string $sSslUrl
+     * @param string $oldSrc
+     * @return string
+     */
+    private function replaceNonSslUrls( $sText, $sSslUrl, $oldSrc )
+    {
+        if (!empty($sSslUrl))
+        {
 
+            $newSrc = $sSslUrl;
+
+            if ($oldSrc != "" && $newSrc != "")
+            {
+                $sText= str_replace('src="'.$oldSrc, 'src="'.$newSrc, $sText);
+            }
+        }
+        
+        return $sText;
+    }
+    
     /**
      * returns raw string from typo3 CMS-page
      * @param bool $blReset set to true if you want to fetch content again
