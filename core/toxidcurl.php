@@ -16,15 +16,8 @@
  * toxid Class
  *
  */
-class toxidCurl extends oxSuperCfg
+class toxidCurl
 {
-    /**
-     * toxidCurl class instance.
-     *
-     * @var toxidcurl instance
-     */
-    private static $_instance = null;
-
     /**
      * array of content snippets
      *
@@ -205,7 +198,15 @@ class toxidCurl extends oxSuperCfg
             return $sText;
         }
     }
-
+    
+    /**
+     * Replaces Links to SSL-Links if configured.
+     * 
+     * @param string $sText
+     * @param string $sSslUrl
+     * @param string $oldSrc
+     * @return string
+     */
     private function replaceNonSslUrl( $sText, $sSslUrl, $oldSrc )
     {
         if (!empty($sSslUrl))
