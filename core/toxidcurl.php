@@ -98,12 +98,6 @@ class toxidCurl extends oxSuperCfg
     protected $_aSearchCache = array();
 
     /**
-     * content will be loaded on first usage needed
-     * @deprecated
-     */
-    public function loadCmsPage() {}
-
-    /**
      * returns SimpleXMLElement object from Typo3 xml
      * @param bool $blReset
      * @return SimpleXMLElement
