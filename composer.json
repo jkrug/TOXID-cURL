@@ -1,0 +1,9 @@
+{
+    "require-dev": {
+        "phpunit/phpunit": "@stable",
+        "phpmd/oxmd": "@stable"
+    },
+    "autoload": {
+        "classmap": ["controller/", "core/"]
+    }
+}
