@@ -18,6 +18,21 @@
  */
 class toxidCurl extends oxSuperCfg
 {
+    private $_initialized = false;
+    private $_smartyParser;
+
+    public function init(Toxid_Curl_Smarty_Parser $smartyParser)
+    {
+        $this->_smartyParser = $smartyParser;
+        $this->_initialized = true;
+    }
+
+    public function getInitialized()
+    {
+        return $this->_initialized;
+    }
+
+
     /**
      * toxidCurl class instance.
      *
@@ -161,34 +176,13 @@ class toxidCurl extends oxSuperCfg
         $oConf   = $this->getConfig();
         $sShopId = $oConf->getActiveShop()->getId();
         $sLangId = oxLang::getInstance()->getBaseLanguage();
-        $sText   = oxUtilsView::getInstance()->parseThroughSmarty(
-            $sText,
-            $snippet.'_'.$sShopId.'_'.$sLangId,
-            null,
-            true
-        );
+        $sText   = $this->smartyParser->parse($sText);
 
-        $this->_sPageTitle = oxUtilsView::getInstance()->parseThroughSmarty(
-            $sPageTitle,
-            '//metadata//title_'.$sShopId.'_'.$sLangId,
-            null,
-            true
-        );
+        $this->_sPageTitle = $this->smartyParser->parse($sPageTitle);
         
-        $this->_sPageDescription = oxUtilsView::getInstance()->parseThroughSmarty(
-            $sPageDescription,
-            '//metadata//description_'.$sShopId.'_'.$sLangId,
-            null,
-            true
-        );
+        $this->_sPageDescription = $this->smartyParser->parse($sPageDescription);
 
-        $this->_sPageKeywords = oxUtilsView::getInstance()->parseThroughSmarty(
-            $sPageKeywords,
-            '//metadata//keywords_'.$sShopId.'_'.$sLangId,
-            null,
-            true
-        );
-        
+        $this->_sPageKeywords = $this->smartyParser->parse($sPageKeywords);
         $this->_aCustomPage = null;
 
         /* if actual site is ssl-site, replace all image-sources with ssl-urls */

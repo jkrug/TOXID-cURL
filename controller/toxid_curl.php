@@ -17,6 +17,8 @@
  */
 class toxid_curl extends oxUBase
 {
+    private $_initialized = false;
+
     /**
      * Current view template
      * @var string
@@ -28,8 +30,19 @@ class toxid_curl extends oxUBase
      * @var array
      */
     protected $_aSourceUrlByLang = null;
-    
-    
+
+
+    public function init()
+    {
+        $this->_initialized = true;
+    }
+
+    public function getInit()
+    {
+        return $this->_initialized;
+    }
+
+
     /**
      * Template variable getter. Returns tag title
      *
@@ -84,7 +97,7 @@ class toxid_curl extends oxUBase
 
         return $this->_sMetaKeywords;
     }
-    
+ 
     /**
      * regular render function
      */
@@ -95,4 +108,6 @@ class toxid_curl extends oxUBase
         }
         return parent::render();
     }
+
 }
+

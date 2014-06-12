@@ -49,6 +49,7 @@ $aModule = array(
         'toxid_setup_main'          => 'toxid_curl/controller/admin/toxid_setup_main.php',
         'toxid_setup_list'          => 'toxid_curl/controller/admin/toxid_setup_list.php',
         'toxid_curl_events'         => 'toxid_curl/core/toxid_curl_events.php',
+        'toxid_curl_smarty_parser'  => 'toxid_curl/core/facades/toxid_curl_smarty_parser.php',
     ),
     'settings' => array(
         array(
