@@ -98,23 +98,6 @@ class toxidCurl extends oxSuperCfg
     protected $_aSearchCache = array();
 
     /**
-     * Deprecated!
-     * resturns a single instance of this class
-     *
-     * @return toxidCurl
-     * @deprec Use the registry pattern please
-     */
-    public static function getInstance()
-    {
-        if ( !(self::$_instance instanceof toxidCurl) ) {
-
-            self::$_instance = oxNew( 'toxidCurl' );
-
-        }
-        return self::$_instance;
-    }
-
-    /**
      * content will be loaded on first usage needed
      * @deprecated
      */
