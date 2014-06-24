@@ -296,9 +296,18 @@ class toxidCurl extends oxSuperCfg
         $curl_handle = curl_init();
         curl_setopt($curl_handle, CURLOPT_URL, $sUrl);
         curl_setopt($curl_handle, CURLOPT_RETURNTRANSFER, 1);
+
+        /* Forward POST requests like a boss */
+        if (!empty($_POST)) {
+            $postRequest = http_build_query($_POST, '', '&');
+            curl_setopt($curl_handle, CURLOPT_POST, 1);
+            curl_setopt($curl_handle, CURLOPT_POSTFIELDS, $postRequest);
+        }
+
         $aResult['content'] = curl_exec($curl_handle);
         $aResult['info']    = curl_getinfo($curl_handle);
         curl_close($curl_handle);
+
         return $aResult;
     }
 
