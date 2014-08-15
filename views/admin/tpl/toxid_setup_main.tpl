@@ -84,51 +84,53 @@ function _groupExp(el) {
             <dl>
                 <dd>
                     [{foreach from=$languages key=lang item=olang}]
-                        <fieldset>
-                            <legend>[{ $olang->name }]</legend>
-                            <table>
-                                <tr>
-                                    <td valign="top" class="edittext">
-                                        [{oxmultilang ident="TOXID_SOURCE"}]: 
-                                    </td>
-                                    <td valign="top" class="edittext">
-                                            <input type="text" name="editval[aToxidCurlSource][[{ $lang }]]" value="[{$aToxidCurlSource.$lang}]">
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td valign="top" class="edittext">
-                                        [{oxmultilang ident="TOXID_SOURCE_SSL"}]: 
-                                    </td>
-                                    <td valign="top" class="edittext">
-                                            <input type="text" name="editval[aToxidCurlSourceSsl][[{ $lang }]]" value="[{$aToxidCurlSourceSsl.$lang}]">
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td valign="top" class="edittext">
-                                        [{oxmultilang ident="TOXID_SEARCH_URL"}]: 
-                                    </td>
-                                    <td valign="top" class="edittext">
-                                            <input type="text" name="editval[aToxidSearchUrl][[{ $lang }]]" value="[{$aToxidSearchUrl.$lang}]">
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td valign="top" class="edittext">
-                                        [{oxmultilang ident="TOXID_PARAM"}]: 
-                                    </td>
-                                    <td valign="top" class="edittext">
-                                            <input type="text" name="editval[aToxidCurlUrlParams][[{ $lang }]]" value="[{$aToxidCurlUrlParams.$lang}]">
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td valign="top" class="edittext">
-                                        [{oxmultilang ident="TOXID_SEO_SNIPPET"}]: 
-                                    </td>
-                                    <td valign="top" class="edittext">
-                                            <input type="text" name="editval[aToxidCurlSeoSnippets][[{ $lang }]]" value="[{$aToxidCurlSeoSnippets.$lang}]">
-                                    </td>
-                                </tr>
-                            </table>
-                        </fieldset>
+                        [{if $olang->active == 1}]
+                            <fieldset>
+                                <legend>[{ $olang->name }]</legend>
+                                <table>
+                                    <tr>
+                                        <td valign="top" class="edittext">
+                                            [{oxmultilang ident="TOXID_SOURCE"}]: 
+                                        </td>
+                                        <td valign="top" class="edittext">
+                                                <input type="text" name="editval[aToxidCurlSource][[{ $lang }]]" value="[{$aToxidCurlSource.$lang}]">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td valign="top" class="edittext">
+                                            [{oxmultilang ident="TOXID_SOURCE_SSL"}]: 
+                                        </td>
+                                        <td valign="top" class="edittext">
+                                                <input type="text" name="editval[aToxidCurlSourceSsl][[{ $lang }]]" value="[{$aToxidCurlSourceSsl.$lang}]">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td valign="top" class="edittext">
+                                            [{oxmultilang ident="TOXID_SEARCH_URL"}]: 
+                                        </td>
+                                        <td valign="top" class="edittext">
+                                                <input type="text" name="editval[aToxidSearchUrl][[{ $lang }]]" value="[{$aToxidSearchUrl.$lang}]">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td valign="top" class="edittext">
+                                            [{oxmultilang ident="TOXID_PARAM"}]: 
+                                        </td>
+                                        <td valign="top" class="edittext">
+                                                <input type="text" name="editval[aToxidCurlUrlParams][[{ $lang }]]" value="[{$aToxidCurlUrlParams.$lang}]">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td valign="top" class="edittext">
+                                            [{oxmultilang ident="TOXID_SEO_SNIPPET"}]: 
+                                        </td>
+                                        <td valign="top" class="edittext">
+                                                <input type="text" name="editval[aToxidCurlSeoSnippets][[{ $lang }]]" value="[{$aToxidCurlSeoSnippets.$lang}]">
+                                        </td>
+                                    </tr>
+                                </table>
+                            </fieldset>
+                        [{/if}]
                     [{/foreach}]
                     <fieldset>
                         <legend>[{oxmultilang ident="TOXID_GENERAL"}]</legend>
