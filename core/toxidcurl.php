@@ -347,7 +347,15 @@ class toxidCurl extends oxSuperCfg
         }
 
         foreach ($aLanguages as $iLangId ) {
-            $target = $this->getConfig()->getConfigParam('sShopURL').$this->_getToxidLangSeoSnippet($iLangId).'/';
+            if ($this->getConfig()->getEdition() === 'EE') {
+                $sShopUrl = $this->getConfig()->getConfigParam('sMallShopURL');
+            } else {
+                $sShopUrl = $this->getConfig()->getConfigParam('sShopURL');
+            }
+            if (substr($sShopUrl, -1) !== '/') {
+                $sShopUrl = $sShopUrl.'/';
+            }
+            $target = $sShopUrl.$this->_getToxidLangSeoSnippet($iLangId).'/';
             $source = $this->_getToxidLangSource($iLangId);
             $pattern = '%href=(\'|")' . $source . '[^"\']*(.|/|\.html|\.php|\.asp)(\?[^"\']*)?(\'|")%';
             preg_match_all($pattern, $sContent, $matches, PREG_SET_ORDER);
