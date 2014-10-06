@@ -177,29 +177,29 @@ class toxidCurl extends oxSuperCfg
 
         $oConf   = $this->getConfig();
         $sShopId = $oConf->getActiveShop()->getId();
-        $sLangId = oxLang::getInstance()->getBaseLanguage();
-        $sText   = oxUtilsView::getInstance()->parseThroughSmarty(
+        $sLangId = oxLang::oxRegistry::getLang()nce()->getBaseLanguage();
+        $sText   = oxRegistry::get("oxUtilsView")->parseThroughSmarty(
             $sText,
             $snippet.'_'.$sShopId.'_'.$sLangId,
             null,
             true
         );
 
-        $this->_sPageTitle = oxUtilsView::getInstance()->parseThroughSmarty(
+        $this->_sPageTitle = oxRegistry::get("oxUtilsView")->parseThroughSmarty(
             $sPageTitle,
             '//metadata//title_'.$sShopId.'_'.$sLangId,
             null,
             true
         );
         
-        $this->_sPageDescription = oxUtilsView::getInstance()->parseThroughSmarty(
+        $this->_sPageDescription = oxRegistry::get("oxUtilsView")->parseThroughSmarty(
             $sPageDescription,
             '//metadata//description_'.$sShopId.'_'.$sLangId,
             null,
             true
         );
 
-        $this->_sPageKeywords = oxUtilsView::getInstance()->parseThroughSmarty(
+        $this->_sPageKeywords = oxRegistry::get("oxUtilsView")->parseThroughSmarty(
             $sPageKeywords,
             '//metadata//keywords_'.$sShopId.'_'.$sLangId,
             null,
@@ -257,16 +257,16 @@ class toxidCurl extends oxSuperCfg
             case 500:
                 header ("HTTP/1.1 500 Internal Server Error");
                 header ('Location: '.$this->getConfig()->getShopHomeURL());
-                oxUtils::getInstance()->showMessageAndExit('');
+                oxRegistry::getUtils()->showMessageAndExit('');
                 break;
             case 404:
                 header ("HTTP/1.1 404 Not Found");
                 header ('Location: '.$this->getConfig()->getShopHomeURL());
-                oxUtils::getInstance()->showMessageAndExit('');
+                oxRegistry::getUtils()->showMessageAndExit('');
                 break;
             case 0:
                 header ('Location: '.$this->getConfig()->getShopHomeURL());
-                oxUtils::getInstance()->showMessageAndExit('');
+                oxRegistry::getUtils()->showMessageAndExit('');
                 break;
         }
 
@@ -336,7 +336,7 @@ class toxidCurl extends oxSuperCfg
         
         if ($blMultiLang == false) {
             if ($iLangId === null) {
-                $iLangId = oxLang::getInstance()->getBaseLanguage();
+                $iLangId = oxRegistry::getLang()->getBaseLanguage();
             }
             $aLanguages = array($iLangId);
         }
@@ -380,7 +380,7 @@ class toxidCurl extends oxSuperCfg
             $this->_aSourceUrlByLang = $this->getConfig()->getConfigParam('aToxidCurlSource');
         }
         if ($iLangId === null) {
-            $iLangId = oxLang::getInstance()->getBaseLanguage();
+            $iLangId = oxRegistry::getLang()->getBaseLanguage();
         }
 
         return $this->_aSourceUrlByLang[$iLangId];
@@ -398,7 +398,7 @@ class toxidCurl extends oxSuperCfg
             $this->_aToxidLangUrlParam = $this->getConfig()->getConfigParam('aToxidCurlUrlParams');
         }
         if ($iLangId === null) {
-            $iLangId = oxLang::getInstance()->getBaseLanguage();
+            $iLangId = oxRegistry::getLang()->getBaseLanguage();
         }
 
         return $this->_aToxidLangUrlParam[$iLangId];
@@ -416,7 +416,7 @@ class toxidCurl extends oxSuperCfg
             $this->_aRewriteStartUrl = $this->getConfig()->getConfigParam('aToxidCurlSeoSnippets');
         }
         if ($iLangId === null) {
-            $iLangId = oxLang::getInstance()->getBaseLanguage();
+            $iLangId = oxRegistry::getLang()->getBaseLanguage();
         }
 
         return $this->_aRewriteStartUrl[$iLangId];
@@ -442,7 +442,7 @@ class toxidCurl extends oxSuperCfg
             $this->_aSearchUrl = $this->getConfig()->getConfigParam('aToxidSearchUrl');
         }
         if ($iLangId === null) {
-            $iLangId = oxLang::getInstance()->getBaseLanguage();
+            $iLangId = oxRegistry::getLang()->getBaseLanguage();
         }
 
         return $this->_aSearchUrl[$iLangId];
