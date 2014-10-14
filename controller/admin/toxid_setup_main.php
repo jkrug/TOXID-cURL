@@ -26,7 +26,7 @@ class toxid_setup_main extends oxAdminView
     public function save()
     {
         $oConf = oxRegistry::getConfig();
-        $aParams = $oConf->getParameter( "editval" );
+        $aParams = $oConf->getRequestParameter( "editval" );
         if($aParams['toxidDontRewriteUrls'] != '1')
         {
             $aParams['toxidDontRewriteUrls'] = 0;

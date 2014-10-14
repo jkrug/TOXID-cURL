@@ -266,7 +266,7 @@ class toxidCurl extends oxSuperCfg
                 break;
             case 0:
                 header ('Location: '.$this->getConfig()->getShopHomeURL());
-                oxUtils::getInstance()->showMessageAndExit('');
+                oxRegistry::getUtils()->showMessageAndExit('');
                 break;
         }
 
