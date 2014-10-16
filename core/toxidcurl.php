@@ -383,7 +383,11 @@ class toxidCurl extends oxSuperCfg
             $iLangId = oxRegistry::getLang()->getBaseLanguage();
         }
 
-        return $this->_aSourceUrlByLang[$iLangId];
+        $source = $this->_aSourceUrlByLang[$iLangId];
+        if (substr($source, -1) !== '/') {
+            return $source.'/';
+        }
+        return $source;
     }
 
     /**
