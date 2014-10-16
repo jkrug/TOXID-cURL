@@ -146,7 +146,7 @@ class toxidCurl extends oxSuperCfg
         $aXpathSnippets = $oTypo3Xml->xpath('//'.$sSnippet.'[1]');
         $sText = $aXpathSnippets[0];
 
-        return $sText;
+        return (string) $sText;
 
     }
 
