@@ -319,6 +319,23 @@ class toxidCurl extends oxSuperCfg
     {
         return preg_replace('#index.php\??$#', '', $this->getConfig()->getShopHomeURL()).$this->_getToxidLangSeoSnippet($iLangId);
     }
+    
+    /**
+     * check if hyperlink refer on image (needed for fancy-, lightbox & co)
+     *
+     * @param $sUrl
+     * @return bool
+     */
+    protected function _isImageLink($sUrl)
+    {
+        $aImgTypes  = array(".jpg", ".jpeg", ".png");
+        foreach($aImgTypes as $sImgType){
+            if(is_int(strrpos($sUrl, $sImgType, -strlen($sImgType)))){
+                return true;
+            }
+        }
+        return false;
+    }
 
     /**
      * rewrites given string URL's, which belongs to typo3 and configured in aToxidCurlSource
@@ -360,7 +377,9 @@ class toxidCurl extends oxSuperCfg
             $pattern = '%href=(\'|")' . $source . '[^"\']*(.|/|\.html|\.php|\.asp)(\?[^"\']*)?(\'|")%';
             preg_match_all($pattern, $sContent, $matches, PREG_SET_ORDER);
             foreach ($matches as $match) {
-                $sContent = str_replace($match[0], str_replace($source, $target, $match[0]), $sContent);
+                if($this->_isImageLink($match[0]) == false){
+                    $sContent = str_replace($match[0], str_replace($source, $target, $match[0]), $sContent);
+                }
             }
             unset($match);
         }
