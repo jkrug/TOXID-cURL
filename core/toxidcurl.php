@@ -146,7 +146,7 @@ class toxidCurl extends oxSuperCfg
         $aXpathSnippets = $oTypo3Xml->xpath('//'.$sSnippet.'[1]');
         $sText = $aXpathSnippets[0];
 
-        return $sText;
+        return (string) $sText;
 
     }
 
@@ -383,7 +383,11 @@ class toxidCurl extends oxSuperCfg
             $iLangId = oxRegistry::getLang()->getBaseLanguage();
         }
 
-        return $this->_aSourceUrlByLang[$iLangId];
+        $source = $this->_aSourceUrlByLang[$iLangId];
+        if (substr($source, -1) !== '/') {
+            return $source.'/';
+        }
+        return $source;
     }
 
     /**
