@@ -23,7 +23,7 @@ $aModule = array(
     'title'       => 'marmalade :: TOXID cURL',
     'description' => array(
         'de'    => 'Integriert CMS-Inhalte in OXID eShop',
-        'en'    => 'Renders pages form CMS and navigation in OXID.',
+        'en'    => 'Integrates CMS content in OXID eShop',
     ),
     'email'         => 'support@marmalade.de',
     'url'           => 'http://www.marmalade.de',
