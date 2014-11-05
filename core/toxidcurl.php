@@ -101,7 +101,7 @@ class toxidCurl extends oxSuperCfg
 	 * sets cache TTL (in seconds)
 	 * @var int
 	 */
-	protected $_iCacheTTL = 3600;
+	protected $_iCacheTTL = 0;
 
 	/**
 	 * Deprecated!
@@ -252,12 +252,16 @@ class toxidCurl extends oxSuperCfg
 			return $this->_sPageContent;
 		}
 
+
 		$source = $this->_getToxidLangSource();
 		$page = $this->getConfig()->getConfigParam('sToxidCurlPage');
 		$param = $this->_getToxidLangUrlParam();
 		$custom	 = $this->_getToxidCustomPage();
 		$sUrl = $source.$custom.$page.$param;
-		
+
+		// Set cache TTL based on Toxid setup
+		$this->_setCacheTTL();
+
 		// check if cache TTL and requested URL is cached
 		// if not get remote content
 		if(!$this->_iCacheTTL || !($cachedPage = $this->_getCachedXml($sUrl))) {
@@ -287,10 +291,12 @@ class toxidCurl extends oxSuperCfg
 			$this->_sPageContent = preg_replace('/.*<\?xml/ms', '<?xml', $aPage['content']);
 
 			// try to save Toxid content in the cache
-			$this->_setCachedXml($sUrl, $this->_sPageContent);
+			if($this->_iCacheTTL) {
+				$this->_setCachedXml($sUrl, $this->_sPageContent);
+			}
 
 		} else {
-			
+
 			// use the cached content
 			$this->_sPageContent = $cachedPage;
 
@@ -541,7 +547,7 @@ class toxidCurl extends oxSuperCfg
 	}
 
 	/**
-	 * Save the remote curled XML to the local cache file and 
+	 * Save the remote curled XML to the local cache file and
 	 * create the toxid cache directory if not exiting
 	 * @author Oliver Georgi <slackero@gmail.com>
 	 * @param string $sUrl
@@ -585,6 +591,23 @@ class toxidCurl extends oxSuperCfg
 		}
 
 		return false;
+	}
+
+	/**
+	 * Set the cache TTL based on Toxid configuration
+	 * @author Oliver Georgi <slackero@gmail.com>
+	 * @return int
+	 */
+	protected function _setCacheTTL()
+	{
+		// Cache or not to cache
+		if($this->getConfig()->getConfigParam('toxidCacheEnabled')) {
+			$this->_iCacheTTL = intval($this->getConfig()->getConfigParam('iToxidCacheTTL'));
+		} else {
+			$this->_iCacheTTL = 0;
+		}
+
+		return $this->_iCacheTTL;
 	}
 
 }
