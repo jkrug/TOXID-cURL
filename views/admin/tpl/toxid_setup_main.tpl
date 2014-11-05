@@ -92,7 +92,7 @@ function _groupExp(el) {
                                         [{oxmultilang ident="TOXID_SOURCE"}]: 
                                     </td>
                                     <td valign="top" class="edittext">
-                                            <input type="text" name="editval[aToxidCurlSource][[{ $lang }]]" value="[{$aToxidCurlSource.$lang}]">
+                                            <input type="text" name="editval[aToxidCurlSource][[{ $lang }]]" value="[{$aToxidCurlSource.$lang}]" size="70">
                                     </td>
                                 </tr>
                                 <tr>
@@ -100,7 +100,7 @@ function _groupExp(el) {
                                         [{oxmultilang ident="TOXID_SOURCE_SSL"}]: 
                                     </td>
                                     <td valign="top" class="edittext">
-                                            <input type="text" name="editval[aToxidCurlSourceSsl][[{ $lang }]]" value="[{$aToxidCurlSourceSsl.$lang}]">
+                                            <input type="text" name="editval[aToxidCurlSourceSsl][[{ $lang }]]" value="[{$aToxidCurlSourceSsl.$lang}]" size="70">
                                     </td>
                                 </tr>
                                 <tr>
@@ -108,7 +108,7 @@ function _groupExp(el) {
                                         [{oxmultilang ident="TOXID_SEARCH_URL"}]: 
                                     </td>
                                     <td valign="top" class="edittext">
-                                            <input type="text" name="editval[aToxidSearchUrl][[{ $lang }]]" value="[{$aToxidSearchUrl.$lang}]">
+                                            <input type="text" name="editval[aToxidSearchUrl][[{ $lang }]]" value="[{$aToxidSearchUrl.$lang}]" size="70">
                                     </td>
                                 </tr>
                                 <tr>
@@ -116,7 +116,7 @@ function _groupExp(el) {
                                         [{oxmultilang ident="TOXID_PARAM"}]: 
                                     </td>
                                     <td valign="top" class="edittext">
-                                            <input type="text" name="editval[aToxidCurlUrlParams][[{ $lang }]]" value="[{$aToxidCurlUrlParams.$lang}]">
+                                            <input type="text" name="editval[aToxidCurlUrlParams][[{ $lang }]]" value="[{$aToxidCurlUrlParams.$lang}]" size="70">
                                     </td>
                                 </tr>
                                 <tr>
@@ -124,7 +124,7 @@ function _groupExp(el) {
                                         [{oxmultilang ident="TOXID_SEO_SNIPPET"}]: 
                                     </td>
                                     <td valign="top" class="edittext">
-                                            <input type="text" name="editval[aToxidCurlSeoSnippets][[{ $lang }]]" value="[{$aToxidCurlSeoSnippets.$lang}]">
+                                            <input type="text" name="editval[aToxidCurlSeoSnippets][[{ $lang }]]" value="[{$aToxidCurlSeoSnippets.$lang}]" size="70">
                                     </td>
                                 </tr>
                             </table>
