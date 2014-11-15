@@ -104,6 +104,12 @@ class toxidCurl extends oxSuperCfg
     protected $_iCacheTTL = 0;
 
     /**
+     * sets active Oxid charset, utf-8 used by default
+     * @var string
+     */
+    protected $_sCharset = 'utf-8';
+
+    /**
      * Deprecated!
      * resturns a single instance of this class
      *
@@ -231,14 +237,12 @@ class toxidCurl extends oxSuperCfg
             }
         }
 
-        $sShopCharset = oxRegistry::getLang()->translateString('charset');
-        if($oConf->getConfigParam('iUtfMode') === 0)
+        if($this->_sCharset !== 'utf-8')
         {
-            $sText = utf8_decode($sText);
-            return $sText;
-        } else {
-            return $sText;
+            return mb_convert_encoding($sText, $this->_sCharset, "auto");
         }
+
+        return $sText;
     }
 
     /**
@@ -251,7 +255,6 @@ class toxidCurl extends oxSuperCfg
         if ($this->_sPageContent !== null && !$blReset) {
             return $this->_sPageContent;
         }
-
 
         $source = $this->_getToxidLangSource();
         $page = $this->getConfig()->getConfigParam('sToxidCurlPage');
@@ -300,6 +303,11 @@ class toxidCurl extends oxSuperCfg
             // use the cached content
             $this->_sPageContent = $cachedPage;
 
+        }
+
+        // set charset used for converting if not in UTF-8 mode
+        if($this->getConfig()->getConfigParam('iUtfMode') === 0) {
+            $this->_sCharset = oxRegistry::getLang()->translateString('charset');
         }
 
         return $this->_sPageContent;
@@ -500,12 +508,12 @@ class toxidCurl extends oxSuperCfg
             $this->_aSearchCache[$sKeywords] = $sSearchResult;
         }
 
-        if($this->getConfig()->getConfigParam('iUtfMode') !== 1)
+        if($this->_sCharset !== 'utf-8')
         {
-            return utf8_decode($this->_aSearchCache[$sKeywords]);
-        } else {
-            return $this->_aSearchCache[$sKeywords];
+            return mb_convert_encoding($this->_aSearchCache[$sKeywords], $this->_sCharset, "auto");
         }
+
+        return $this->_aSearchCache[$sKeywords];
     }
 
     /**
