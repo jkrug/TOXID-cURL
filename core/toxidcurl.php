@@ -181,11 +181,11 @@ class toxidCurl extends oxSuperCfg
         $sText = $this->_getSnippetFromXml($snippet);
         $sText = $this->_rewriteUrls($sText, null, $blMultiLang);
 
-        $sPageTitle = $this->_rewriteUrls($this->_getSnippetFromXml('//metadata//title', null, $blMultiLang));
+        $sPageTitle = $this->_rewriteUrls($this->_getSnippetFromXml('//metadata//title'), null, $blMultiLang);
 
-        $sPageDescription = $this->_rewriteUrls($this->_getSnippetFromXml('//metadata//description', null, $blMultiLang));
+        $sPageDescription = $this->_rewriteUrls($this->_getSnippetFromXml('//metadata//description'), null, $blMultiLang);
 
-        $sPageKeywords = $this->_rewriteUrls($this->_getSnippetFromXml('//metadata//keywords', null, $blMultiLang));
+        $sPageKeywords = $this->_rewriteUrls($this->_getSnippetFromXml('//metadata//keywords'), null, $blMultiLang);
 
         $oConf   = $this->getConfig();
         $sShopId = $oConf->getActiveShop()->getId();
