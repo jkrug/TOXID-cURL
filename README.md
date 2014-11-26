@@ -45,11 +45,11 @@ Installation & configuration
 
 **3 Set up your CMS to deliver the pages in UTF-8 XML-format**
 
-        <?xml version="1.0"?>
-        <toxid>
-            <part1></part1>
-            <part2></part2>
-        </toxid>
+    <?xml version="1.0"?>
+    <toxid>
+        <part1></part1>
+        <part2></part2>
+    </toxid>
 
 It is STRONGLY recommended to wrap your snippets/parts in CDATA to prevent XML-mistaktes
 
@@ -66,20 +66,20 @@ in your blog URLs ("../Blog//foo-bar").
 
 **6 now you can call your snippets via the component like this**
 
-        [{assign var='toxid' value=$oViewConf->getToxid()}]
-        [{ $toxid->getCmsSnippet(part1) }]
+    [{assign var='toxid' value=$oViewConf->getToxid()}]
+    [{ $toxid->getCmsSnippet(part1) }]
 
 keep in mind, that search keywords will be attached in the end
 
 and in tpl/search.tpl (if you use basic theme), or tpl/page/search/search.tpl add following code:
 
-        [{assign var='toxid' value=$oViewConf->getToxid()}]
-        [{assign var='typo3result' value=$toxid->getSearchResult($oView->getSearchParamForHtml())}]
-        [{if $typo3result}]
-            <div>
-                [{$typo3result}]
-            </div>
-        [{/if}]
+    [{assign var='toxid' value=$oViewConf->getToxid()}]
+    [{assign var='typo3result' value=$toxid->getSearchResult($oView->getSearchParamForHtml())}]
+    [{if $typo3result}]
+        <div>
+            [{$typo3result}]
+        </div>
+    [{/if}]
 
 **8 Adjust your templates!**
 
