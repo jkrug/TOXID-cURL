@@ -298,6 +298,16 @@ class toxidCurl extends oxSuperCfg
                     header ('Location: '.$this->getConfig()->getShopHomeURL());
                     oxRegistry::getUtils()->showMessageAndExit('');
                     break;
+                case 403:
+                    header ("HTTP/1.1 403 Forbidden");
+                    header ('Location: '.$this->getConfig()->getShopHomeURL());
+                    oxRegistry::getUtils()->showMessageAndExit('');
+                    break;
+                case 401:
+                    header ("HTTP/1.1 401 Unauthorized");
+                    header ('Location: '.$this->getConfig()->getShopHomeURL());
+                    oxRegistry::getUtils()->showMessageAndExit('');
+                    break;
                 case 0:
                     header ('Location: '.$this->getConfig()->getShopHomeURL());
                     oxRegistry::getUtils()->showMessageAndExit('');
