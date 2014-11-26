@@ -105,10 +105,10 @@ class toxidCurl extends oxSuperCfg
 
     /**
      * Deprecated!
-     * resturns a single instance of this class
+     * returns a single instance of this class
      *
      * @return toxidCurl
-     * @deprec Use the registry pattern please
+     * @deprecated Use the registry pattern please
      */
     public static function getInstance()
     {
