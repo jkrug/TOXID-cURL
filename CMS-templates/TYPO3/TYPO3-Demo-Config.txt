@@ -316,5 +316,6 @@ page.config {
 }
 page.10 < lib.mainnav
 page.20 < lib.content
-page.30 < lib.metadata
+page.30 < lib.sections
+page.40 < lib.metadata
 page.wrap = <?xml version="1.0" encoding="utf-8"?><toxid>|</toxid>
