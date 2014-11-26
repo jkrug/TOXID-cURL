@@ -115,11 +115,17 @@ class toxidCurl extends oxSuperCfg
      */
     protected $_aToxidCurlLogin = null;
 
-     /**
+    /**
      * array of strings with language specific toxidCurlPwd
      * @var array
      */
     protected $_aToxidCurlPwd = null;
+
+    /**
+     * bool if cURL metadata has been parsed
+     * @var array
+     */
+    protected $_blToxidParsedMeta = false;
 
     /**
      * Deprecated!
@@ -193,39 +199,12 @@ class toxidCurl extends oxSuperCfg
         $sText = $this->_getSnippetFromXml($snippet);
         $sText = $this->_rewriteUrls($sText, null, $blMultiLang);
 
-        $sPageTitle = $this->_rewriteUrls($this->_getSnippetFromXml('//metadata//title'), null, $blMultiLang);
-
-        $sPageDescription = $this->_rewriteUrls($this->_getSnippetFromXml('//metadata//description'), null, $blMultiLang);
-
-        $sPageKeywords = $this->_rewriteUrls($this->_getSnippetFromXml('//metadata//keywords'), null, $blMultiLang);
-
         $oConf   = $this->getConfig();
         $sShopId = $oConf->getActiveShop()->getId();
         $sLangId = oxRegistry::getLang()->getBaseLanguage();
         $sText   = oxRegistry::get("oxUtilsView")->parseThroughSmarty(
             $sText,
             $snippet.'_'.$sShopId.'_'.$sLangId,
-            null,
-            true
-        );
-
-        $this->_sPageTitle = oxRegistry::get("oxUtilsView")->parseThroughSmarty(
-            $sPageTitle,
-            '//metadata//title_'.$sShopId.'_'.$sLangId,
-            null,
-            true
-        );
-
-        $this->_sPageDescription = oxRegistry::get("oxUtilsView")->parseThroughSmarty(
-            $sPageDescription,
-            '//metadata//description_'.$sShopId.'_'.$sLangId,
-            null,
-            true
-        );
-
-        $this->_sPageKeywords = oxRegistry::get("oxUtilsView")->parseThroughSmarty(
-            $sPageKeywords,
-            '//metadata//keywords_'.$sShopId.'_'.$sLangId,
             null,
             true
         );
@@ -255,6 +234,92 @@ class toxidCurl extends oxSuperCfg
         }
 
         return $sText;
+    }
+
+    /**
+     * returns the requested Metadata
+     * @param string $metadata
+     * @param bool $blMultiLang
+     * @param array $customPage
+     * @return string
+     */
+    public function getCmsMetadata($metadata=null, $blMultiLang = false, $customPage = null)
+    {
+        $aMetadataKeys = array('title', 'description', 'keywords');
+
+        if($metadata === null || !in_array($metadata, $aMetadataKeys)) {
+            return 'No TOXID Metadata key given: title, description or keywords';
+        }
+
+        if($customPage !== null) {
+            $this->_aCustomPage = $customPage;
+        }
+
+        $oConf   = $this->getConfig();
+        $sShopId = $oConf->getActiveShop()->getId();
+        $sLangId = oxRegistry::getLang()->getBaseLanguage();
+
+        if($this->_blToxidParsedMeta === false || $customPage !== null) {
+
+            // Title
+            $sMetadata = $this->_rewriteUrls($this->_getSnippetFromXml('//metadata//title'), null, $blMultiLang);
+
+            $this->_sPageTitle = oxRegistry::get("oxUtilsView")->parseThroughSmarty(
+                $sMetadata,
+                '//metadata//title_'.$sShopId.'_'.$sLangId,
+                null,
+                true
+            );
+
+            // Description
+            $sMetadata = $this->_rewriteUrls($this->_getSnippetFromXml('//metadata//description'), null, $blMultiLang);
+
+            $this->_sPageDescription = oxRegistry::get("oxUtilsView")->parseThroughSmarty(
+                $sMetadata,
+                '//metadata//description_'.$sShopId.'_'.$sLangId,
+                null,
+                true
+            );
+
+            // Keywords
+            $sMetadata = $this->_rewriteUrls($this->_getSnippetFromXml('//metadata//keywords'), null, $blMultiLang);
+
+            $this->_sPageKeywords = oxRegistry::get("oxUtilsView")->parseThroughSmarty(
+                $sMetadata,
+                '//metadata//keywords_'.$sShopId.'_'.$sLangId,
+                null,
+                true
+            );
+
+            $this->_blToxidParsedMeta = true;
+
+        }
+
+        $this->_aCustomPage = null;
+
+        if($metadata === 'title') {
+
+            $sMetadata = $this->_sPageTitle;
+
+        } elseif($metadata === 'description') {
+
+            $sMetadata = $this->_sPageDescription;
+
+        } elseif($metadata === 'keywords') {
+
+            $sMetadata = $this->_sPageKeywords;
+
+        } else {
+
+            $sMetadata = '';
+        }
+
+        if($sMetadata && $this->_sCharset !== 'utf-8')
+        {
+            return mb_convert_encoding($sMetadata, $this->_sCharset, "auto");
+        }
+
+        return $sMetadata;
     }
 
     /**
