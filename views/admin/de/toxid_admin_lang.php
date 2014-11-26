@@ -26,6 +26,8 @@ $aLang = array(
     'TOXID_CACHE_ENABLED'		=> 'Externen CMS-Inhalt lokal zwischenspeichern',
     'TOXID_CACHE_TTL'			=> 'Gültigkeitsdauer (TTL)',
     'TOXID_IN_SECONDS'			=> 'Sekunden (z.B. 3600)',
+    'TOXID_LOGIN'               => 'Zugangsschutz Login',
+    'TOXID_PWD'                 => 'Zugangsschutz Passwort',
 );
 
 if (oxRegistry::getConfig()->getConfigParam('iUtfMode') === 0) {

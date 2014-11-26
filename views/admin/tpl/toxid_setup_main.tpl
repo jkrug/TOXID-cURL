@@ -126,6 +126,22 @@ function _groupExp(el) {
                                             <input type="text" name="editval[aToxidCurlSeoSnippets][[{ $lang }]]" value="[{$aToxidCurlSeoSnippets.$lang}]" size="70">
                                     </td>
                                 </tr>
+                                <tr>
+                                    <td class="edittext">
+                                        [{oxmultilang ident="TOXID_LOGIN"}]:
+                                    </td>
+                                    <td class="edittext">
+                                            <input type="text" name="editval[aToxidCurlLogin][[{ $lang }]]" value="[{$aToxidCurlLogin.$lang}]" size="40" autocomplete="off">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="edittext">
+                                        [{oxmultilang ident="TOXID_PWD"}]:
+                                    </td>
+                                    <td class="edittext">
+                                            <input type="password" name="editval[aToxidCurlPwd][[{ $lang }]]" value="[{$aToxidCurlPwd.$lang}]" size="40" autocomplete="off">
+                                    </td>
+                                </tr>
                             </table>
                         </fieldset>
                     [{/foreach}]

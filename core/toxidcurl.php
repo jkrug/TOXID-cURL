@@ -110,6 +110,18 @@ class toxidCurl extends oxSuperCfg
     protected $_sCharset = 'utf-8';
 
     /**
+     * array of strings with language specific toxidCurlLogin
+     * @var array
+     */
+    protected $_aToxidCurlLogin = null;
+
+     /**
+     * array of strings with language specific toxidCurlPwd
+     * @var array
+     */
+    protected $_aToxidCurlPwd = null;
+
+    /**
      * Deprecated!
      * resturns a single instance of this class
      *
@@ -269,7 +281,10 @@ class toxidCurl extends oxSuperCfg
         // if not get remote content
         if(!$this->_iCacheTTL || !($cachedPage = $this->_getCachedXml($sUrl))) {
 
-            $aPage = $this->_getRemoteContent($sUrl);
+            $sLogin = $this->_getToxidLangCurlLogin();
+            $sPwd = $this->_getToxidLangCurlPwd();
+
+            $aPage = $this->_getRemoteContent($sUrl, $sLogin, $sPwd);
 
             switch ($aPage['info']['http_code'])
             {
@@ -323,14 +338,21 @@ class toxidCurl extends oxSuperCfg
      *   )
      * )
      * @param $sUrl
+     * @param $sLogin
+     * @param $sPwd
      * @return array
      */
-    protected function _getRemoteContent($sUrl)
+    protected function _getRemoteContent($sUrl, $sLogin='', $sPwd='')
     {
         $aResult = array();
         $curl_handle = curl_init();
         curl_setopt($curl_handle, CURLOPT_URL, $sUrl);
         curl_setopt($curl_handle, CURLOPT_RETURNTRANSFER, 1);
+
+        // Use cURL Login/Password
+        if($sLogin.$sPwd !== '') {
+            curl_setopt($curl_handle, CURLOPT_USERPWD, $sLogin.':'.$sPwd);
+        }
 
         /* Forward POST requests like a boss */
         if (!empty($_POST)) {
@@ -499,8 +521,10 @@ class toxidCurl extends oxSuperCfg
         }
         $this->_aSearchCache[$sKeywords] = '';
         $sSearchStartUrl = $this->_getToxidSearchUrl();
+        $sLogin = $this->_getToxidLangCurlLogin();
+        $sPwd = $this->_getToxidLangCurlPwd();
 
-        $aSearchResults = $this->_getRemoteContent($sSearchStartUrl.$sKeywords);
+        $aSearchResults = $this->_getRemoteContent($sSearchStartUrl.$sKeywords, $sLogin, $sPwd);
 
         if ($aSearchResults['info']['http_code'] == 200) {
             $sSearchResult = $aSearchResults['content'];
@@ -617,5 +641,51 @@ class toxidCurl extends oxSuperCfg
 
         return $this->_iCacheTTL;
     }
+
+    /**
+     * Get language specific Toxid access control login
+     * @param int $iLangId
+     * @param bool $blReset reset object value, and get url again
+     * @return string
+     */
+    protected function _getToxidLangCurlLogin($iLangId = null, $blReset = false)
+    {
+        if ($this->_aToxidCurlLogin === null || $blReset) {
+            $this->_aToxidCurlLogin = $this->getConfig()->getConfigParam('aToxidCurlLogin');
+        }
+        if ($iLangId === null) {
+            $iLangId = oxRegistry::getLang()->getBaseLanguage();
+        }
+
+        return isset($this->_aToxidCurlLogin[$iLangId]) ? $this->_aToxidCurlLogin[$iLangId] : '';
+    }
+
+    /**
+     * Get language specific Toxid access control password
+     * @param int $iLangId
+     * @param bool $blReset reset object value, and get url again
+     * @return string
+     */
+    protected function _getToxidLangCurlPwd($iLangId = null, $blReset = false)
+    {
+        if ($this->_aToxidCurlPwd === null || $blReset) {
+
+            $oDecryptor = oxNew('oxDecryptor');
+            $encryptKey = $this->getConfig()->getConfigParam('dbPwd');
+            $this->_aToxidCurlPwd = $this->getConfig()->getConfigParam('aToxidCurlPwd');
+
+            foreach($this->_aToxidCurlPwd as $lang => $value) {
+                if($value !== '') {
+                    $this->_aToxidCurlPwd[$lang] = $oDecryptor->decrypt($value, $encryptKey);
+                }
+            }
+        }
+        if ($iLangId === null) {
+            $iLangId = oxRegistry::getLang()->getBaseLanguage();
+        }
+
+        return isset($this->_aToxidCurlPwd[$iLangId]) ? $this->_aToxidCurlPwd[$iLangId] : '';
+    }
+
 
 }
