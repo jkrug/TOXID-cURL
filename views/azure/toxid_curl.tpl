@@ -4,6 +4,7 @@
 [{capture append="oxidBlock_content"}]
 	<div id="toxid_curl_main">
 		[{$toxid->getCmsSnippet('content')}]
+		[{* $toxid->getCmsSnippet('sections/left') *}]
 	</div>
 [{/capture}]
 
