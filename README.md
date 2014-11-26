@@ -81,6 +81,22 @@ and in tpl/search.tpl (if you use basic theme), or tpl/page/search/search.tpl ad
         </div>
     [{/if}]
 
+**7 Use OXIDs file cache for integrating snippets into navigation**
+
+When using snippets in omnipresent parts of the OXID eShop you probably don't want TOXID to request your CMS on every shop request. In this case you can use the TTL parameter to cache the parsed snippet markup for a given amount of time:
+
+    [{assign var='toxid' value=$oViewConf->getToxid()}]
+    [{ $toxid->getCmsSnippet('cms_navigation', false, null, 1800) }]
+
+This stores the requested snippet in OXIDs file cache for 30 minutes (1800 seconds). Further calls with the same parameter signature will be served from the file cache until one of the following conditions is met:
+
+*    Given TTL has expired
+*    The CMS has already been queried in previous snippet calls without TTL parameter. So when requesting a content page via the `toxid_curl` controller the snippet calls with TTL will be served from the fresh loaded CMS response instead of the cache content
+*    When the request header `Cache-Control: no-cache` is set. This way you can refresh the cached snippets bei hitting `ctrl + shift + R` in your browser
+*    When OXIDs tmp/compile directory is cleared
+
+For further information about TTL handling see `oxUtils::toFileCache()`
+
 **8 Adjust your templates!**
 
 
