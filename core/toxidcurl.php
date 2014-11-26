@@ -98,6 +98,12 @@ class toxidCurl extends oxSuperCfg
     protected $_aSearchCache = array();
 
     /**
+     * stores custom page
+     * @var string
+     */
+    protected $_sCustomPage = null;
+
+    /**
      * Deprecated!
      * resturns a single instance of this class
      *
@@ -154,6 +160,7 @@ class toxidCurl extends oxSuperCfg
      * returns the called snippet
      * @param string $snippet
      * @param bool $blMultiLang
+     * @param string $customPage
      * @return string
      */
     public function getCmsSnippet($snippet=null, $blMultiLang = false, $customPage = null)
@@ -163,7 +170,7 @@ class toxidCurl extends oxSuperCfg
         }
 
         if ($customPage != '') {
-            $this->_aCustomPage = $customPage;
+            $this->_sCustomPage = $customPage;
         }
 
         $sText = $this->_getSnippetFromXml($snippet);
@@ -206,7 +213,7 @@ class toxidCurl extends oxSuperCfg
             true
         );
         
-        $this->_aCustomPage = null;
+        $this->_sCustomPage = null;
 
         /* if actual site is ssl-site, replace all image-sources with ssl-urls */
         if ($oConf->isSsl()) {
@@ -431,7 +438,7 @@ class toxidCurl extends oxSuperCfg
      */
     protected function _getToxidCustomPage()
     {
-        return ($this->_aCustomPage !== null) ? $this->_aCustomPage : '';
+        return ($this->_sCustomPage !== null) ? $this->_sCustomPage : '';
     }
 
     /**
