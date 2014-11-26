@@ -1,18 +1,30 @@
 [{assign var="tpl" value=$oViewConf->getActTplName()}]
-[{assign var='toxid' value=$oViewConf->getToxid()}]
+[{assign var="toxid" value=$oViewConf->getToxid()}]
+
+[{*assign var="_sMetaTitle" value=$toxid->getCmsMetadata('title')*}]
+[{*assign var="description" value=$toxid->getCmsMetadata('description')*}]
+[{*assign var="keywords" value=$toxid->getCmsMetadata('keywords')*}]
+
+[{assign var="border" value=$toxid->getCmsSnippet('sections/border')}]
+
+[{if $border}]
+    <div class="header">
+        [{$border}]
+    </div>
+[{/if}]
 
 [{capture append="oxidBlock_content"}]
-	<div id="toxid_curl_main">
-		[{$toxid->getCmsSnippet('content')}]
-		[{* $toxid->getCmsSnippet('sections/left') *}]
-	</div>
+    <div id="toxid_curl_main">
+        [{$toxid->getCmsSnippet('content')}]
+        [{* $toxid->getCmsSnippet('sections/left') *}]
+    </div>
 [{/capture}]
 
 [{capture append="oxidBlock_sidebar"}]
-	<div id="toxid_curl_sub">
-		[{* $toxid->getCmsSnippet('sidebar') *}]
-		[{$toxid->getCmsSnippet('navigation')}]
-	</div>
+    <div id="toxid_curl_sub">
+        [{* $toxid->getCmsSnippet('sidebar') *}]
+        [{$toxid->getCmsSnippet('navigation')}]
+    </div>
 [{/capture}]
 
 [{include file="layout/page.tpl" sidebar="Left"}]
