@@ -98,11 +98,17 @@ class toxidCurl extends oxSuperCfg
     protected $_aSearchCache = array();
 
     /**
+     * stores custom page
+     * @var string
+     */
+    protected $_sCustomPage = null;
+
+    /**
      * Deprecated!
-     * resturns a single instance of this class
+     * returns a single instance of this class
      *
      * @return toxidCurl
-     * @deprec Use the registry pattern please
+     * @deprecated Use the registry pattern please
      */
     public static function getInstance()
     {
@@ -154,16 +160,32 @@ class toxidCurl extends oxSuperCfg
      * returns the called snippet
      * @param string $snippet
      * @param bool $blMultiLang
+     * @param string $customPage
+     * @param int $iCacheTtl
      * @return string
      */
-    public function getCmsSnippet($snippet=null, $blMultiLang = false, $customPage = null)
+    public function getCmsSnippet($snippet=null, $blMultiLang = false, $customPage = null, $iCacheTtl = null)
     {
         if($snippet == null) {
             return '<strong style="color:red;">TOXID: Please add part, you want to display!</strong>';
         }
 
+        $oConf        = $this->getConfig();
+        $sShopId      = $oConf->getActiveShop()->getId();
+        $sLangId      = oxRegistry::getLang()->getBaseLanguage();
+        $oUtils       = oxRegistry::getUtils();
+        $oUtilsServer = oxRegistry::get('oxUtilsServer');
+
+        // check if snippet text has a ttl and is in cache
+        $sCacheIdent = 'toxid_snippet_'.$snippet.'_'.$sShopId.'_'.$sLangId;
+        if($iCacheTtl !== null && $this->_oSxToxid === null
+           && ($sCacheContent = $oUtils->fromFileCache($sCacheIdent))
+           && $oUtilsServer->getServerVar('HTTP_CACHE_CONTROL') !== 'no-cache') {
+             return $sCacheContent;
+        }
+
         if ($customPage != '') {
-            $this->_aCustomPage = $customPage;
+            $this->_sCustomPage = $customPage;
         }
 
         $sText = $this->_getSnippetFromXml($snippet);
@@ -175,10 +197,7 @@ class toxidCurl extends oxSuperCfg
 
         $sPageKeywords = $this->_rewriteUrls($this->_getSnippetFromXml('//metadata//keywords', null, $blMultiLang));
 
-        $oConf   = $this->getConfig();
-        $sShopId = $oConf->getActiveShop()->getId();
-        $sLangId = oxRegistry::getLang()->getBaseLanguage();
-        $sText   = oxRegistry::get("oxUtilsView")->parseThroughSmarty(
+        $sText = oxRegistry::get("oxUtilsView")->parseThroughSmarty(
             $sText,
             $snippet.'_'.$sShopId.'_'.$sLangId,
             null,
@@ -206,7 +225,7 @@ class toxidCurl extends oxSuperCfg
             true
         );
         
-        $this->_aCustomPage = null;
+        $this->_sCustomPage = null;
 
         /* if actual site is ssl-site, replace all image-sources with ssl-urls */
         if ($oConf->isSsl()) {
@@ -225,14 +244,16 @@ class toxidCurl extends oxSuperCfg
             }
         }
 
-        $sShopCharset = oxRegistry::getLang()->translateString('charset');
-        if($oConf->getConfigParam('iUtfMode') === 0)
-        {
+        if($oConf->getConfigParam('iUtfMode') === 0) {
             $sText = utf8_decode($sText);
-            return $sText;
-        } else {
-            return $sText;
         }
+
+        // save in cache if ttl is set
+        if($iCacheTtl !== null) {
+            $oUtils->toFileCache($sCacheIdent, $sText, $iCacheTtl);
+        }
+
+        return $sText;
     }
 
     /**
@@ -298,7 +319,7 @@ class toxidCurl extends oxSuperCfg
         curl_setopt($curl_handle, CURLOPT_RETURNTRANSFER, 1);
 
         /* Forward POST requests like a boss */
-        if (!empty($_POST)) {
+        if (!empty($_POST) && ! $this->getConfig()->getConfigParam('bToxidDontPassPostVarsToCms')) {
             $postRequest = http_build_query($_POST, '', '&');
             curl_setopt($curl_handle, CURLOPT_POST, 1);
             curl_setopt($curl_handle, CURLOPT_POSTFIELDS, $postRequest);
@@ -431,7 +452,7 @@ class toxidCurl extends oxSuperCfg
      */
     protected function _getToxidCustomPage()
     {
-        return ($this->_aCustomPage !== null) ? $this->_aCustomPage : '';
+        return ($this->_sCustomPage !== null) ? $this->_sCustomPage : '';
     }
 
     /**

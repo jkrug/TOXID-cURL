@@ -64,6 +64,7 @@ function _groupExp(el) {
                                     <li><a href="https://github.com/Tr0nYx" target="_blank">Tr0nYx</a></li>
                                     <li><a href="https://github.com/pixelkrieg" target="_blank">pixelkrieg</a></li>
                                     <li><a href="https://github.com/wanis" target="_blank">wanis</a></li>
+                                    <li><a href="https://github.com/adriankirchner" target="_blank">adriankirchner</a></li>
                                 </ul>
                             </td>
                             <td valign="top">
@@ -132,8 +133,22 @@ function _groupExp(el) {
                     [{/foreach}]
                     <fieldset>
                         <legend>[{oxmultilang ident="TOXID_GENERAL"}]</legend>
-                        <input type="checkbox" name="editval[toxidDontRewriteUrls]" value="1" [{if $toxidDontRewriteUrls}]checked="checked"[{/if}]>
-                        [{oxmultilang ident="TOXID_DONT_REWRITE"}]
+                        <table>
+                            <tr>
+                                <td valign="top" class="edittext">
+                                    <input type="hidden" name="editval[toxidDontRewriteUrls]" value="0">
+                                    <input type="checkbox" name="editval[toxidDontRewriteUrls]" value="1" [{if $toxidDontRewriteUrls}]checked="checked"[{/if}]>
+                                    [{oxmultilang ident="TOXID_DONT_REWRITE"}]
+                                </td>
+                            </tr>
+                            <tr>
+                                <td valign="top" class="edittext">
+                                    <input type="hidden" name="editval[bToxidDontPassPostVarsToCms]" value="0">
+                                    <input type="checkbox" name="editval[bToxidDontPassPostVarsToCms]" value="1" [{if $bToxidDontPassPostVarsToCms}]checked="checked"[{/if}]>
+                                    [{oxmultilang ident="TOXID_DONT_PASSTHROUGH"}]
+                                </td>
+                            </tr>
+                        </table>
                     </fieldset>
                 </dd>
             </dl>
