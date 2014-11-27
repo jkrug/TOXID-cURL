@@ -132,8 +132,22 @@ function _groupExp(el) {
                     [{/foreach}]
                     <fieldset>
                         <legend>[{oxmultilang ident="TOXID_GENERAL"}]</legend>
-                        <input type="checkbox" name="editval[toxidDontRewriteUrls]" value="1" [{if $toxidDontRewriteUrls}]checked="checked"[{/if}]>
-                        [{oxmultilang ident="TOXID_DONT_REWRITE"}]
+                        <table>
+                            <tr>
+                                <td valign="top" class="edittext">
+                                    <input type="hidden" name="editval[toxidDontRewriteUrls]" value="0">
+                                    <input type="checkbox" name="editval[toxidDontRewriteUrls]" value="1" [{if $toxidDontRewriteUrls}]checked="checked"[{/if}]>
+                                    [{oxmultilang ident="TOXID_DONT_REWRITE"}]
+                                </td>
+                            </tr>
+                            <tr>
+                                <td valign="top" class="edittext">
+                                    <input type="hidden" name="editval[bToxidDontPassPostVarsToCms]" value="0">
+                                    <input type="checkbox" name="editval[bToxidDontPassPostVarsToCms]" value="1" [{if $bToxidDontPassPostVarsToCms}]checked="checked"[{/if}]>
+                                    [{oxmultilang ident="TOXID_DONT_PASSTHROUGH"}]
+                                </td>
+                            </tr>
+                        </table>
                     </fieldset>
                 </dd>
             </dl>

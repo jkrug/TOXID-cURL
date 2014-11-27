@@ -319,7 +319,7 @@ class toxidCurl extends oxSuperCfg
         curl_setopt($curl_handle, CURLOPT_RETURNTRANSFER, 1);
 
         /* Forward POST requests like a boss */
-        if (!empty($_POST)) {
+        if (!empty($_POST) && ! $this->getConfig()->getConfigParam('bToxidDontPassPostVarsToCms')) {
             $postRequest = http_build_query($_POST, '', '&');
             curl_setopt($curl_handle, CURLOPT_POST, 1);
             curl_setopt($curl_handle, CURLOPT_POSTFIELDS, $postRequest);

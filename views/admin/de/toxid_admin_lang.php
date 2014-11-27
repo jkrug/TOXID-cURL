@@ -18,6 +18,7 @@ $aLang = array(
     'TOXID_SEARCH_URL'          => 'URL zum Aufruf der Suche (optional)',
     'TOXID_PARAM'               => 'TOXID URL-Parameter',
     'TOXID_DONT_REWRITE'        => 'URLs nicht umschreiben - Aufrufe führen auf externe CMS-Seite',
+    'TOXID_DONT_PASSTHROUGH'    => 'POST-Parameter <b><u>nicht</u></b> an CMS durchreichen',
     'TOXID_LOOKING_FOR'         => 'gesucht!',
     'TOXID_GENERAL'             => 'Allgemein',
     'TOXID_BECOME_PARTNER'      => 'Partner werden',

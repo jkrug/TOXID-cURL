@@ -18,6 +18,7 @@ $aLang = array(
     'TOXID_SEARCH_URL'          => 'URL to call the searchpage (optional)',
     'TOXID_PARAM'               => 'TOXID URL parameter',
     'TOXID_DONT_REWRITE'        => 'Don\'t rewrite the URLs - Users will linked to the external site.',
+    'TOXID_DONT_PASSTHROUGH'    => '<b><u>Don\'t</u></b> pass POST parameters to CMS',
     'TOXID_LOOKING_FOR'         => 'Support us with PayPal!',
     'TOXID_GENERAL'             => 'General',
     'TOXID_BECOME_PARTNER'      => 'Become a partner',
