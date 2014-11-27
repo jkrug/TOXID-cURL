@@ -62,5 +62,4 @@ function smarty_function_toxid_load( $params, &$smarty )
 
     $smarty->assign($params['assign'], $oObject);
 
-
 }

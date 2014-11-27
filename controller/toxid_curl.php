@@ -22,14 +22,14 @@ class toxid_curl extends oxUBase
      * @var string
      */
     protected $_sThisTemplate = 'toxid_curl.tpl';
-    
+
     /**
      * stores URL from which typo3 content is loaded.
      * @var array
      */
     protected $_aSourceUrlByLang = null;
-    
-    
+
+
     /**
      * Template variable getter. Returns tag title
      *
@@ -40,7 +40,7 @@ class toxid_curl extends oxUBase
         $sTitle = toxidCurl::getInstance()->_sPageTitle;
         return $sTitle;
     }
-    
+
     /**
      * Template variable getter. Returns meta description
      *
@@ -59,10 +59,10 @@ class toxid_curl extends oxUBase
                 $this->_sMetaDescription = $this->_prepareMetaDescription( $this->_xMetaDescription );
             }
         }
-        
+
         return $this->_sMetaDescription;
     }
-    
+
     /**
      * Template variable getter. Returns meta keywords
      *
@@ -84,7 +84,7 @@ class toxid_curl extends oxUBase
 
         return $this->_sMetaKeywords;
     }
-    
+
     /**
      * regular render function
      */

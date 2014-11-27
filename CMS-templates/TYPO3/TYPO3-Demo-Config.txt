@@ -21,6 +21,260 @@ lib.content = COA
 lib.content.wrap = <content><![CDATA[|]]></content>
 lib.content.10 < styles.content.get
 
+#############################
+######### SECTIONS ##########
+#############################
+#
+#  0  = main
+#  1  = left
+#  2  = right
+#  3  = border
+#  4  = main2
+#
+#  10 = footer1
+#  11 = footer2
+#  12 = footer3
+#
+#  20 = middle1
+#  21 = middle2
+#  22 = middle3
+#
+#  30 = special1
+#  31 = special2
+#  32 = special3
+#  33 = special4
+#  34 = special5
+#  35 = special6
+#  36 = special7
+#  37 = special8
+#  38 = special9
+#  39 = special10
+#
+#############################
+#
+# Get section content in Oxid
+# [{$toxid->getCmsSnippet('sections/main')}]
+#
+#############################
+lib.sections = COA
+lib.sections {
+	wrap = <sections>|</sections>
+
+	# main
+	10 = TEXT
+	10.wrap = <main><![CDATA[|]]></main>
+	10.cObject = COA
+	10.cObject {
+		1 < styles.content.get
+		1.select.where = colPos=0
+		1.select.where.insertData = 1
+	}
+
+	# left
+	20 = TEXT
+	20.wrap = <left><![CDATA[|]]></left>
+	20.cObject = COA
+	20.cObject {
+		1 < styles.content.get
+		1.select.where = colPos=1
+		1.select.where.insertData = 1
+	}
+
+	# right
+	30 = TEXT
+	30.wrap = <right><![CDATA[|]]></right>
+	30.cObject = COA
+	30.cObject {
+		1 < styles.content.get
+		1.select.where = colPos=2
+		1.select.where.insertData = 1
+	}
+
+	# border
+#	40 = TEXT
+#	40.wrap = <border><![CDATA[|]]></border>
+#	40.cObject = COA
+#	40.cObject {
+#		1 < styles.content.get
+#		1.select.where = colPos=3
+#		1.select.where.insertData = 1
+#	}
+
+	# main2
+#	50 = TEXT
+#	50.wrap = <main2><![CDATA[|]]></main2>
+#	50.cObject = COA
+#	50.cObject {
+#		1 < styles.content.get
+#		1.select.where = colPos=4
+#		1.select.where.insertData = 1
+#	}
+
+	# footer1
+#	60 = TEXT
+#	60.wrap = <footer1><![CDATA[|]]></footer1>
+#	60.cObject = COA
+#	60.cObject {
+#		1 < styles.content.get
+#		1.select.where = colPos=10
+#		1.select.where.insertData = 1
+#	}
+
+	# footer2
+#	70 = TEXT
+#	70.wrap = <footer2><![CDATA[|]]></footer2>
+#	70.cObject = COA
+#	70.cObject {
+#		1 < styles.content.get
+#		1.select.where = colPos=11
+#		1.select.where.insertData = 1
+#	}
+
+	# footer3
+#	80 = TEXT
+#	80.wrap = <footer3><![CDATA[|]]></footer3>
+#	80.cObject = COA
+#	80.cObject {
+#		1 < styles.content.get
+#		1.select.where = colPos=12
+#		1.select.where.insertData = 1
+#	}
+
+	# middle1
+#	90 = TEXT
+#	90.wrap = <middle1><![CDATA[|]]></middle1>
+#	90.cObject = COA
+#	90.cObject {
+#		1 < styles.content.get
+#		1.select.where = colPos=20
+#		1.select.where.insertData = 1
+#	}
+
+	# middle2
+#	100 = TEXT
+#	100.wrap = <middle2><![CDATA[|]]></middle2>
+#	100.cObject = COA
+#	100.cObject {
+#		1 < styles.content.get
+#		1.select.where = colPos=21
+#		1.select.where.insertData = 1
+#	}
+
+	# middle3
+#	110 = TEXT
+#	110.wrap = <middle3><![CDATA[|]]></middle3>
+#	110.cObject = COA
+#	110.cObject {
+#		1 < styles.content.get
+#		1.select.where = colPos=22
+#		1.select.where.insertData = 1
+#	}
+
+
+	# special1
+#	120 = TEXT
+#	120.wrap = <special1><![CDATA[|]]></special1>
+#	120.cObject = COA
+#	120.cObject {
+#		1 < styles.content.get
+#		1.select.where = colPos=30
+#		1.select.where.insertData = 1
+#	}
+
+	# special2
+#	130 = TEXT
+#	130.wrap = <special2><![CDATA[|]]></special2>
+#	130.cObject = COA
+#	130.cObject {
+#		1 < styles.content.get
+#		1.select.where = colPos=31
+#		1.select.where.insertData = 1
+#	}
+
+	# special3
+#	140 = TEXT
+#	140.wrap = <special3><![CDATA[|]]></special3>
+#	140.cObject = COA
+#	140.cObject {
+#		1 < styles.content.get
+#		1.select.where = colPos=32
+#		1.select.where.insertData = 1
+#	}
+
+	# special4
+#	150 = TEXT
+#	150.wrap = <special4><![CDATA[|]]></special4>
+#	150.cObject = COA
+#	150.cObject {
+#		1 < styles.content.get
+#		1.select.where = colPos=33
+#		1.select.where.insertData = 1
+#	}
+
+	# special5
+#	160 = TEXT
+#	160.wrap = <special5><![CDATA[|]]></special5>
+#	160.cObject = COA
+#	160.cObject {
+#		1 < styles.content.get
+#		1.select.where = colPos=34
+#		1.select.where.insertData = 1
+#	}
+
+	# special6
+#	170 = TEXT
+#	170.wrap = <special6><![CDATA[|]]></special6>
+#	170.cObject = COA
+#	170.cObject {
+#		1 < styles.content.get
+#		1.select.where = colPos=35
+#		1.select.where.insertData = 1
+#	}
+
+	# special7
+#	180 = TEXT
+#	180.wrap = <special7><![CDATA[|]]></special7>
+#	180.cObject = COA
+#	180.cObject {
+#		1 < styles.content.get
+#		1.select.where = colPos=36
+#		1.select.where.insertData = 1
+#	}
+
+	# special8
+#	190 = TEXT
+#	190.wrap = <special8><![CDATA[|]]></special8>
+#	190.cObject = COA
+#	190.cObject {
+#		1 < styles.content.get
+#		1.select.where = colPos=37
+#		1.select.where.insertData = 1
+#	}
+
+	# special9
+#	200 = TEXT
+#	200.wrap = <special9><![CDATA[|]]></special9>
+#	200.cObject = COA
+#	200.cObject {
+#		1 < styles.content.get
+#		1.select.where = colPos=38
+#		1.select.where.insertData = 1
+#	}
+
+	# special10
+#	210 = TEXT
+#	210.wrap = <special10><![CDATA[|]]></special10>
+#	210.cObject = COA
+#	210.cObject {
+#		1 < styles.content.get
+#		1.select.where = colPos=39
+#		1.select.where.insertData = 1
+#	}
+
+}
+
+
+########## METADATA ##########
 lib.metadata = COA
 lib.metadata {
 	wrap = <metadata>|</metadata>
@@ -62,5 +316,6 @@ page.config {
 }
 page.10 < lib.mainnav
 page.20 < lib.content
-page.30 < lib.metadata
+page.30 < lib.sections
+page.40 < lib.metadata
 page.wrap = <?xml version="1.0" encoding="utf-8"?><toxid>|</toxid>
