@@ -64,6 +64,7 @@ function _groupExp(el) {
                                     <li><a href="https://github.com/Tr0nYx" target="_blank">Tr0nYx</a></li>
                                     <li><a href="https://github.com/pixelkrieg" target="_blank">pixelkrieg</a></li>
                                     <li><a href="https://github.com/wanis" target="_blank">wanis</a></li>
+                                    <li><a href="https://github.com/adriankirchner" target="_blank">adriankirchner</a></li>
                                 </ul>
                             </td>
                             <td valign="top">
