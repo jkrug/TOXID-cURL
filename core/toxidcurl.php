@@ -497,6 +497,9 @@ class toxidCurl extends oxSuperCfg
             unset($match);
         }
 
+        // strip double http://example.com/http://example.com
+        $sContent = preg_replace('/href=(\'|")(http[s]{0,1}:\/\/.+?)\/(http[s]{0,1}:\/\/.+?)(\'|")/', 'href=$1$2/$1', $sContent);
+
         return $sContent;
     }
 
