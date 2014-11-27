@@ -11,13 +11,13 @@ class toxid_setup_main extends oxAdminView
     {
         $oConf = oxRegistry::getConfig();
 
-        $this->_aViewData['aToxidCurlSource']              = $oConf->getShopConfVar('aToxidCurlSource');
-        $this->_aViewData['aToxidCurlSourceSsl']           = $oConf->getShopConfVar('aToxidCurlSourceSsl');
-        $this->_aViewData['aToxidSearchUrl']               = $oConf->getShopConfVar('aToxidSearchUrl');
-        $this->_aViewData['aToxidCurlUrlParams']           = $oConf->getShopConfVar('aToxidCurlUrlParams');
-        $this->_aViewData['aToxidCurlSeoSnippets']         = $oConf->getShopConfVar('aToxidCurlSeoSnippets');
-        $this->_aViewData['toxidDontRewriteUrls']          = $oConf->getShopConfVar('toxidDontRewriteUrls');
-        $this->_aViewData['bToxidDontPassPostVarsToCms']   = $oConf->getShopConfVar('bToxidDontPassPostVarsToCms');
+        $this->_aViewData['aToxidCurlSource']            = $oConf->getShopConfVar('aToxidCurlSource');
+        $this->_aViewData['aToxidCurlSourceSsl']         = $oConf->getShopConfVar('aToxidCurlSourceSsl');
+        $this->_aViewData['aToxidSearchUrl']             = $oConf->getShopConfVar('aToxidSearchUrl');
+        $this->_aViewData['aToxidCurlUrlParams']         = $oConf->getShopConfVar('aToxidCurlUrlParams');
+        $this->_aViewData['aToxidCurlSeoSnippets']       = $oConf->getShopConfVar('aToxidCurlSeoSnippets');
+        $this->_aViewData['toxidDontRewriteUrls']        = $oConf->getShopConfVar('toxidDontRewriteUrls');
+        $this->_aViewData['bToxidDontPassPostVarsToCms'] = $oConf->getShopConfVar('bToxidDontPassPostVarsToCms');
 
         return parent::render();
     }
