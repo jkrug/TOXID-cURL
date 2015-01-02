@@ -24,8 +24,8 @@
     <div id="toxid_curl_sub">
         [{* $toxid->getCmsSnippet('sidebar') *}]
         [{$toxid->getCmsSnippet('navigation')}]
-	[{* Cache navigation snippet for 1800 seconds *}]
-	[{* $toxid->getCmsSnippet('navigation', false, null, 1800) *}]
+        [{* Cache navigation snippet for 1800 seconds *}]
+        [{* $toxid->getCmsSnippet('navigation', false, null, 1800) *}]
     </div>
 [{/capture}]
 
