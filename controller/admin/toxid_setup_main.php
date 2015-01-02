@@ -10,19 +10,18 @@ class toxid_setup_main extends oxAdminView
     public function render()
     {
         $oConf = oxRegistry::getConfig();
-        $this->_aViewData['aToxidCurlSource']       = $oConf->getShopConfVar('aToxidCurlSource');
-        $this->_aViewData['aToxidCurlSourceSsl']    = $oConf->getShopConfVar('aToxidCurlSourceSsl');
-        $this->_aViewData['aToxidSearchUrl']        = $oConf->getShopConfVar('aToxidSearchUrl');
-        $this->_aViewData['aToxidCurlUrlParams']    = $oConf->getShopConfVar('aToxidCurlUrlParams');
-        $this->_aViewData['aToxidCurlSeoSnippets']  = $oConf->getShopConfVar('aToxidCurlSeoSnippets');
-        $this->_aViewData['toxidDontRewriteUrls']   = $oConf->getShopConfVar('toxidDontRewriteUrls');
-        $this->_aViewData['toxidCacheEnabled']      = $oConf->getShopConfVar('toxidCacheEnabled');
-        $this->_aViewData['iToxidCacheTTL']         = intval($oConf->getShopConfVar('iToxidCacheTTL'));
-        if(empty($this->_aViewData['iToxidCacheTTL'])) {
-            $this->_aViewData['iToxidCacheTTL'] = 3600;
-        }
-        $this->_aViewData['aToxidCurlLogin']        = $oConf->getShopConfVar('aToxidCurlLogin');
-        $this->_aViewData['aToxidCurlPwd']          = $oConf->getShopConfVar('aToxidCurlPwd');
+
+        $this->_aViewData['aToxidCurlSource']            = $oConf->getShopConfVar('aToxidCurlSource');
+        $this->_aViewData['aToxidCurlSourceSsl']         = $oConf->getShopConfVar('aToxidCurlSourceSsl');
+        $this->_aViewData['aToxidSearchUrl']             = $oConf->getShopConfVar('aToxidSearchUrl');
+        $this->_aViewData['aToxidCurlUrlParams']         = $oConf->getShopConfVar('aToxidCurlUrlParams');
+        $this->_aViewData['aToxidCurlSeoSnippets']       = $oConf->getShopConfVar('aToxidCurlSeoSnippets');
+        $this->_aViewData['toxidDontRewriteUrls']        = $oConf->getShopConfVar('toxidDontRewriteUrls');
+        $this->_aViewData['bToxidDontPassPostVarsToCms'] = $oConf->getShopConfVar('bToxidDontPassPostVarsToCms');
+        $this->_aViewData['toxidCacheEnabled']           = $oConf->getShopConfVar('toxidCacheEnabled');
+        $this->_aViewData['iToxidCacheTTL']              = intval($oConf->getShopConfVar('iToxidCacheTTL'));
+        $this->_aViewData['aToxidCurlLogin']             = $oConf->getShopConfVar('aToxidCurlLogin');
+        $this->_aViewData['aToxidCurlPwd']               = $oConf->getShopConfVar('aToxidCurlPwd');
 
         return parent::render();
     }
@@ -34,27 +33,24 @@ class toxid_setup_main extends oxAdminView
     public function save()
     {
         $oConf = oxRegistry::getConfig();
-        $aParams = $oConf->getRequestParameter( "editval" );
-        if(empty($aParams['toxidDontRewriteUrls']))
-        {
-            $aParams['toxidDontRewriteUrls'] = 0;
-        }
-        if(empty($aParams['toxidCacheEnabled']))
-        {
-            $aParams['toxidCacheEnabled'] = 0;
-        }
-        if(empty($aParams['iToxidCacheTTL']))
-        {
-            $aParams['iToxidCacheTTL'] = 3600;
-        }
         $sShopId = $oConf->getShopId();
+        $aParams = $oConf->getRequestParameter( "editval" );
+
+        $aParams['toxidDontRewriteUrls']        = empty($aParams['toxidDontRewriteUrls']) ? 0 : 1;
+        $aParams['toxidCacheEnabled']           = empty($aParams['toxidCacheEnabled']) ? 0 : 1;
+        $aParams['toxidDontRedirectOnError']    = empty($aParams['toxidDontRedirectOnError']) ? 0 : 1;
+        $aParams['iToxidCacheTTL']              = empty($aParams['iToxidCacheTTL']) ? 0 : intval($aParams['iToxidCacheTTL']);
+        $aParams['bToxidDontPassPostVarsToCms'] = empty($aParams['bToxidDontPassPostVarsToCms']) ? 0 : 1;
+
         $oConf->saveShopConfVar( 'arr', 'aToxidCurlSource', $aParams['aToxidCurlSource'], $sShopId, self::CONFIG_MODULE_NAME );
         $oConf->saveShopConfVar( 'arr', 'aToxidCurlSourceSsl', $aParams['aToxidCurlSourceSsl'], $sShopId, self::CONFIG_MODULE_NAME );
         $oConf->saveShopConfVar( 'arr', 'aToxidSearchUrl', $aParams['aToxidSearchUrl'], $sShopId, self::CONFIG_MODULE_NAME );
         $oConf->saveShopConfVar( 'arr', 'aToxidCurlUrlParams', $aParams['aToxidCurlUrlParams'], $sShopId, self::CONFIG_MODULE_NAME );
         $oConf->saveShopConfVar( 'arr', 'aToxidCurlSeoSnippets', $aParams['aToxidCurlSeoSnippets'], $sShopId, self::CONFIG_MODULE_NAME );
         $oConf->saveShopConfVar( 'bl', 'toxidDontRewriteUrls', $aParams['toxidDontRewriteUrls'], $sShopId, self::CONFIG_MODULE_NAME );
+        $oConf->saveShopConfVar( 'bl', 'bToxidDontPassPostVarsToCms', $aParams['bToxidDontPassPostVarsToCms'], $sShopId, self::CONFIG_MODULE_NAME );
         $oConf->saveShopConfVar( 'bl', 'toxidCacheEnabled', $aParams['toxidCacheEnabled'], $sShopId, self::CONFIG_MODULE_NAME );
+        $oConf->saveShopConfVar( 'bl', 'toxidDontRedirectOnError', $aParams['toxidDontRedirectOnError'], $sShopId, self::CONFIG_MODULE_NAME );
         $oConf->saveShopConfVar( 'num', 'iToxidCacheTTL', $aParams['iToxidCacheTTL'], $sShopId, self::CONFIG_MODULE_NAME );
 
         // htaccess Login

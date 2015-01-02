@@ -40,6 +40,13 @@ $aModule = array(
         'product.tpl'               => 'toxid_curl/views/azure/product.tpl',
         'toxid_setup_main.tpl'      => 'toxid_curl/views/admin/tpl/toxid_setup_main.tpl',
     ),
+    'blocks' => array(
+        array(
+            'template' => '_formparams.tpl',
+            'block'=>'admin_formparams',
+            'file'=>'/views/admin/blocks/_formparams_admin_formparams.tpl'
+        ),
+    ),
     'files' => array(
         'toxid_curl'                => 'toxid_curl/controller/toxid_curl.php',
         'toxid_curl_oxseodecoder'   => 'toxid_curl/core/toxid_curl_oxseodecoder.php',

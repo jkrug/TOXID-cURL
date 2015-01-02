@@ -62,7 +62,8 @@ function _groupExp(el) {
                                     <li><a href="https://github.com/Tr0nYx" target="_blank">Tr0nYx</a></li>
                                     <li><a href="https://github.com/pixelkrieg" target="_blank">pixelkrieg</a></li>
                                     <li><a href="https://github.com/wanis" target="_blank">wanis</a></li>
-                                    <li><a href="https://github.com/slackero" target="_blank">Oliver Georgi</a></li>
+                                    <li><a href="https://github.com/adriankirchner" target="_blank">adriankirchner</a></li>
+                                    <li><a href="https://github.com/slackero" target="_blank">slackero</a></li>
                                 </ul>
                             </td>
                             <td valign="top">
@@ -91,7 +92,7 @@ function _groupExp(el) {
                                         [{oxmultilang ident="TOXID_SOURCE"}]:
                                     </td>
                                     <td class="edittext">
-                                            <input type="text" name="editval[aToxidCurlSource][[{ $lang }]]" value="[{$aToxidCurlSource.$lang}]" size="70">
+                                        <input type="text" name="editval[aToxidCurlSource][[{ $lang }]]" value="[{$aToxidCurlSource.$lang}]" size="70">
                                     </td>
                                 </tr>
                                 <tr>
@@ -107,7 +108,7 @@ function _groupExp(el) {
                                         [{oxmultilang ident="TOXID_SEARCH_URL"}]:
                                     </td>
                                     <td class="edittext">
-                                            <input type="text" name="editval[aToxidSearchUrl][[{ $lang }]]" value="[{$aToxidSearchUrl.$lang}]" size="70">
+                                        <input type="text" name="editval[aToxidSearchUrl][[{ $lang }]]" value="[{$aToxidSearchUrl.$lang}]" size="70">
                                     </td>
                                 </tr>
                                 <tr>
@@ -115,7 +116,7 @@ function _groupExp(el) {
                                         [{oxmultilang ident="TOXID_PARAM"}]:
                                     </td>
                                     <td class="edittext">
-                                            <input type="text" name="editval[aToxidCurlUrlParams][[{ $lang }]]" value="[{$aToxidCurlUrlParams.$lang}]" size="70">
+                                        <input type="text" name="editval[aToxidCurlUrlParams][[{ $lang }]]" value="[{$aToxidCurlUrlParams.$lang}]" size="70">
                                     </td>
                                 </tr>
                                 <tr>
@@ -123,7 +124,7 @@ function _groupExp(el) {
                                         [{oxmultilang ident="TOXID_SEO_SNIPPET"}]:
                                     </td>
                                     <td class="edittext">
-                                            <input type="text" name="editval[aToxidCurlSeoSnippets][[{ $lang }]]" value="[{$aToxidCurlSeoSnippets.$lang}]" size="70">
+                                        <input type="text" name="editval[aToxidCurlSeoSnippets][[{ $lang }]]" value="[{$aToxidCurlSeoSnippets.$lang}]" size="70">
                                     </td>
                                 </tr>
                                 <tr>
@@ -131,7 +132,7 @@ function _groupExp(el) {
                                         [{oxmultilang ident="TOXID_LOGIN"}]:
                                     </td>
                                     <td class="edittext">
-                                            <input type="text" name="editval[aToxidCurlLogin][[{ $lang }]]" value="[{$aToxidCurlLogin.$lang}]" size="40" autocomplete="off">
+                                        <input type="text" name="editval[aToxidCurlLogin][[{ $lang }]]" value="[{$aToxidCurlLogin.$lang}]" size="40" autocomplete="off">
                                     </td>
                                 </tr>
                                 <tr>
@@ -139,7 +140,7 @@ function _groupExp(el) {
                                         [{oxmultilang ident="TOXID_PWD"}]:
                                     </td>
                                     <td class="edittext">
-                                            <input type="password" name="editval[aToxidCurlPwd][[{ $lang }]]" value="[{$aToxidCurlPwd.$lang}]" size="40" autocomplete="off">
+                                        <input type="password" name="editval[aToxidCurlPwd][[{ $lang }]]" value="[{$aToxidCurlPwd.$lang}]" size="40" autocomplete="off">
                                     </td>
                                 </tr>
                             </table>
@@ -148,23 +149,35 @@ function _groupExp(el) {
                     <fieldset>
                         <legend>[{oxmultilang ident="TOXID_GENERAL"}]</legend>
                         <table>
-                        	<tr>
-	                        	<td class="edittext" colspan="2">
-		                        	<input type="checkbox" name="editval[toxidDontRewriteUrls]" value="1" [{if $toxidDontRewriteUrls}]checked="checked"[{/if}]>
-									[{oxmultilang ident="TOXID_DONT_REWRITE"}]
-	                        	</td>
-                        	 </tr>
+                            <tr>
+                                <td class="edittext">
+                                    <input type="checkbox" name="editval[toxidDontRewriteUrls]" value="1"[{if $toxidDontRewriteUrls}] checked="checked"[{/if}]>
+                                    [{oxmultilang ident="TOXID_DONT_REWRITE"}]
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="edittext">
+                                    <input type="checkbox" name="editval[bToxidDontPassPostVarsToCms]" value="1"[{if $bToxidDontPassPostVarsToCms}] checked="checked"[{/if}]>
+                                    [{oxmultilang ident="TOXID_DONT_PASSTHROUGH"}]
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="edittext">
+                                    <input type="checkbox" name="editval[toxidDontRedirectOnError]" value="1"[{if $toxidDontRedirectOnError}] checked="checked"[{/if}]>
+                                    [{oxmultilang ident="TOXID_DONT_REDIRECT"}]
+                                </td>
+                            </tr>
                         </table>
                     </fieldset>
                     <fieldset>
                         <legend>[{oxmultilang ident="TOXID_CACHE"}]</legend>
                         <table>
-                        	<tr>
-	                        	<td class="edittext" colspan="2">
-		                        	<input type="checkbox" name="editval[toxidCacheEnabled]" value="1" [{if $toxidCacheEnabled}]checked="checked"[{/if}]>
-									[{oxmultilang ident="TOXID_CACHE_ENABLED"}]
-	                        	</td>
-                        	 </tr>
+                            <tr>
+                                <td class="edittext" colspan="2">
+                                    <input type="checkbox" name="editval[toxidCacheEnabled]" value="1"[{if $toxidCacheEnabled}] checked="checked"[{/if}]>
+                                    [{oxmultilang ident="TOXID_CACHE_ENABLED"}]
+                                </td>
+                            </tr>
                             <tr>
                                 <td class="edittext">
                                     [{oxmultilang ident="TOXID_CACHE_TTL"}]:
@@ -180,10 +193,9 @@ function _groupExp(el) {
             </dl>
         </div>
     </div>
-    <br />
-    <input type="submit" class="edittext" id="oLockButton" value="[{ oxmultilang ident="GENERAL_SAVE" }]" onclick="Javascript:document.myedit.fnc.value='save'"" [{ $readonly }]>
-    <br>
-
+    <p>
+        <input type="submit" class="edittext" id="oLockButton" value="[{ oxmultilang ident="GENERAL_SAVE" }]" onclick="Javascript:document.myedit.fnc.value='save'"" [{ $readonly }]>
+    </p>
 </form>
 
 [{include file="bottomnaviitem.tpl"}]
