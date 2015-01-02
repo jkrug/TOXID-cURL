@@ -96,7 +96,7 @@ class toxidCurl extends oxSuperCfg
      * @var array
      */
     protected $_aSearchCache = array();
-    
+
     /**
      * stores custom page
      * @var string
@@ -104,13 +104,19 @@ class toxidCurl extends oxSuperCfg
     protected $_sCustomPage = null;
 
     /**
-     * sets cache TTL (in seconds)
+     * integer with cache’s TTL (in seconds)
      * @var int
      */
     protected $_iCacheTtl = null;
 
     /**
-     * sets active Oxid charset
+     * is snippet caching enabled or not
+     * @var bool
+     */
+    protected $_blCacheSnippets = null;
+
+    /**
+     * string with active Oxid charset
      * @var string
      */
     protected $_sCharset = null;
@@ -132,25 +138,50 @@ class toxidCurl extends oxSuperCfg
      * @var bool
      */
     protected $_blToxidParsedMeta = false;
-	
-	/**
-	 * shortcut to the Oxid config object
-	 * @var object
-	 */
-	protected $_oConf = null;
-	
-	/**
-	 * set active Shop ID
-	 * @var string
-	 */
-	public $sShopId = null;
 
-	/**
-	 * set active language
-	 * @var string
-	 */
-	public $sLangId = null;
-	
+    /**
+     * shortcut to the Oxid config object
+     * @var object
+     */
+    protected $_oConf = null;
+
+    /**
+     * string with active Shop ID
+     * @var string
+     */
+    public $sShopId = null;
+
+    /**
+     * string active language
+     * @var string
+     */
+    public $sLangId = null;
+
+    /**
+     * string with requested Toxid URL
+     * @var string
+     */
+    public $sUrl = null;
+
+    /**
+     * bool value handling HTTP_CACHE_CONTROL
+     * @var bool
+     */
+    public $blHttpCacheControl = null;
+
+    /**
+     * array of UTF-8 chars to search for to be replaced
+     * by HTML entities if Oxid charset is not equal UTF-8
+     * @var array
+     */
+    public $aCharsUtf8Search = array('„', '“', '´', '`','€');
+
+     /**
+     * array of HTML entities for replacing $aCharsUtf8Search
+     * @var array
+     */
+    public $aCharsUtf8Replace = array('&bdquo;', '&ldquo;', '&acute;', '&#96;', '&euro;');
+
     /**
      * Deprecated!
      * returns a single instance of this class
@@ -173,17 +204,24 @@ class toxidCurl extends oxSuperCfg
      * @deprecated
      */
     public function loadCmsPage() {}
-		
-	/**
-	 * Construct, load required configurations only once
-	 */
-	publich function __construct() {
-		
-		$this->_oConf = $this->getConfig();
-		$this->sShopId = $this->_oConf->getActiveShop()->getId();
-		$this->sLangId = oxRegistry::getLang()->getBaseLanguage();
-		
-	}
+
+    /**
+     * Construct, set required stuff only once per request
+     */
+    public function __construct() {
+
+        $this->_oConf = $this->getConfig();
+        $this->sShopId = $this->_oConf->getActiveShop()->getId();
+        $this->sLangId = oxRegistry::getLang()->getBaseLanguage();
+        $this->blHttpCacheControl = oxRegistry::get('oxUtilsServer')->getServerVar('HTTP_CACHE_CONTROL') !== 'no-cache' ? true : false;
+
+        $source = $this->_getToxidLangSource();
+        $page = $this->_oConf->getConfigParam('sToxidCurlPage');
+        $param = $this->_getToxidLangUrlParam();
+        $custom  = $this->_getToxidCustomPage();
+        $this->sUrl = $source.$custom.$page.$param;
+
+    }
 
     /**
      * returns SimpleXMLElement object from Typo3 xml
@@ -238,34 +276,24 @@ class toxidCurl extends oxSuperCfg
      */
     public function getCmsSnippet($snippet=null, $blMultiLang = false, $customPage = null, $iCacheTtl = null)
     {
-        if($snippet == null) {
+        if($snippet === null) {
             return '<strong style="color:red;">TOXID: Please add part, you want to display!</strong>';
         }
 
         if($iCacheTtl === null) {
-            $iCacheTtl = $this->_getCacheTtl();
-		}
+            if($this->_blCacheSnippets === null) {
+                $this->_blCacheSnippets = (bool) $this->_oConf->getConfigParam('toxidCacheSnippetsEnabled');
+            }
+            if($this->_blCacheSnippets) {
+                $iCacheTtl = $this->_getCacheTtl();
+            }
+        }
 
-        $oConf   = $this->getConfig();
-        $sShopId = $oConf->getActiveShop()->getId();
-        $sLangId = oxRegistry::getLang()->getBaseLanguage();
-		
-		// check if snippet text has a ttl
-		if($iCacheTtl && $this->_oSxToxid === null) {
-	        $sCacheIdent = 'toxid_snippet_'.$snippet.'_'.$sShopId.'_'.$sLangId;
-			$oUtils = oxRegistry::getUtils();
-			// and is in cache
-			if($sCacheContent = $oUtils->fromFileCache($sCacheIdent)) {
-				$oUtilsServer = oxRegistry::get('oxUtilsServer');
-				if($oUtilsServer->getServerVar('HTTP_CACHE_CONTROL') !== 'no-cache') {
-					return $sCacheContent;
-				}
-			}
-		} else {
-			// no caching for this snippet
-			$sCacheIdent = null;
-		}
-		
+        // snippet caching
+        if($this->blHttpCacheControl && $iCacheTtl && $this->_oSxToxid === null && ($sCacheContent = $this->_getCache('html', $snippet, $iCacheTtl))) {
+            return $sCacheContent;
+        }
+
         if ($customPage != '') {
             $this->_sCustomPage = $customPage;
         }
@@ -275,39 +303,37 @@ class toxidCurl extends oxSuperCfg
 
         $sText = oxRegistry::get("oxUtilsView")->parseThroughSmarty(
             $sText,
-            $snippet.'_'.$sShopId.'_'.$sLangId,
+            $snippet.'_'.$this->sShopId.'_'.$this->sLangId,
             null,
             true
         );
-		
+
         $this->_sCustomPage = null;
 
         /* if actual site is ssl-site, replace all image-sources with ssl-urls */
-        if ($oConf->isSsl()) {
+        if ($this->_oConf->isSsl()) {
 
-            $aSslUrl = $oConf->getShopConfVar('aToxidCurlSourceSsl', $sShopId);
-            $sSslUrl = $aSslUrl[$sLangId];
+            $aSslUrl = $oConf->getShopConfVar('aToxidCurlSourceSsl', $this->sShopId);
+            $sSslUrl = $aSslUrl[$this->sLangId];
 
             if (!empty($sSslUrl)) {
 
-                $oldSrc = $this->_getToxidLangSource($sLangId);
+                $oldSrc = $this->_getToxidLangSource($this->sLangId);
                 $newSrc = $sSslUrl;
 
-                if ($oldSrc != "" && $newSrc != "") {
+                if ($oldSrc !== '' && $newSrc !== '') {
                     $sText= str_replace('src="'.$oldSrc, 'src="'.$newSrc, $sText);
                 }
             }
         }
 
-        if($this->_getCharset() !== 'utf-8')
-        {
-            $sText = str_replace(array('„', '“', '´', '`','€'), array('&bdquo;', '&ldquo;', '&acute;', '&#96;', '&euro;'), $sText);
-            return mb_convert_encoding($sText, $this->_sCharset, "auto");
+        if($sText && $this->_getCharset() !== 'utf-8') {
+            $sText = str_replace($this->aCharsUtf8Search, $this->aCharsUtf8Replace, $sText);
+            $sText = mb_convert_encoding($sText, $this->_sCharset, "auto");
         }
-		
-        // save in cache if $sCacheIdent is set
-        if($sCacheIdent !== null) {
-            $oUtils->toFileCache($sCacheIdent, $sText, $iCacheTtl);
+
+        if($sText && $this->blHttpCacheControl && $iCacheTtl) {
+            $this->_writeCache('html', $snippet, $sText);
         }
 
         return $sText;
@@ -323,35 +349,40 @@ class toxidCurl extends oxSuperCfg
      */
     public function getCmsMetadata($sMetadata=null, $blMultiLang = false, $customPage = null, $iCacheTtl = null)
     {
-        $aMetadataKeys = array('title', 'description', 'keywords');
+        $aMetadataKeys = array(
+            'title' => '//metadata//title',
+            'description' => '//metadata//description',
+            'keywords' => '//metadata//keywords'
+        );
 
-        if($sMetadata === null || !in_array($sMetadata, $aMetadataKeys)) {
+        if($sMetadata === null || !isset($aMetadataKeys[$sMetadata])) {
             return '<strong style="color:red;">No TOXID Metadata key given: title, description or keywords</strong>';
         }
-        
-		if($iCacheTtl === null) {
-            $iCacheTtl = $this->_getCacheTtl();
-		}
-        $oConf   = $this->getConfig();
-        $sShopId = $oConf->getActiveShop()->getId();
-        $sLangId = oxRegistry::getLang()->getBaseLanguage();
-		
-		// check if snippet text has a ttl
-		if($iCacheTtl && $this->_oSxToxid === null) {
-	        $sCacheIdent = 'toxid_snippet_'.$sMetadata.'_'.$sShopId.'_'.$sLangId;
-			$oUtils = oxRegistry::getUtils();
-			// and is in cache
-			if($sCacheContent = $oUtils->fromFileCache($sCacheIdent)) {
-				$oUtilsServer = oxRegistry::get('oxUtilsServer');
-				if($oUtilsServer->getServerVar('HTTP_CACHE_CONTROL') !== 'no-cache') {
-					return $sCacheContent;
-				}
-			}
-		} else {
-			// no caching for this snippet
-			$sCacheIdent = null;
-		}
-		
+
+        if($iCacheTtl === null) {
+            if($this->_blCacheSnippets === null) {
+                $this->_blCacheSnippets = (bool) $this->_oConf->getConfigParam('toxidCacheSnippetsEnabled');
+            }
+            if($this->_blCacheSnippets) {
+                $iCacheTtl = $this->_getCacheTtl();
+            }
+        }
+
+        // get metadata cache
+        if($this->blHttpCacheControl && $iCacheTtl && $this->_oSxToxid === null && ($sCacheContent = $this->_getCache('html', $aMetadataKeys[$sMetadata], $iCacheTtl))) {
+
+            if($sMetadata === 'title') {
+                $this->_sPageTitle = $sCacheContent;
+            } elseif($sMetadata === 'description') {
+                $this->_sPageDescription = $sCacheContent;
+            } elseif($sMetadata === 'keywords') {
+                $this->_sPageKeywords = $sCacheContent;
+            }
+
+            return $sCacheContent;
+        }
+
+
         if ($customPage != '') {
             $this->_sCustomPage = $customPage;
         }
@@ -359,62 +390,85 @@ class toxidCurl extends oxSuperCfg
         if($this->_blToxidParsedMeta === false || $customPage !== null) {
 
             // Title
-            $sMetadataContent = $this->_rewriteUrls($this->_getSnippetFromXml('//metadata//title'), null, $blMultiLang);
+            $sMetadataContent = $this->_rewriteUrls($this->_getSnippetFromXml($aMetadataKeys['title']), null, $blMultiLang);
 
             $this->_sPageTitle = oxRegistry::get("oxUtilsView")->parseThroughSmarty(
                 $sMetadataContent,
-                '//metadata//title_'.$sShopId.'_'.$sLangId,
+                $aMetadataKeys['title'].'_'.$this->sShopId.'_'.$this->sLangId,
                 null,
                 true
             );
 
             // Description
-            $sMetadataContent = $this->_rewriteUrls($this->_getSnippetFromXml('//metadata//description'), null, $blMultiLang);
+            $sMetadataContent = $this->_rewriteUrls($this->_getSnippetFromXml($aMetadataKeys['description']), null, $blMultiLang);
 
             $this->_sPageDescription = oxRegistry::get("oxUtilsView")->parseThroughSmarty(
                 $sMetadataContent,
-                '//metadata//description_'.$sShopId.'_'.$sLangId,
+                $aMetadataKeys['description'].'_'.$this->sShopId.'_'.$this->sLangId,
                 null,
                 true
             );
 
             // Keywords
-            $sMetadataContent = $this->_rewriteUrls($this->_getSnippetFromXml('//metadata//keywords'), null, $blMultiLang);
+            $sMetadataContent = $this->_rewriteUrls($this->_getSnippetFromXml($aMetadataKeys['keywords']), null, $blMultiLang);
 
             $this->_sPageKeywords = oxRegistry::get("oxUtilsView")->parseThroughSmarty(
                 $sMetadataContent,
-                '//metadata//keywords_'.$sShopId.'_'.$sLangId,
+                $aMetadataKeys['keywords'].'_'.$this->sShopId.'_'.$this->sLangId,
                 null,
                 true
             );
 
             $this->_blToxidParsedMeta = true;
 
+            if($this->_getCharset() !== 'utf-8') {
+
+                if($this->_sPageTitle) {
+                    $this->_sPageTitle = str_replace($this->aCharsUtf8Search, $this->aCharsUtf8Replace, $this->_sPageTitle);
+                    $this->_sPageTitle = mb_convert_encoding($this->_sPageTitle, $this->_sCharset, "auto");
+                }
+
+                if($this->_sPageDescription) {
+                    $this->_sPageDescription = str_replace($this->aCharsUtf8Search, $this->aCharsUtf8Replace, $this->_sPageDescription);
+                    $this->_sPageDescription = mb_convert_encoding($this->_sPageDescription, $this->_sCharset, "auto");
+                }
+
+                if($this->_sPageKeywords) {
+                    $this->_sPageKeywords = str_replace($this->aCharsUtf8Search, $this->aCharsUtf8Replace, $this->_sPageKeywords);
+                    $this->_sPageKeywords = mb_convert_encoding($this->_sPageKeywords, $this->_sCharset, "auto");
+                }
+
+            }
+
+            // cache metadata
+            if($this->blHttpCacheControl && $iCacheTtl) {
+
+                if($this->_sPageTitle) {
+                    $this->_writeCache('html', $aMetadataKeys['title'], $this->_sPageTitle);
+                }
+
+                if($this->_sPageDescription) {
+                    $this->_writeCache('html',  $aMetadataKeys['description'], $this->_sPageDescription);
+                }
+
+                if($this->_sPageKeywords) {
+                    $this->_writeCache('html', $aMetadataKeys['keywords'], $this->_sPageKeywords);
+                }
+
+            }
+
         }
 
         $this->_sCustomPage = null;
 
         if($sMetadata === 'title') {
-
             $sMetadataContent = $this->_sPageTitle;
-
         } elseif($sMetadata === 'description') {
-
             $sMetadataContent = $this->_sPageDescription;
-
         } elseif($sMetadata === 'keywords') {
-
             $sMetadataContent = $this->_sPageKeywords;
-
         } else {
-
             $sMetadataContent = '';
-        }
-
-        if($sMetadataContent && $this->_getCharset() !== 'utf-8')
-        {
-            $sMetadataContent = str_replace(array('„', '“', '´', '`','€'), array('&bdquo;', '&ldquo;', '&acute;', '&#96;', '&euro;'), $sMetadataContent);
-            return mb_convert_encoding($sMetadataContent, $this->_sCharset, "auto");
         }
 
         return $sMetadataContent;
@@ -431,52 +485,48 @@ class toxidCurl extends oxSuperCfg
             return $this->_sPageContent;
         }
 
-        $source = $this->_getToxidLangSource();
-        $page = $this->getConfig()->getConfigParam('sToxidCurlPage');
-        $param = $this->_getToxidLangUrlParam();
-        $custom  = $this->_getToxidCustomPage();
-        $sUrl = $source.$custom.$page.$param;
-
         // check if cache TTL and requested URL is cached
-        // if not get remote content
-        if(!$this->getCacheTtl() || !($cachedPage = $this->_getCachedXml($sUrl))) {
+        if($this->blHttpCacheControl && $this->_getCacheTtl() && ($sCacheContent = $this->_getCache('xml', '', $this->_iCacheTtl))) {
+
+            // use the cached content
+            $this->_sPageContent = $sCacheContent;
+
+        } else {
 
             $sLogin = $this->_getToxidLangCurlLogin();
             $sPwd = $this->_getToxidLangCurlPwd();
 
-            $aPage = $this->_getRemoteContent($sUrl, $sLogin, $sPwd);
-            $dontRedirectOnError = (bool) $this->getConfig()->getConfigParam('toxidDontRedirectOnError');
+            $aPage = $this->_getRemoteContent($this->sUrl, $sLogin, $sPwd);
+            $dontRedirectOnError = (bool) $this->_oConf->getConfigParam('toxidDontRedirectOnError');
 
             if($dontRedirectOnError === false && $aPage['info']['http_code'] !== 200) {
 
-                switch ($aPage['info']['http_code'])
-                {
+                switch ($aPage['info']['http_code']) {
                     case 500:
                         header ("HTTP/1.1 500 Internal Server Error");
-                        header ('Location: '.$this->getConfig()->getShopHomeURL());
+                        header ('Location: '.$this->_oConf->getShopHomeURL());
                         oxRegistry::getUtils()->showMessageAndExit('');
                         break;
                     case 404:
                         header ("HTTP/1.1 404 Not Found");
-                        header ('Location: '.$this->getConfig()->getShopHomeURL());
+                        header ('Location: '.$this->_oConf->getShopHomeURL());
                         oxRegistry::getUtils()->showMessageAndExit('');
                         break;
                     case 403:
                         header ("HTTP/1.1 403 Forbidden");
-                        header ('Location: '.$this->getConfig()->getShopHomeURL());
+                        header ('Location: '.$this->_oConf->getShopHomeURL());
                         oxRegistry::getUtils()->showMessageAndExit('');
                         break;
                     case 401:
                         header ("HTTP/1.1 401 Unauthorized");
-                        header ('Location: '.$this->getConfig()->getShopHomeURL());
+                        header ('Location: '.$this->_oConf->getShopHomeURL());
                         oxRegistry::getUtils()->showMessageAndExit('');
                         break;
                     case 0:
-                        header ('Location: '.$this->getConfig()->getShopHomeURL());
+                        header ('Location: '.$this->_oConf->getShopHomeURL());
                         oxRegistry::getUtils()->showMessageAndExit('');
                         break;
                 }
-
             }
 
             // Do this only when HTTP status 200 OK
@@ -487,8 +537,8 @@ class toxidCurl extends oxSuperCfg
                 $this->_sPageContent = preg_replace('/.*<\?xml/ms', '<?xml', $aPage['content']);
 
                 // try to save Toxid content in the cache
-                if($this->_iCacheTtl) {
-                    $this->_setCachedXml($sUrl, $this->_sPageContent);
+                if($this->blHttpCacheControl && $this->_iCacheTtl) {
+                    $this->_writeCache('xml', '', $this->_sPageContent);
                 }
 
             } else {
@@ -496,11 +546,6 @@ class toxidCurl extends oxSuperCfg
                 $this->_sPageContent = null;
 
             }
-
-        } else {
-
-            // use the cached content
-            $this->_sPageContent = $cachedPage;
 
         }
 
@@ -553,7 +598,7 @@ class toxidCurl extends oxSuperCfg
      */
     public function getToxidStartUrl($iLangId = null)
     {
-        return preg_replace('#index.php\??$#', '', $this->getConfig()->getShopHomeURL()).$this->_getToxidLangSeoSnippet($iLangId);
+        return preg_replace('#index.php\??$#', '', $this->_oConf->getShopHomeURL()).$this->_getToxidLangSeoSnippet($iLangId);
     }
 
     /**
@@ -565,8 +610,7 @@ class toxidCurl extends oxSuperCfg
      */
     protected function _rewriteUrls($sContent, $iLangId = null, $blMultiLang = false)
     {
-        if ($this->getConfig()->getConfigParam('toxidDontRewriteUrls') == true)
-        {
+        if ($this->_oConf->getConfigParam('toxidDontRewriteUrls') == true) {
             return $sContent;
         }
 
@@ -575,18 +619,17 @@ class toxidCurl extends oxSuperCfg
                 $iLangId = oxRegistry::getLang()->getBaseLanguage();
             }
             $aLanguages = array($iLangId);
-        }
-        else {
-            $aLangs = $this->getConfig()->getConfigParam('aToxidCurlSource');
+        } else {
+            $aLangs = $this->_oConf->getConfigParam('aToxidCurlSource');
             arsort($aLangs);
             $aLanguages = array_keys($aLangs);
         }
 
         foreach ($aLanguages as $iLangId ) {
-            if ($this->getConfig()->getEdition() === 'EE') {
-                $sShopUrl = $this->getConfig()->getConfigParam('sMallShopURL');
+            if ($this->_oConf->getEdition() === 'EE') {
+                $sShopUrl = $this->_oConf->getConfigParam('sMallShopURL');
             } else {
-                $sShopUrl = $this->getConfig()->getConfigParam('sShopURL');
+                $sShopUrl = $this->_oConf->getConfigParam('sShopURL');
             }
             if (substr($sShopUrl, -1) !== '/') {
                 $sShopUrl = $sShopUrl.'/';
@@ -616,7 +659,7 @@ class toxidCurl extends oxSuperCfg
     protected function _getToxidLangSource($iLangId = null, $blReset = false)
     {
         if ($this->_aSourceUrlByLang === null || $blReset) {
-            $this->_aSourceUrlByLang = $this->getConfig()->getConfigParam('aToxidCurlSource');
+            $this->_aSourceUrlByLang = $this->_oConf->getConfigParam('aToxidCurlSource');
         }
         if ($iLangId === null) {
             $iLangId = oxRegistry::getLang()->getBaseLanguage();
@@ -638,7 +681,7 @@ class toxidCurl extends oxSuperCfg
     protected function _getToxidLangUrlParam($iLangId = null, $blReset = false)
     {
         if ($this->_aToxidLangUrlParam === null || $blReset) {
-            $this->_aToxidLangUrlParam = $this->getConfig()->getConfigParam('aToxidCurlUrlParams');
+            $this->_aToxidLangUrlParam = $this->_oConf->getConfigParam('aToxidCurlUrlParams');
         }
         if ($iLangId === null) {
             $iLangId = oxRegistry::getLang()->getBaseLanguage();
@@ -656,7 +699,7 @@ class toxidCurl extends oxSuperCfg
     protected function _getToxidLangSeoSnippet($iLangId = null, $blReset = false)
     {
         if ($this->_aRewriteStartUrl === null || $blReset) {
-            $this->_aRewriteStartUrl = $this->getConfig()->getConfigParam('aToxidCurlSeoSnippets');
+            $this->_aRewriteStartUrl = $this->_oConf->getConfigParam('aToxidCurlSeoSnippets');
         }
         if ($iLangId === null) {
             $iLangId = oxRegistry::getLang()->getBaseLanguage();
@@ -682,7 +725,7 @@ class toxidCurl extends oxSuperCfg
     protected function _getToxidSearchUrl($iLangId = null, $blReset = false)
     {
         if ($this->_aSearchUrl === null || $blReset) {
-            $this->_aSearchUrl = $this->getConfig()->getConfigParam('aToxidSearchUrl');
+            $this->_aSearchUrl = $this->_oConf->getConfigParam('aToxidSearchUrl');
         }
         if ($iLangId === null) {
             $iLangId = oxRegistry::getLang()->getBaseLanguage();
@@ -714,12 +757,95 @@ class toxidCurl extends oxSuperCfg
             $this->_aSearchCache[$sKeywords] = $sSearchResult;
         }
 
-        if($this->_aSearchCache[$sKeywords] && $this->_getCharset() !== 'utf-8')
-        {
+        if($this->_aSearchCache[$sKeywords] && $this->_getCharset() !== 'utf-8') {
             return mb_convert_encoding($this->_aSearchCache[$sKeywords], $this->_sCharset, "auto");
         }
 
         return $this->_aSearchCache[$sKeywords];
+    }
+
+    /**
+     * Returns Toxid cache file name
+     * @author Oliver Georgi <slackero@gmail.com>
+     * @param string $sUrl
+     * @return string
+     */
+    protected function _getCacheFileName($sType = null, $sSnippet = null)
+    {
+        if($sType === null || !in_array($sType, array('xml', 'html', 'txt'))) {
+            return false;
+        }
+
+        // build cache file name based on type
+        $sCacheFileName  = 'toxid_' . $this->sShopId . '_' . $this->sLangId . '_';
+        // use an individual MD5 hash for current URL and snippet
+        $sCacheFileName .= md5( $sSnippet === null ? $this->sUrl : $this->sUrl.$sSnippet );
+        $sCacheFileName .= '.' . $sType;
+
+        return $sCacheFileName;
+    }
+
+    /**
+     * Returns Toxid cache directory
+     * @author Oliver Georgi <slackero@gmail.com>
+     * @return string
+     */
+    protected function _getCacheDir()
+    {
+        return realpath($this->getConfig()->getConfigParam('sCompileDir')).DIRECTORY_SEPARATOR.'toxid'.DIRECTORY_SEPARATOR;
+    }
+
+    /**
+     * Returns XML from local cache file if existing
+     * @author Oliver Georgi <slackero@gmail.com>
+     * @param string $sUrl
+     * @return string
+     */
+    protected function _getCache($sType = null, $sSnippet = '', $iCacheTtl = null)
+    {
+        $sCacheFile = $this->_getCacheDir().$this->_getCacheFileName($sType, $sSnippet);
+
+        if($this->_isCached($sCacheFile, $iCacheTtl)) {
+            return @file_get_contents($sCacheFile);
+        }
+
+        return false;
+    }
+
+    /**
+     * Save cache data to local cache file and
+     * create the toxid cache directory if not exiting
+     * @author Oliver Georgi <slackero@gmail.com>
+     * @param string $sUrl
+     * @param string $sCacheData
+     * @return int|bool
+     */
+    protected function _writeCache($sType = null, $sSnippet = '', $sCacheData = '')
+    {
+        $sCacheDir = $this->_getCacheDir();
+
+        if(!is_dir($sCacheDir)) {
+
+            // a file exists, so we cannot write here and stop with writing to cache
+            if(file_exists($sCacheDir)) {
+                return false;
+            }
+
+            clearstatcache();
+            $iMode = defined('OXID_PHP_UNIT') ? 0777 : 0755;
+
+            if((@mkdir($sCacheDir, $iMode, true) === false) || (!is_dir($sCacheDir))) {
+                return false;
+            }
+        }
+
+        if($sCacheFile = $sCacheDir.$this->_getCacheFileName($sType, $sSnippet)) {
+
+            return @file_put_contents($sCacheFile, $sCacheData);
+
+        }
+
+        return false;
     }
 
     /**
@@ -728,9 +854,12 @@ class toxidCurl extends oxSuperCfg
      * @param string $sCacheFile
      * @return bool
      */
-    protected function _isCached($sCacheFile)
+    protected function _isCached($sCacheFile, $iCacheTtl = null)
     {
-        if(is_file($sCacheFile) && (filemtime($sCacheFile) + $this->_iCacheTtl >= time())) {
+        if($iCacheTtl === null) {
+            $iCacheTtl = $this->_iCacheTtl;
+        }
+        if($iCacheTtl && is_file($sCacheFile) && (filemtime($sCacheFile) + $iCacheTtl >= time())) {
             return true;
         }
 
@@ -745,8 +874,8 @@ class toxidCurl extends oxSuperCfg
     protected function _setCacheTtl()
     {
         // Cache or not to cache
-        if($this->getConfig()->getConfigParam('toxidCacheEnabled')) {
-            $this->_iCacheTtl = intval($this->getConfig()->getConfigParam('iToxidCacheTTL'));
+        if($this->_oConf->getConfigParam('toxidCacheEnabled')) {
+            $this->_iCacheTtl = intval($this->_oConf->getConfigParam('iToxidCacheTTL'));
         } else {
             $this->_iCacheTtl = 0;
         }
@@ -775,11 +904,11 @@ class toxidCurl extends oxSuperCfg
     protected function _setCharset()
     {
         // set charset used for converting if not in UTF-8 mode
-	    if($this->getConfig()->getConfigParam('iUtfMode') === 0) {
-	        $this->_sCharset = oxRegistry::getLang()->translateString('charset');
-	    } else {
-	     	$this->_sCharset = 'utf-8';
-	    }
+        if($this->_oConf->getConfigParam('iUtfMode') === 0) {
+            $this->_sCharset = oxRegistry::getLang()->translateString('charset');
+        } else {
+            $this->_sCharset = 'utf-8';
+        }
     }
 
     /**
@@ -790,9 +919,9 @@ class toxidCurl extends oxSuperCfg
     protected function _getCharset()
     {
         if($this->_sCharset === null) {
-	        $this->_setCharset();
+            $this->_setCharset();
         }
-		
+
         return $this->_sCharset;
     }
 
@@ -805,7 +934,7 @@ class toxidCurl extends oxSuperCfg
     protected function _getToxidLangCurlLogin($iLangId = null, $blReset = false)
     {
         if ($this->_aToxidCurlLogin === null || $blReset) {
-            $this->_aToxidCurlLogin = $this->getConfig()->getConfigParam('aToxidCurlLogin');
+            $this->_aToxidCurlLogin = $this->_oConf->getConfigParam('aToxidCurlLogin');
         }
         if ($iLangId === null) {
             $iLangId = oxRegistry::getLang()->getBaseLanguage();
@@ -825,8 +954,8 @@ class toxidCurl extends oxSuperCfg
         if ($this->_aToxidCurlPwd === null || $blReset) {
 
             $oDecryptor = oxNew('oxDecryptor');
-            $encryptKey = $this->getConfig()->getConfigParam('dbPwd');
-            $this->_aToxidCurlPwd = $this->getConfig()->getConfigParam('aToxidCurlPwd');
+            $encryptKey = $this->_oConf->getConfigParam('dbPwd');
+            $this->_aToxidCurlPwd = $this->_oConf->getConfigParam('aToxidCurlPwd');
 
             foreach($this->_aToxidCurlPwd as $lang => $value) {
                 if($value !== '') {
