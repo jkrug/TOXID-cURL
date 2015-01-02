@@ -179,6 +179,12 @@ function _groupExp(el) {
                                 </td>
                             </tr>
                             <tr>
+                                <td class="edittext" colspan="2">
+                                    <input type="checkbox" name="editval[toxidCacheSnippetsEnabled]" value="1"[{if $toxidCacheSnippetsEnabled}] checked="checked"[{/if}]>
+                                    [{oxmultilang ident="TOXID_CACHE_SNIPPET_ENABLED"}]
+                                </td>
+                            </tr>
+                            <tr>
                                 <td class="edittext">
                                     [{oxmultilang ident="TOXID_CACHE_TTL"}]:
                                 </td>
