@@ -110,10 +110,22 @@ class toxidCurl extends oxSuperCfg
     protected $_iCacheTtl = null;
 
     /**
+     * is toxid XML caching enabled or not
+     * @var bool
+     */
+    protected $_blCache = null;
+
+    /**
      * is snippet caching enabled or not
      * @var bool
      */
     protected $_blCacheSnippets = null;
+
+    /**
+     * string with Toxid cache directory
+     * @var string
+     */
+    protected $_sCacheDir = null;
 
     /**
      * string with active Oxid charset
@@ -213,7 +225,14 @@ class toxidCurl extends oxSuperCfg
         $this->_oConf = $this->getConfig();
         $this->sShopId = $this->_oConf->getActiveShop()->getId();
         $this->sLangId = oxRegistry::getLang()->getBaseLanguage();
-        $this->blHttpCacheControl = oxRegistry::get('oxUtilsServer')->getServerVar('HTTP_CACHE_CONTROL') !== 'no-cache' ? true : false;
+        $this->_blCache = (bool) $this->_oConf->getConfigParam('toxidCacheEnabled');
+        $this->_blCacheSnippets = (bool) $this->_oConf->getConfigParam('toxidCacheSnippetsEnabled');
+
+        if($this->_blCache || $this->_blCacheSnippets) {
+            $this->blHttpCacheControl = oxRegistry::get('oxUtilsServer')->getServerVar('HTTP_CACHE_CONTROL') !== 'no-cache' ? true : false;
+            $this->setCacheTtl();
+            $this->setCacheDir();
+        }
 
         $source = $this->_getToxidLangSource();
         $page = $this->_oConf->getConfigParam('sToxidCurlPage');
@@ -280,13 +299,8 @@ class toxidCurl extends oxSuperCfg
             return '<strong style="color:red;">TOXID: Please add part, you want to display!</strong>';
         }
 
-        if($iCacheTtl === null) {
-            if($this->_blCacheSnippets === null) {
-                $this->_blCacheSnippets = (bool) $this->_oConf->getConfigParam('toxidCacheSnippetsEnabled');
-            }
-            if($this->_blCacheSnippets) {
-                $iCacheTtl = $this->_getCacheTtl();
-            }
+        if($iCacheTtl === null && $this->_blCacheSnippets) {
+            $iCacheTtl = $this->_getCacheTtl();
         }
 
         // snippet caching
@@ -359,13 +373,8 @@ class toxidCurl extends oxSuperCfg
             return '<strong style="color:red;">No TOXID Metadata key given: title, description or keywords</strong>';
         }
 
-        if($iCacheTtl === null) {
-            if($this->_blCacheSnippets === null) {
-                $this->_blCacheSnippets = (bool) $this->_oConf->getConfigParam('toxidCacheSnippetsEnabled');
-            }
-            if($this->_blCacheSnippets) {
-                $iCacheTtl = $this->_getCacheTtl();
-            }
+        if($iCacheTtl === null && $this->_blCacheSnippets) {
+            $iCacheTtl = $this->_getCacheTtl();
         }
 
         // get metadata cache
@@ -786,13 +795,29 @@ class toxidCurl extends oxSuperCfg
     }
 
     /**
+     * Sets Toxid cache directory
+     * @author Oliver Georgi <slackero@gmail.com>
+     * @return string
+     */
+    public function setCacheDir($sCacheDir = null) {
+
+        if($sCacheDir === null || !is_dir($sCacheDir)) {
+            $sCacheDir = realpath($this->_oConf->getConfigParam('sCompileDir')).DIRECTORY_SEPARATOR.'toxid'.DIRECTORY_SEPARATOR;
+        }
+
+        $this->_sCacheDir = $sCacheDir;
+
+        return $this->_sCacheDir;
+    }
+
+    /**
      * Returns Toxid cache directory
      * @author Oliver Georgi <slackero@gmail.com>
      * @return string
      */
     protected function _getCacheDir()
     {
-        return realpath($this->getConfig()->getConfigParam('sCompileDir')).DIRECTORY_SEPARATOR.'toxid'.DIRECTORY_SEPARATOR;
+        return $this->_sCacheDir;
     }
 
     /**
@@ -871,14 +896,13 @@ class toxidCurl extends oxSuperCfg
      * @author Oliver Georgi <slackero@gmail.com>
      * @return int
      */
-    protected function _setCacheTtl()
+    public function setCacheTtl($iCacheTtl = null)
     {
-        // Cache or not to cache
-        if($this->_oConf->getConfigParam('toxidCacheEnabled')) {
-            $this->_iCacheTtl = intval($this->_oConf->getConfigParam('iToxidCacheTTL'));
-        } else {
-            $this->_iCacheTtl = 0;
+        if($iCacheTtl === null) {
+            $iCacheTtl = $this->_oConf->getConfigParam('iToxidCacheTTL');
         }
+
+        $this->_iCacheTtl = (int) $iCacheTtl;
 
         return $this->_iCacheTtl;
     }
@@ -890,16 +914,13 @@ class toxidCurl extends oxSuperCfg
      */
     protected function _getCacheTtl()
     {
-        if($this->_iCacheTtl === null) {
-           return $this->_setCacheTtl();
-        }
-
-        return $this->_iCacheTtl;
+        return (int) $this->_iCacheTtl;
     }
 
     /**
      * Set the Toxid charset
      * @author Oliver Georgi <slackero@gmail.com>
+     * @return string
      */
     protected function _setCharset()
     {
@@ -909,6 +930,8 @@ class toxidCurl extends oxSuperCfg
         } else {
             $this->_sCharset = 'utf-8';
         }
+
+        return $this->_sCharset;
     }
 
     /**
