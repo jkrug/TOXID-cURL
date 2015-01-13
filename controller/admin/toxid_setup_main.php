@@ -20,6 +20,7 @@ class toxid_setup_main extends oxAdminView
         $this->_aViewData['bToxidDontPassPostVarsToCms'] = $oConf->getShopConfVar('bToxidDontPassPostVarsToCms');
         $this->_aViewData['toxidCacheEnabled']           = $oConf->getShopConfVar('toxidCacheEnabled');
         $this->_aViewData['toxidCacheSnippetsEnabled']   = $oConf->getShopConfVar('toxidCacheSnippetsEnabled');
+        $this->_aViewData['toxidDontRedirectOnError']    = $oConf->getShopConfVar('toxidDontRedirectOnError');
         $this->_aViewData['iToxidCacheTTL']              = intval($oConf->getShopConfVar('iToxidCacheTTL'));
         $this->_aViewData['aToxidCurlLogin']             = $oConf->getShopConfVar('aToxidCurlLogin');
         $this->_aViewData['aToxidCurlPwd']               = $oConf->getShopConfVar('aToxidCurlPwd');
