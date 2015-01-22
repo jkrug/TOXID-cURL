@@ -389,7 +389,6 @@ class toxidCurl extends oxSuperCfg
 
             preg_match_all($pattern, $sContent, $matches, PREG_SET_ORDER);
             foreach ($matches as $match) {
-                error_log($match[0]);
                 if ($this->_getRelValuesForNoRewrite()) {
                     if (preg_match('%rel=["\']('.$this->_getRelValuesForNoRewrite().')["\']%', $match[0])) {
                         continue;
