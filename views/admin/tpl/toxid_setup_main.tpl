@@ -136,6 +136,14 @@ function _groupExp(el) {
                         <table>
                             <tr>
                                 <td valign="top" class="edittext">
+                                    [{oxmultilang ident="TOXID_DONT_REWRITE_REL_URLS"}]:
+                                </td>
+                                <td valign="top" class="edittext">
+                                    <input type="text" name="editval[toxidDontRewriteRelUrls]" value="[{$toxidDontRewriteRelUrls}]" size="100">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td valign="top" class="edittext">
                                     <input type="hidden" name="editval[toxidDontRewriteUrls]" value="0">
                                     <input type="checkbox" name="editval[toxidDontRewriteUrls]" value="1" [{if $toxidDontRewriteUrls}]checked="checked"[{/if}]>
                                     [{oxmultilang ident="TOXID_DONT_REWRITE"}]

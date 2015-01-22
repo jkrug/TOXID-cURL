@@ -104,6 +104,12 @@ class toxidCurl extends oxSuperCfg
     protected $_sCustomPage = null;
 
     /**
+     * stores rel values for no url rewrite
+     * @var string
+     */
+    protected $_sRelValuesForNoRewrite = null;
+
+    /**
      * Deprecated!
      * returns a single instance of this class
      *
@@ -245,7 +251,8 @@ class toxidCurl extends oxSuperCfg
         }
 
         if($oConf->getConfigParam('iUtfMode') === 0) {
-            $sText = utf8_decode($sText);
+            $sText = htmlentities($sText, ENT_NOQUOTES, "UTF-8");
+            $sText = html_entity_decode($sText);
         }
 
         // save in cache if ttl is set
@@ -378,9 +385,17 @@ class toxidCurl extends oxSuperCfg
             }
             $target = $sShopUrl.$this->_getToxidLangSeoSnippet($iLangId).'/';
             $source = $this->_getToxidLangSource($iLangId);
-            $pattern = '%href=(\'|")' . $source . '[^"\']*(.|/|\.html|\.php|\.asp)(\?[^"\']*)?(\'|")%';
+            $pattern = '%[^<>]*href=[\'"]' . $source . '[^"\']*?(?:/|\.html|\.php|\.asp)?(?:\?[^"\']*)?[\'"][^<>]*%';
+
             preg_match_all($pattern, $sContent, $matches, PREG_SET_ORDER);
             foreach ($matches as $match) {
+                error_log($match[0]);
+                if ($this->_getRelValuesForNoRewrite()) {
+                    if (preg_match('%rel=["\']('.$this->_getRelValuesForNoRewrite().')["\']%', $match[0])) {
+                        continue;
+                    }
+                }
+
                 $sContent = str_replace($match[0], str_replace($source, $target, $match[0]), $sContent);
             }
             unset($match);
@@ -500,5 +515,18 @@ class toxidCurl extends oxSuperCfg
         } else {
             return $this->_aSearchCache[$sKeywords];
         }
+    }
+
+    /**
+     * returns string with rel values separated by '|'
+     * @return string
+     */
+    protected function _getRelValuesForNoRewrite()
+    {
+        if ($this->_sRelValuesForNoRewrite === null) {
+            $this->_sRelValuesForNoRewrite = implode('|', explode(',',str_replace(' ', '', $this->getConfig()->getConfigParam('toxidDontRewriteRelUrls'))));
+        }
+
+        return $this->_sRelValuesForNoRewrite;
     }
 }
