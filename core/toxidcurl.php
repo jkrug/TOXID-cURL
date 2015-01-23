@@ -398,8 +398,19 @@ class toxidCurl extends oxSuperCfg
                 $sContent = str_replace($match[0], str_replace($source, $target, $match[0]), $sContent);
             }
             unset($match);
-        }
 
+            if ($this->getConfig()->getConfigParam('toxidRewriteUrlEncoded') == true)
+            {
+                // rewrite url encoded url in src attribut
+                $patternUrlEncoded = '%[^<>]*src=[\'"][^\'"]+' . preg_quote(urlencode($source), '%') . '[^"\']*?(?:/|\.html|\.php|\.asp)?(?:\?[^"\']*)?[\'"][^<>]*%';
+                preg_match_all($patternUrlEncoded, $sContent, $matches, PREG_SET_ORDER);
+                foreach ($matches as $match) {
+                    $sContent = str_replace($match[0], str_replace(urlencode($source), urlencode($target), $match[0]), $sContent);
+                }
+
+                unset($match);
+            }
+        }
         return $sContent;
     }
 

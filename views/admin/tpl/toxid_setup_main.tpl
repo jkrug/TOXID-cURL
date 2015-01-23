@@ -144,6 +144,13 @@ function _groupExp(el) {
                             </tr>
                             <tr>
                                 <td valign="top" class="edittext">
+                                    <input type="hidden" name="editval[toxidRewriteUrlEncoded]" value="0">
+                                    <input type="checkbox" name="editval[toxidRewriteUrlEncoded]" value="1" [{if $toxidRewriteUrlEncoded}]checked="checked"[{/if}]>
+                                    [{oxmultilang ident="TOXID_REWRITE_URLENCODED"}]
+                                </td>
+                            </tr>
+                            <tr>
+                                <td valign="top" class="edittext">
                                     <input type="hidden" name="editval[toxidDontRewriteUrls]" value="0">
                                     <input type="checkbox" name="editval[toxidDontRewriteUrls]" value="1" [{if $toxidDontRewriteUrls}]checked="checked"[{/if}]>
                                     [{oxmultilang ident="TOXID_DONT_REWRITE"}]

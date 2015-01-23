@@ -20,6 +20,7 @@ $aLang = array(
     'TOXID_DONT_REWRITE'          => 'Don\'t rewrite the URLs - Users will linked to the external site.',
     'TOXID_DONT_PASSTHROUGH'      => '<b><u>Don\'t</u></b> pass POST parameters to CMS',
     'TOXID_DONT_REWRITE_REL_URLS' => 'Don\'t rewrite the URLs for particular "rel" attribute values (comma-separated list)',
+    'TOXID_REWRITE_URLENCODED'    => 'Rewrite URLs that are "url encoded" (URL must be contained in the "src" attribute)',
     'TOXID_LOOKING_FOR'           => 'Support us with PayPal!',
     'TOXID_GENERAL'               => 'General',
     'TOXID_BECOME_PARTNER'        => 'Become a partner',
