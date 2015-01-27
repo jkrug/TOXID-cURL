@@ -110,6 +110,12 @@ class toxidCurl extends oxSuperCfg
     protected $_sRelValuesForNoRewrite = null;
 
     /**
+     * stores file extension values for no url rewrite
+     * @var string
+     */
+    protected $_sFileExtensionValuesForNoRewrite = null;
+
+    /**
      * Deprecated!
      * returns a single instance of this class
      *
@@ -389,8 +395,15 @@ class toxidCurl extends oxSuperCfg
 
             preg_match_all($pattern, $sContent, $matches, PREG_SET_ORDER);
             foreach ($matches as $match) {
+                // skip rewrite for defined rel values
                 if ($this->_getRelValuesForNoRewrite()) {
                     if (preg_match('%rel=["\']('.$this->_getRelValuesForNoRewrite().')["\']%', $match[0])) {
+                        continue;
+                    }
+                }
+                // skip rewrite for defined file extensions
+                if ($this->_getFileExtensionValuesForNoRewrite()) {
+                    if (preg_match('%\.('.$this->_getFileExtensionValuesForNoRewrite().')[\'"]*%i', $match[0])) {
                         continue;
                     }
                 }
@@ -538,5 +551,18 @@ class toxidCurl extends oxSuperCfg
         }
 
         return $this->_sRelValuesForNoRewrite;
+    }
+
+    /**
+     * returns string with rel values separated by '|'
+     * @return string
+     */
+    protected function _getFileExtensionValuesForNoRewrite()
+    {
+        if ($this->_sFileExtensionValuesForNoRewrite === null) {
+            $this->_sFileExtensionValuesForNoRewrite = implode('|', explode(',',str_replace(' ', '', $this->getConfig()->getConfigParam('toxidDontRewriteFileExtension'))));
+        }
+
+        return $this->_sFileExtensionValuesForNoRewrite;
     }
 }
