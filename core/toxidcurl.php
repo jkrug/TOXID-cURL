@@ -298,6 +298,13 @@ class toxidCurl extends oxSuperCfg
                 header ('Location: '.$this->getConfig()->getShopHomeURL());
                 oxRegistry::getUtils()->showMessageAndExit('');
                 break;
+            case 301:
+                if($this->getConfig()->getConfigParam('bToxidRedirect301ToStartpage')) {
+                    header ("HTTP/1.1 301 Moved Permanently");
+                    header ('Location: '.$this->getToxidStartUrl());
+                    oxRegistry::getUtils()->showMessageAndExit('');
+                }
+                break;
             case 0:
                 header ('Location: '.$this->getConfig()->getShopHomeURL());
                 oxRegistry::getUtils()->showMessageAndExit('');

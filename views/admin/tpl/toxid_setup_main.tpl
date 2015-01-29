@@ -171,6 +171,13 @@ function _groupExp(el) {
                                     [{oxmultilang ident="TOXID_DONT_PASSTHROUGH"}]
                                 </td>
                             </tr>
+                            <tr>
+                                <td valign="top" class="edittext">
+                                    <input type="hidden" name="editval[bToxidRedirect301ToStartpage]" value="0">
+                                    <input type="checkbox" name="editval[bToxidRedirect301ToStartpage]" value="1" [{if $bToxidRedirect301ToStartpage}]checked="checked"[{/if}]>
+                                    [{oxmultilang ident="TOXID_REDIRECT_301_TO_STARTPAGE"}]
+                                </td>
+                            </tr>
                         </table>
                     </fieldset>
                 </dd>
