@@ -655,18 +655,18 @@ class toxidCurl extends oxSuperCfg
 
         $sShopUrl = '';
         if ($this->_oConf->getEdition() === 'EE') {
-	        if($this->_blIsSsl) {
-		        $sShopUrl = $this->_oConf->getConfigParam('sMallSSLShopURL');
-	        }
-	        if(empty($sShopUrl)) { // http or fallback if empty https
-		        $sShopUrl = $this->_oConf->getConfigParam('sMallShopURL');
-	        }
-        } else {
-	        if($this->_blIsSsl) {
-            	$sShopUrl = $this->_oConf->getConfigParam('sSSLShopURL');
+            if($this->_blIsSsl) {
+                $sShopUrl = $this->_oConf->getConfigParam('sMallSSLShopURL');
             }
             if(empty($sShopUrl)) { // http or fallback if empty https
-	            $sShopUrl = $this->_oConf->getConfigParam('sShopURL');
+                $sShopUrl = $this->_oConf->getConfigParam('sMallShopURL');
+            }
+        } else {
+            if($this->_blIsSsl) {
+                $sShopUrl = $this->_oConf->getConfigParam('sSSLShopURL');
+            }
+            if(empty($sShopUrl)) { // http or fallback if empty https
+                $sShopUrl = $this->_oConf->getConfigParam('sShopURL');
             }
         }
 
