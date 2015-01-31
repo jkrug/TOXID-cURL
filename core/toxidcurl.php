@@ -158,6 +158,18 @@ class toxidCurl extends oxSuperCfg
     protected $_oConf = null;
 
     /**
+     * is Oxid in SSL mode
+     * @var bool
+     */
+    protected $_blIsSsl = false;
+
+    /**
+     * used to separate snippet cache names for http/https mode
+     * @var string
+     */
+    protected $_sSslSnippetAdd = '';
+
+    /**
      * string with active Shop ID
      * @var string
      */
@@ -223,6 +235,13 @@ class toxidCurl extends oxSuperCfg
     public function __construct() {
 
         $this->_oConf = $this->getConfig();
+        if($this->_oConf->isSsl()) {
+            $this->_blIsSsl = true;
+            $this->_sSslSnippetAdd = 'ssl_';
+        } else {
+            $this->_blIsSsl = false;
+            $this->_sSslSnippetAdd = '';
+        }
         $this->sShopId = $this->_oConf->getActiveShop()->getId();
         $this->sLangId = oxRegistry::getLang()->getBaseLanguage();
         $this->_blCache = (bool) $this->_oConf->getConfigParam('toxidCacheEnabled');
@@ -325,9 +344,9 @@ class toxidCurl extends oxSuperCfg
         $this->_sCustomPage = null;
 
         /* if actual site is ssl-site, replace all image-sources with ssl-urls */
-        if ($this->_oConf->isSsl()) {
+        if ($this->_blIsSsl) {
 
-            $aSslUrl = $oConf->getShopConfVar('aToxidCurlSourceSsl', $this->sShopId);
+            $aSslUrl = $this->_oConf->getConfigParam('aToxidCurlSourceSsl', $this->sShopId);
             $sSslUrl = $aSslUrl[$this->sLangId];
 
             if (!empty($sSslUrl)) {
@@ -634,15 +653,28 @@ class toxidCurl extends oxSuperCfg
             $aLanguages = array_keys($aLangs);
         }
 
+        $sShopUrl = '';
+        if ($this->_oConf->getEdition() === 'EE') {
+	        if($this->_blIsSsl) {
+		        $sShopUrl = $this->_oConf->getConfigParam('sMallSSLShopURL');
+	        }
+	        if(empty($sShopUrl)) { // http or fallback if empty https
+		        $sShopUrl = $this->_oConf->getConfigParam('sMallShopURL');
+	        }
+        } else {
+	        if($this->_blIsSsl) {
+            	$sShopUrl = $this->_oConf->getConfigParam('sSSLShopURL');
+            }
+            if(empty($sShopUrl)) { // http or fallback if empty https
+	            $sShopUrl = $this->_oConf->getConfigParam('sShopURL');
+            }
+        }
+
+        if (substr($sShopUrl, -1) !== '/') {
+            $sShopUrl .= '/';
+        }
+
         foreach ($aLanguages as $iLangId ) {
-            if ($this->_oConf->getEdition() === 'EE') {
-                $sShopUrl = $this->_oConf->getConfigParam('sMallShopURL');
-            } else {
-                $sShopUrl = $this->_oConf->getConfigParam('sShopURL');
-            }
-            if (substr($sShopUrl, -1) !== '/') {
-                $sShopUrl = $sShopUrl.'/';
-            }
             $target = $sShopUrl.$this->_getToxidLangSeoSnippet($iLangId).'/';
             $source = $this->_getToxidLangSource($iLangId);
             $pattern = '%href=(\'|")' . $source . '[^"\']*(.|/|\.html|\.php|\.asp)(\?[^"\']*)?(\'|")%';
@@ -786,7 +818,7 @@ class toxidCurl extends oxSuperCfg
         }
 
         // build cache file name based on type
-        $sCacheFileName  = 'toxid_' . $this->sShopId . '_' . $this->sLangId . '_';
+        $sCacheFileName  = 'toxid_' . $this->sShopId . '_' . $this->sLangId . '_' . $this->_sSslSnippetAdd;
         // use an individual MD5 hash for current URL and snippet
         $sCacheFileName .= md5( $sSnippet === null ? $this->sUrl : $this->sUrl.$sSnippet );
         $sCacheFileName .= '.' . $sType;
