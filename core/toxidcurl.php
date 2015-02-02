@@ -104,6 +104,18 @@ class toxidCurl extends oxSuperCfg
     protected $_sCustomPage = null;
 
     /**
+     * stores rel values for no url rewrite
+     * @var string
+     */
+    protected $_sRelValuesForNoRewrite = null;
+
+    /**
+     * stores file extension values for no url rewrite
+     * @var string
+     */
+    protected $_sFileExtensionValuesForNoRewrite = null;
+
+    /**
      * Deprecated!
      * returns a single instance of this class
      *
@@ -245,7 +257,8 @@ class toxidCurl extends oxSuperCfg
         }
 
         if($oConf->getConfigParam('iUtfMode') === 0) {
-            $sText = utf8_decode($sText);
+            $sText = htmlentities($sText, ENT_NOQUOTES, "UTF-8");
+            $sText = html_entity_decode($sText);
         }
 
         // save in cache if ttl is set
@@ -284,6 +297,13 @@ class toxidCurl extends oxSuperCfg
                 header ("HTTP/1.1 404 Not Found");
                 header ('Location: '.$this->getConfig()->getShopHomeURL());
                 oxRegistry::getUtils()->showMessageAndExit('');
+                break;
+            case 301:
+                if($this->getConfig()->getConfigParam('bToxidRedirect301ToStartpage')) {
+                    header ("HTTP/1.1 301 Moved Permanently");
+                    header ('Location: '.$this->getToxidStartUrl());
+                    oxRegistry::getUtils()->showMessageAndExit('');
+                }
                 break;
             case 0:
                 header ('Location: '.$this->getConfig()->getShopHomeURL());
@@ -378,14 +398,39 @@ class toxidCurl extends oxSuperCfg
             }
             $target = $sShopUrl.$this->_getToxidLangSeoSnippet($iLangId).'/';
             $source = $this->_getToxidLangSource($iLangId);
-            $pattern = '%href=(\'|")' . $source . '[^"\']*(.|/|\.html|\.php|\.asp)(\?[^"\']*)?(\'|")%';
+            $pattern = '%[^<>]*href=[\'"]' . $source . '[^"\']*?(?:/|\.html|\.php|\.asp)?(?:\?[^"\']*)?[\'"][^<>]*%';
+
             preg_match_all($pattern, $sContent, $matches, PREG_SET_ORDER);
             foreach ($matches as $match) {
+                // skip rewrite for defined rel values
+                if ($this->_getRelValuesForNoRewrite()) {
+                    if (preg_match('%rel=["\']('.$this->_getRelValuesForNoRewrite().')["\']%', $match[0])) {
+                        continue;
+                    }
+                }
+                // skip rewrite for defined file extensions
+                if ($this->_getFileExtensionValuesForNoRewrite()) {
+                    if (preg_match('%\.('.$this->_getFileExtensionValuesForNoRewrite().')[\'"]*%i', $match[0])) {
+                        continue;
+                    }
+                }
+
                 $sContent = str_replace($match[0], str_replace($source, $target, $match[0]), $sContent);
             }
             unset($match);
-        }
 
+            if ($this->getConfig()->getConfigParam('toxidRewriteUrlEncoded') == true)
+            {
+                // rewrite url encoded url in src attribut
+                $patternUrlEncoded = '%[^<>]*src=[\'"][^\'"]+' . preg_quote(urlencode($source), '%') . '[^"\']*?(?:/|\.html|\.php|\.asp)?(?:\?[^"\']*)?[\'"][^<>]*%';
+                preg_match_all($patternUrlEncoded, $sContent, $matches, PREG_SET_ORDER);
+                foreach ($matches as $match) {
+                    $sContent = str_replace($match[0], str_replace(urlencode($source), urlencode($target), $match[0]), $sContent);
+                }
+
+                unset($match);
+            }
+        }
         return $sContent;
     }
 
@@ -500,5 +545,31 @@ class toxidCurl extends oxSuperCfg
         } else {
             return $this->_aSearchCache[$sKeywords];
         }
+    }
+
+    /**
+     * returns string with rel values separated by '|'
+     * @return string
+     */
+    protected function _getRelValuesForNoRewrite()
+    {
+        if ($this->_sRelValuesForNoRewrite === null) {
+            $this->_sRelValuesForNoRewrite = implode('|', explode(',',str_replace(' ', '', $this->getConfig()->getConfigParam('toxidDontRewriteRelUrls'))));
+        }
+
+        return $this->_sRelValuesForNoRewrite;
+    }
+
+    /**
+     * returns string with rel values separated by '|'
+     * @return string
+     */
+    protected function _getFileExtensionValuesForNoRewrite()
+    {
+        if ($this->_sFileExtensionValuesForNoRewrite === null) {
+            $this->_sFileExtensionValuesForNoRewrite = implode('|', explode(',',str_replace(' ', '', $this->getConfig()->getConfigParam('toxidDontRewriteFileExtension'))));
+        }
+
+        return $this->_sFileExtensionValuesForNoRewrite;
     }
 }
