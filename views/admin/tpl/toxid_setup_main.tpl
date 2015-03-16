@@ -64,6 +64,7 @@ function _groupExp(el) {
                                     <li><a href="https://github.com/Tr0nYx" target="_blank">Tr0nYx</a></li>
                                     <li><a href="https://github.com/pixelkrieg" target="_blank">pixelkrieg</a></li>
                                     <li><a href="https://github.com/wanis" target="_blank">wanis</a></li>
+                                    <li><a href="https://github.com/adriankirchner" target="_blank">adriankirchner</a></li>
                                 </ul>
                             </td>
                             <td valign="top">
@@ -132,8 +133,52 @@ function _groupExp(el) {
                     [{/foreach}]
                     <fieldset>
                         <legend>[{oxmultilang ident="TOXID_GENERAL"}]</legend>
-                        <input type="checkbox" name="editval[toxidDontRewriteUrls]" value="1" [{if $toxidDontRewriteUrls}]checked="checked"[{/if}]>
-                        [{oxmultilang ident="TOXID_DONT_REWRITE"}]
+                        <table>
+                            <tr>
+                                <td valign="top" class="edittext">
+                                    [{oxmultilang ident="TOXID_DONT_REWRITE_REL_URLS"}]:
+                                </td>
+                                <td valign="top" class="edittext">
+                                    <input type="text" name="editval[toxidDontRewriteRelUrls]" value="[{$toxidDontRewriteRelUrls}]" size="100">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td valign="top" class="edittext">
+                                    [{oxmultilang ident="TOXID_DONT_REWRITE_URLS_WITH_FILE_EXTENSIONS"}]:
+                                </td>
+                                <td valign="top" class="edittext">
+                                    <input type="text" name="editval[toxidDontRewriteFileExtension]" value="[{$toxidDontRewriteFileExtension}]" size="100">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td valign="top" class="edittext">
+                                    <input type="hidden" name="editval[toxidRewriteUrlEncoded]" value="0">
+                                    <input type="checkbox" name="editval[toxidRewriteUrlEncoded]" value="1" [{if $toxidRewriteUrlEncoded}]checked="checked"[{/if}]>
+                                    [{oxmultilang ident="TOXID_REWRITE_URLENCODED"}]
+                                </td>
+                            </tr>
+                            <tr>
+                                <td valign="top" class="edittext">
+                                    <input type="hidden" name="editval[toxidDontRewriteUrls]" value="0">
+                                    <input type="checkbox" name="editval[toxidDontRewriteUrls]" value="1" [{if $toxidDontRewriteUrls}]checked="checked"[{/if}]>
+                                    [{oxmultilang ident="TOXID_DONT_REWRITE"}]
+                                </td>
+                            </tr>
+                            <tr>
+                                <td valign="top" class="edittext">
+                                    <input type="hidden" name="editval[bToxidDontPassPostVarsToCms]" value="0">
+                                    <input type="checkbox" name="editval[bToxidDontPassPostVarsToCms]" value="1" [{if $bToxidDontPassPostVarsToCms}]checked="checked"[{/if}]>
+                                    [{oxmultilang ident="TOXID_DONT_PASSTHROUGH"}]
+                                </td>
+                            </tr>
+                            <tr>
+                                <td valign="top" class="edittext">
+                                    <input type="hidden" name="editval[bToxidRedirect301ToStartpage]" value="0">
+                                    <input type="checkbox" name="editval[bToxidRedirect301ToStartpage]" value="1" [{if $bToxidRedirect301ToStartpage}]checked="checked"[{/if}]>
+                                    [{oxmultilang ident="TOXID_REDIRECT_301_TO_STARTPAGE"}]
+                                </td>
+                            </tr>
+                        </table>
                     </fieldset>
                 </dd>
             </dl>
