@@ -103,7 +103,7 @@ class toxid_curl extends oxUBase
      */
     public function render()
     {
-        if ( version_compare(oxConfig::getInstance()->getVersion(), '4.5.0') < 0 ) {
+        if ( version_compare(oxRegistry::getConfig()->getVersion(), '4.5.0') < 0 ) {
             $this->_sThisTemplate = 'toxid_curl.tpl';
         }
         return parent::render();
