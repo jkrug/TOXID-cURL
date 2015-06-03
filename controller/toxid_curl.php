@@ -34,6 +34,7 @@ class toxid_curl extends oxUBase
 
     public function init()
     {
+        parent::init();
         $this->_initialized = true;
     }
 
@@ -50,7 +51,7 @@ class toxid_curl extends oxUBase
      */
     public function getTitle()
     {
-        $sTitle = toxidCurl::getInstance()->_sPageTitle;
+        $sTitle = oxRegistry::get('toxidCurl')->_sPageTitle;
         return $sTitle;
     }
     
@@ -61,7 +62,7 @@ class toxid_curl extends oxUBase
      */
     public function getMetaDescription()
     {
-        $this->_xMetaDescription = strip_tags(toxidCurl::getInstance()->_sPageDescription);
+        $this->_xMetaDescription = strip_tags(oxRegistry::get('toxidCurl')->_sPageDescription);
         if ( $this->_sMetaDescription === null ) {
             $this->_sMetaDescription = false;
 
@@ -83,7 +84,7 @@ class toxid_curl extends oxUBase
      */
     public function getMetaKeywords()
     {
-        $this->_xMetaKeywords = strip_tags(toxidCurl::getInstance()->_sPageKeywords);
+        $this->_xMetaKeywords = strip_tags(oxRegistry::get('toxidCurl')->_sPageKeywords);
         if ( $this->_sMetaKeywords === null ) {
             $this->_sMetaKeywords = false;
 
