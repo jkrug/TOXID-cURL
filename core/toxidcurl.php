@@ -105,6 +105,7 @@ class toxidCurl
      */
     private $_sPageContent = null;
     private $iLangId;
+    private $cmsAvailable = true;
 
     public function init(Toxid_Curl_Smarty_Parser $smartyParser)
     {
@@ -129,6 +130,9 @@ class toxidCurl
      */
     public function getCmsSnippet($snippet = null, $blMultiLang = false, $customPage = null, $iCacheTtl = null)
     {
+        if (!$this->cmsAvailable) {
+            return '';
+        }
         if ($snippet == null) {
             return '<strong style="color:red;">TOXID: Please add part, you want to display!</strong>';
         }
@@ -290,10 +294,6 @@ class toxidCurl
         $custom = $this->_getToxidCustomPage();
         $sUrl   = $source . $custom . $page . $param;
         $aPage  = $this->getRemoteContentAndHandleStatusCodes($sUrl);
-
-        switch ($aPage['info']['http_code']) {
-
-        }
 
         // Especially for Wordpress-Frickel-Heinze
         // Kill everything before the <?xml
@@ -562,7 +562,7 @@ class toxidCurl
                 oxRegistry::getUtils()->showMessageAndExit('');
                 break;
             case 404:
-                oxRegistry::getUtils()->handlePageNotFoundError($aPage['info']['url']);
+                $this->handleError(404, $aPage['info']['url']);
                 break;
             case 301:
                 if ($this->getConfig()->getConfigParam('bToxidRedirect301ToStartpage')) {
@@ -662,5 +662,23 @@ class toxidCurl
     private function getConfig()
     {
         return oxRegistry::getConfig();
+    }
+
+    /**
+     * Handle toxid request errors
+     *
+     * @param integer       $statusCode
+     * @param string $sUrl
+     */
+    private function handleError($statusCode, $sUrl = '')
+    {
+        $this->cmsAvailable = false;
+
+        switch ($statusCode) {
+            case 404:
+                oxRegistry::getUtils()->handlePageNotFoundError($sUrl);
+                break;
+        }
+
     }
 }
