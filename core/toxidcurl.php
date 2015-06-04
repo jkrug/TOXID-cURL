@@ -107,6 +107,13 @@ class toxidCurl
     private $iLangId;
     private $cmsAvailable = true;
 
+    /**
+     * Stores a list of URL parameters, which will be added to the CMS request.
+     *
+     * @var array
+     */
+    private $additionalUrlParams = array();
+
     public function init(Toxid_Curl_Smarty_Parser $smartyParser)
     {
         $this->smartyParser = $smartyParser;
@@ -334,6 +341,10 @@ class toxidCurl
     {
         $aResult     = array();
         $curl_handle = curl_init();
+
+        $params = http_build_query($this->additionalUrlParams);
+        $sUrl = rtrim($sUrl, '&') . "&{$params}";
+
         curl_setopt($curl_handle, CURLOPT_URL, $sUrl);
         curl_setopt($curl_handle, CURLOPT_RETURNTRANSFER, 1);
         if (!$this->isToxidCurlPage()) {
@@ -466,7 +477,7 @@ class toxidCurl
             $iLangId = oxRegistry::getLang()->getBaseLanguage();
         }
 
-        return $this->_aToxidLangUrlParam[$iLangId];
+        return '?' . ltrim($this->_aToxidLangUrlParam[$iLangId], '?');
     }
 
     /**
@@ -680,5 +691,14 @@ class toxidCurl
                 break;
         }
 
+    }
+
+    /**
+     * @param string $key
+     * @param string $value
+     */
+    public function setAdditionalUrlParam($key, $value)
+    {
+        $this->additionalUrlParams[$key] = $value;
     }
 }
