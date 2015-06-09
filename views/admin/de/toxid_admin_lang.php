@@ -27,6 +27,10 @@ $aLang = array(
     'TOXID_GENERAL'                                => 'Allgemein',
     'TOXID_BECOME_PARTNER'                         => 'Partner werden',
     'TOXID_INTEGRATIONPARTNER'                     => 'Integrationspartner',
+    'TOXID_CACHE'                                  => 'Cache',
+    'TOXID_CACHE_TTL'                              => 'Cache-Lebenszeit (TTL) in Sekunden',
+    'HELP_TOXID_CACHE_TTL'                         => '0 => unendlich<br>kein Wert => default Cache deaktiviert',
+
 );
 
 if (oxRegistry::getConfig()->getConfigParam('iUtfMode') === 0) {

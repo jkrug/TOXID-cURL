@@ -135,18 +135,18 @@ function _groupExp(el) {
                         <legend>[{oxmultilang ident="TOXID_GENERAL"}]</legend>
                         <table>
                             <tr>
-                                <td valign="top" class="edittext">
+                                <td class="edittext">
                                     [{oxmultilang ident="TOXID_DONT_REWRITE_REL_URLS"}]:
                                 </td>
-                                <td valign="top" class="edittext">
+                                <td class="edittext">
                                     <input type="text" name="editval[toxidDontRewriteRelUrls]" value="[{$toxidDontRewriteRelUrls}]" size="100">
                                 </td>
                             </tr>
                             <tr>
-                                <td valign="top" class="edittext">
+                                <td class="edittext">
                                     [{oxmultilang ident="TOXID_DONT_REWRITE_URLS_WITH_FILE_EXTENSIONS"}]:
                                 </td>
-                                <td valign="top" class="edittext">
+                                <td class="edittext">
                                     <input type="text" name="editval[toxidDontRewriteFileExtension]" value="[{$toxidDontRewriteFileExtension}]" size="100">
                                 </td>
                             </tr>
@@ -176,6 +176,19 @@ function _groupExp(el) {
                                     <input type="hidden" name="editval[bToxidRedirect301ToStartpage]" value="0">
                                     <input type="checkbox" name="editval[bToxidRedirect301ToStartpage]" value="1" [{if $bToxidRedirect301ToStartpage}]checked="checked"[{/if}]>
                                     [{oxmultilang ident="TOXID_REDIRECT_301_TO_STARTPAGE"}]
+                                </td>
+                            </tr>
+                        </table>
+                    </fieldset>
+                    <fieldset>
+                        <legend>[{oxmultilang ident="TOXID_CACHE"}]</legend>
+                        <table>
+                            <tr>
+                                <td class="edittext">
+                                    [{oxmultilang ident="TOXID_CACHE_TTL"}]:
+                                </td>
+                                <td class="edittext">
+                                    <input type="text" name="editval[toxidCacheTtl]" value="[{$toxidCacheTtl}]" size="10">[{oxinputhelp ident="HELP_TOXID_CACHE_TTL"}]
                                 </td>
                             </tr>
                         </table>

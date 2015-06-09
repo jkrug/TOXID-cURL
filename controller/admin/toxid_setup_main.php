@@ -2,11 +2,9 @@
 
 class toxid_setup_main extends oxAdminView
 {
-    
+    const CONFIG_MODULE_NAME = 'module:toxid_curl';
     protected $_sThisTemplate = 'toxid_setup_main.tpl';
 
-    const CONFIG_MODULE_NAME = 'module:toxid_curl';
-    
     public function render()
     {
         $oConf = oxRegistry::getConfig();
@@ -22,30 +20,33 @@ class toxid_setup_main extends oxAdminView
         $this->_aViewData['toxidDontRewriteUrls']          = $oConf->getShopConfVar('toxidDontRewriteUrls');
         $this->_aViewData['bToxidDontPassPostVarsToCms']   = $oConf->getShopConfVar('bToxidDontPassPostVarsToCms');
         $this->_aViewData['bToxidRedirect301ToStartpage']  = $oConf->getShopConfVar('bToxidRedirect301ToStartpage');
+        $this->_aViewData['toxidCacheTtl']                 = $oConf->getShopConfVar('toxidCacheTtl');
 
         return parent::render();
     }
 
     /**
      * Saves the settings
+     *
      * @return void
      */
     public function save()
     {
         $oConf   = oxRegistry::getConfig();
-        $aParams = $oConf->getRequestParameter( "editval" );
+        $aParams = $oConf->getRequestParameter("editval");
         $sShopId = $oConf->getShopId();
 
-        $oConf->saveShopConfVar( 'arr', 'aToxidCurlSource', $aParams['aToxidCurlSource'], $sShopId, self::CONFIG_MODULE_NAME );
-        $oConf->saveShopConfVar( 'arr', 'aToxidCurlSourceSsl', $aParams['aToxidCurlSourceSsl'], $sShopId, self::CONFIG_MODULE_NAME );
-        $oConf->saveShopConfVar( 'arr', 'aToxidSearchUrl', $aParams['aToxidSearchUrl'], $sShopId, self::CONFIG_MODULE_NAME );
-        $oConf->saveShopConfVar( 'arr', 'aToxidCurlUrlParams', $aParams['aToxidCurlUrlParams'], $sShopId, self::CONFIG_MODULE_NAME );
-        $oConf->saveShopConfVar( 'arr', 'aToxidCurlSeoSnippets', $aParams['aToxidCurlSeoSnippets'], $sShopId, self::CONFIG_MODULE_NAME );
-        $oConf->saveShopConfVar( 'str', 'toxidDontRewriteRelUrls', $aParams['toxidDontRewriteRelUrls'], $sShopId, self::CONFIG_MODULE_NAME );
-        $oConf->saveShopConfVar( 'str', 'toxidDontRewriteFileExtension', $aParams['toxidDontRewriteFileExtension'], $sShopId, self::CONFIG_MODULE_NAME );
-        $oConf->saveShopConfVar( 'bl', 'toxidRewriteUrlEncoded', $aParams['toxidRewriteUrlEncoded'], $sShopId, self::CONFIG_MODULE_NAME );
-        $oConf->saveShopConfVar( 'bl', 'toxidDontRewriteUrls', $aParams['toxidDontRewriteUrls'], $sShopId, self::CONFIG_MODULE_NAME );
-        $oConf->saveShopConfVar( 'bl', 'bToxidDontPassPostVarsToCms', $aParams['bToxidDontPassPostVarsToCms'], $sShopId, self::CONFIG_MODULE_NAME );
-        $oConf->saveShopConfVar( 'bl', 'bToxidRedirect301ToStartpage', $aParams['bToxidRedirect301ToStartpage'], $sShopId, self::CONFIG_MODULE_NAME );
+        $oConf->saveShopConfVar('arr', 'aToxidCurlSource', $aParams['aToxidCurlSource'], $sShopId, self::CONFIG_MODULE_NAME);
+        $oConf->saveShopConfVar('arr', 'aToxidCurlSourceSsl', $aParams['aToxidCurlSourceSsl'], $sShopId, self::CONFIG_MODULE_NAME);
+        $oConf->saveShopConfVar('arr', 'aToxidSearchUrl', $aParams['aToxidSearchUrl'], $sShopId, self::CONFIG_MODULE_NAME);
+        $oConf->saveShopConfVar('arr', 'aToxidCurlUrlParams', $aParams['aToxidCurlUrlParams'], $sShopId, self::CONFIG_MODULE_NAME);
+        $oConf->saveShopConfVar('arr', 'aToxidCurlSeoSnippets', $aParams['aToxidCurlSeoSnippets'], $sShopId, self::CONFIG_MODULE_NAME);
+        $oConf->saveShopConfVar('str', 'toxidDontRewriteRelUrls', $aParams['toxidDontRewriteRelUrls'], $sShopId, self::CONFIG_MODULE_NAME);
+        $oConf->saveShopConfVar('str', 'toxidDontRewriteFileExtension', $aParams['toxidDontRewriteFileExtension'], $sShopId, self::CONFIG_MODULE_NAME);
+        $oConf->saveShopConfVar('str', 'toxidCacheTtl', $aParams['toxidCacheTtl'], $sShopId, self::CONFIG_MODULE_NAME);
+        $oConf->saveShopConfVar('bl', 'toxidRewriteUrlEncoded', $aParams['toxidRewriteUrlEncoded'], $sShopId, self::CONFIG_MODULE_NAME);
+        $oConf->saveShopConfVar('bl', 'toxidDontRewriteUrls', $aParams['toxidDontRewriteUrls'], $sShopId, self::CONFIG_MODULE_NAME);
+        $oConf->saveShopConfVar('bl', 'bToxidDontPassPostVarsToCms', $aParams['bToxidDontPassPostVarsToCms'], $sShopId, self::CONFIG_MODULE_NAME);
+        $oConf->saveShopConfVar('bl', 'bToxidRedirect301ToStartpage', $aParams['bToxidRedirect301ToStartpage'], $sShopId, self::CONFIG_MODULE_NAME);
     }
 }

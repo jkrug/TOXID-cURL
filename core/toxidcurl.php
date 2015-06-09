@@ -105,7 +105,7 @@ class toxidCurl
      */
     private $_sPageContent = null;
     private $iLangId;
-    private $cmsAvailable = true;
+    private $cmsAvailable  = true;
 
     /**
      * Stores a list of URL parameters, which will be added to the CMS request.
@@ -135,7 +135,7 @@ class toxidCurl
      *
      * @return string
      */
-    public function getCmsSnippet($snippet = null, $blMultiLang = false, $customPage = null, $iCacheTtl = null)
+    public function getCmsSnippet($snippet = null, $blMultiLang = false, $customPage = null, $iCacheTtl = null, $blGlobalSnippet = false)
     {
         if (!$this->cmsAvailable) {
             return '';
@@ -149,9 +149,14 @@ class toxidCurl
         $sLangId      = oxRegistry::getLang()->getBaseLanguage();
         $oUtils       = oxRegistry::getUtils();
         $oUtilsServer = oxRegistry::get('oxUtilsServer');
+        $pageHash     = md5($this->getConfig()->getConfigParam('sToxidCurlPage')) . "_";
+        if ($blGlobalSnippet) {
+            $pageHash = '';
+        }
 
         // check if snippet text has a ttl and is in cache
-        $sCacheIdent = 'toxid_snippet_' . $snippet . '_' . $sShopId . '_' . $sLangId;
+        $sCacheIdent = "toxid_snippet_{$pageHash}{$snippet}_{$sShopId}_{$sLangId}";
+        $iCacheTtl   = $this->getCacheLifetime($iCacheTtl);
         if ($iCacheTtl !== null && $this->_oSxToxid === null
             && ($sCacheContent = $oUtils->fromFileCache($sCacheIdent))
             && $oUtilsServer->getServerVar('HTTP_CACHE_CONTROL') !== 'no-cache'
@@ -245,6 +250,15 @@ class toxidCurl
         } else {
             return $this->_aSearchCache[$sKeywords];
         }
+    }
+
+    /**
+     * @param string $key
+     * @param string $value
+     */
+    public function setAdditionalUrlParam($key, $value)
+    {
+        $this->additionalUrlParams[$key] = $value;
     }
 
     /**
@@ -343,7 +357,7 @@ class toxidCurl
         $curl_handle = curl_init();
 
         $params = http_build_query($this->additionalUrlParams);
-        $sUrl = rtrim($sUrl, '&') . "&{$params}";
+        $sUrl   = rtrim($sUrl, '&') . "&{$params}";
 
         curl_setopt($curl_handle, CURLOPT_URL, $sUrl);
         curl_setopt($curl_handle, CURLOPT_RETURNTRANSFER, 1);
@@ -397,7 +411,7 @@ class toxidCurl
             if (substr($sShopUrl, -1) !== '/') {
                 $sShopUrl = $sShopUrl . '/';
             }
-            $target  = rtrim($sShopUrl . $this->_getToxidLangSeoSnippet($iLangId),'/') . '/';
+            $target  = rtrim($sShopUrl . $this->_getToxidLangSeoSnippet($iLangId), '/') . '/';
             $source  = $this->_getToxidLangSource($iLangId);
             $pattern = '%[^<>]*href=[\'"]' . $source . '[^"\']*?(?:/|\.html|\.php|\.asp)?(?:\?[^"\']*)?[\'"][^<>]*%';
 
@@ -678,8 +692,8 @@ class toxidCurl
     /**
      * Handle toxid request errors
      *
-     * @param integer       $statusCode
-     * @param string $sUrl
+     * @param integer $statusCode
+     * @param string  $sUrl
      */
     private function handleError($statusCode, $sUrl = '')
     {
@@ -693,12 +707,15 @@ class toxidCurl
 
     }
 
-    /**
-     * @param string $key
-     * @param string $value
-     */
-    public function setAdditionalUrlParam($key, $value)
+    private function getCacheLifetime($iCacheTtl)
     {
-        $this->additionalUrlParams[$key] = $value;
+        if (null === $iCacheTtl) {
+            $defaultCacheTtl = $this->getConfig()->getConfigParam('toxidCacheTtl');
+            if ('' !== trim($defaultCacheTtl)) {
+                $iCacheTtl = $defaultCacheTtl;
+            }
+        }
+
+        return $iCacheTtl;
     }
 }
