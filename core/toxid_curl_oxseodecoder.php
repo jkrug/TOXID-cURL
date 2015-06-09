@@ -14,8 +14,18 @@
  */
 class toxid_curl_oxseodecoder extends toxid_curl_oxseodecoder_parent
 {
+    /**
+     * @var array
+     */
     private $decodedUrl = array();
 
+    /**
+     * Overwrite default decodeUrl handling to check for toxid pages
+     *
+     * @param $sSeoUrl
+     *
+     * @return mixed
+     */
     public function decodeUrl($sSeoUrl)
     {
         if ($this->isToxidUrl($sSeoUrl)) {
@@ -32,12 +42,14 @@ class toxid_curl_oxseodecoder extends toxid_curl_oxseodecoder_parent
             return $this->decodedUrl['params'];
         }
         oxRegistry::getUtils()->redirect($this->getConfig()->getShopURL() . $this->decodedUrl['url'], false);
-
     }
 
     /**
-     * detect if page is toxidPage
-     * if so, return array with langId and URL part
+     * Decode seo snippet url for toxid
+     *
+     * @param $sSeoUrl
+     *
+     * @return array|bool
      */
     protected function detectToxidAndLang($sSeoUrl)
     {
@@ -61,6 +73,15 @@ class toxid_curl_oxseodecoder extends toxid_curl_oxseodecoder_parent
         return false;
     }
 
+    /**
+     * Check for toxid url
+     *
+     * Detects toxid url using the seo snippet or if OXID cannot decode the url.
+     *
+     * @param $sSeoUrl
+     *
+     * @return bool
+     */
     private function isToxidUrl($sSeoUrl)
     {
         $decodedToxidUrl = $this->detectToxidAndLang($sSeoUrl);
@@ -90,7 +111,7 @@ class toxid_curl_oxseodecoder extends toxid_curl_oxseodecoder_parent
         }
 
         $this->decodedUrl['toxidUrl']  = $sSeoUrl;
-        $this->decodedUrl['toxidLang'] = 0;
+        $this->decodedUrl['toxidLang'] = oxRegistry::getLang()->getBaseLanguage();
 
         return true;
     }
