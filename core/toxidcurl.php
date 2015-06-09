@@ -149,13 +149,10 @@ class toxidCurl
         $sLangId      = oxRegistry::getLang()->getBaseLanguage();
         $oUtils       = oxRegistry::getUtils();
         $oUtilsServer = oxRegistry::get('oxUtilsServer');
-        $pageHash     = md5($this->getConfig()->getConfigParam('sToxidCurlPage')) . "_";
-        if ($blGlobalSnippet) {
-            $pageHash = '';
-        }
+
+        $sCacheIdent = $this->getCacheIdent($snippet,$sShopId,$sLangId,$blGlobalSnippet);
 
         // check if snippet text has a ttl and is in cache
-        $sCacheIdent = "toxid_snippet_{$pageHash}{$snippet}_{$sShopId}_{$sLangId}";
         $iCacheTtl   = $this->getCacheLifetime($iCacheTtl);
         if ($iCacheTtl !== null && $this->_oSxToxid === null
             && ($sCacheContent = $oUtils->fromFileCache($sCacheIdent))
@@ -717,5 +714,15 @@ class toxidCurl
         }
 
         return $iCacheTtl;
+    }
+
+    private function getCacheIdent($snippet, $sShopId, $sLangId, $blGlobalSnippet)
+    {
+        $identString = $snippet;
+        if (!$blGlobalSnippet) {
+            $identString .= $this->getConfig()->getConfigParam('sToxidCurlPage');
+        }
+        $identHash = md5($identString);
+        return "toxid_snippet_{$identHash}_{$sShopId}_{$sLangId}";
     }
 }
