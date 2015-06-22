@@ -30,7 +30,7 @@ class toxid_curl_oxseodecoder extends toxid_curl_oxseodecoder_parent
     {
         if ($this->isToxidUrl($sSeoUrl)) {
             $aRet['cl']   = 'toxid_curl';
-            $aRet['lang'] = $this->decodedUrl['lang'];
+            $aRet['lang'] = $this->decodedUrl['toxidLang'];
             $toxidUrl     = $this->decodedUrl['toxidUrl'];
 
             oxRegistry::getLang()->setBaseLanguage($aRet['lang']);
