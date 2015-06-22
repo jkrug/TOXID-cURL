@@ -354,7 +354,11 @@ class toxidCurl
         $curl_handle = curl_init();
 
         $params = http_build_query($this->additionalUrlParams);
-        $sUrl   = rtrim($sUrl, '&') . "&{$params}";
+        if (false === strpos($sUrl, '?')) {
+            $sUrl .= "?{$params}";
+        } else {
+            $sUrl = rtrim($sUrl, '&') . "&{$params}";
+        }
 
         curl_setopt($curl_handle, CURLOPT_URL, $sUrl);
         curl_setopt($curl_handle, CURLOPT_RETURNTRANSFER, 1);
