@@ -30,7 +30,7 @@ class toxid_curl_oxviewconfig extends toxid_curl_oxviewconfig_parent
      */
     protected function _injectTplVariable()
     {
-        $oConfig = oxConfig::getInstance();
+        $oConfig = oxRegistry::getConfig();
         $sTplVariableName = $oConfig->getConfigParam('sTplVariable');
         if ($sTplVariableName) {
             $oConfig->getActiveView()->addTplParam($sTplVariableName, $this->getToxid());

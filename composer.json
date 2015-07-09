@@ -1,9 +1,16 @@
 {
-    "require-dev": {
-        "phpunit/phpunit": "@stable",
-        "phpmd/oxmd": "@stable"
-    },
-    "autoload": {
-        "classmap": ["controller/", "core/"]
-    }
+  "name": "jkrug/toxid_curl",
+  "description": "",
+  "type": "oxid-module",
+  "license": "GPL-3.0",
+  "require": {
+    "composer/installers": "~1.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "@stable",
+    "phpmd/oxmd": "@stable"
+  },
+  "autoload": {
+    "classmap": ["controller/", "core/"]
+  }
 }
