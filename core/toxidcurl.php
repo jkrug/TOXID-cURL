@@ -414,7 +414,7 @@ class toxidCurl
             }
             $target  = rtrim($sShopUrl . $this->_getToxidLangSeoSnippet($iLangId), '/') . '/';
             $source  = $this->_getToxidLangSource($iLangId);
-            $pattern = '%[^<>]*href=[\'"]' . $source . '[^"\']*?(?:/|\.html|\.php|\.asp)?(?:\?[^"\']*)?[\'"][^<>]*%';
+            $pattern = '%[^<>]*(action|href)=[\'"]' . $source . '[^"\']*?(?:/|\.html|\.php|\.asp)?(?:\?[^"\']*)?[\'"][^<>]*%';
 
             preg_match_all($pattern, $sContent, $matches, PREG_SET_ORDER);
             foreach ($matches as $match) {
