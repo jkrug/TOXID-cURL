@@ -89,9 +89,18 @@ class toxid_curl_oxseodecoder extends toxid_curl_oxseodecoder_parent
             return false;
         }
 
-        $this->decodedUrl['toxidUrl']  = $sSeoUrl;
-        $this->decodedUrl['toxidLang'] = 0;
+        $this->decodedUrl['toxidUrl']  = $this->postProcessToxidUrl($sSeoUrl);
+        $this->decodedUrl['toxidLang'] = oxRegistry::getLang()->getBaseLanguage();
 
         return true;
+    }
+
+    protected function postProcessToxidUrl($sSeoUrl)
+    {
+        /* Waving chicken... */
+        if (method_exists(get_parent_class(), 'postProcessToxidUrl')) {
+            $sSeoUrl = parent::postProcessToxidUrl($sSeoUrl);
+        }
+        return $sSeoUrl;
     }
 }
