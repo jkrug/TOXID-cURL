@@ -307,7 +307,8 @@ class toxidCurl
         }
 
         $source = $this->_getToxidLangSource();
-        $page   = $this->getConfig()->getConfigParam('sToxidCurlPage');
+        $lang = oxRegistry::getLang()->getLanguageAbbr();
+        $page   = $this->getConfig()->getConfigParam('sToxidCurlPage') ? : $lang;
         $param  = $this->_getToxidLangUrlParam();
         $custom = $this->_getToxidCustomPage();
         $sUrl   = $source . $custom . $page . $param;
