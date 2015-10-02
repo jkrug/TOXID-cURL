@@ -86,8 +86,8 @@ class toxid_curl_oxseodecoder extends toxid_curl_oxseodecoder_parent
     {
         $decodedToxidUrl = $this->detectToxidAndLang($sSeoUrl);
         if (false !== $decodedToxidUrl) {
-            $this->decodedUrl['toxidLang'] = $decodedToxidUrl['lang'];
-            $this->decodedUrl['toxidUrl']  = $decodedToxidUrl['url'];
+            $this->decodedUrl['toxidUrl'] = $decodedToxidUrl['url'];
+            $this->decodedUrl['toxidLang'] = $this->getLanguageId($this->decodedUrl['toxidUrl']);
 
             return true;
         }
@@ -110,8 +110,8 @@ class toxid_curl_oxseodecoder extends toxid_curl_oxseodecoder_parent
             return false;
         }
 
-        $this->decodedUrl['toxidUrl']  = $this->postProcessToxidUrl($sSeoUrl);
-        $this->decodedUrl['toxidLang'] = oxRegistry::getLang()->getBaseLanguage();
+        $this->decodedUrl['toxidUrl'] = $this->postProcessToxidUrl($sSeoUrl);
+        $this->decodedUrl['toxidLang'] = $this->getLanguageId($this->decodedUrl['toxidUrl']);
 
         return true;
     }
@@ -123,5 +123,18 @@ class toxid_curl_oxseodecoder extends toxid_curl_oxseodecoder_parent
             $sSeoUrl = parent::postProcessToxidUrl($sSeoUrl);
         }
         return $sSeoUrl;
+    }
+
+    private function getLanguageId($sUrl = null)
+    {
+        if ($sUrl !== null) {
+            foreach (oxRegistry::getLang()->getLanguageIds() as $key => $abbr) {
+                if (strpos($sUrl, $abbr . '?') === 0 || strpos($sUrl, $abbr . '/') === 0) {
+                    return $key;
+                }
+            }
+        }
+
+        return oxRegistry::getLang()->getBaseLanguage();
     }
 }
