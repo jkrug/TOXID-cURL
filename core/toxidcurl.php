@@ -703,6 +703,10 @@ class toxidCurl
 
         switch ($statusCode) {
             case 404:
+                $sRedirectLinkError404 = $this->getConfig()->getConfigParam('toxidError404Link');
+                if ('' !== trim($sRedirectLinkError404)) {
+                    oxRegistry::getUtils()->redirect($sRedirectLinkError404);
+                }
                 oxRegistry::getUtils()->handlePageNotFoundError($sUrl);
                 break;
         }

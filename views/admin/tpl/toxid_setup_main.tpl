@@ -151,6 +151,14 @@ function _groupExp(el) {
                                 </td>
                             </tr>
                             <tr>
+                                <td class="edittext">
+                                    [{ oxmultilang ident="TOXID_ERROR_404_LINK" }]:
+                                </td>
+                                <td class="edittext">
+                                    <input type="text" name="editval[toxidError404Link]" value="[{$toxidError404Link}]" size="100">
+                                </td>
+                            </tr>
+                            <tr>
                                 <td valign="top" class="edittext">
                                     <input type="hidden" name="editval[toxidRewriteUrlEncoded]" value="0">
                                     <input type="checkbox" name="editval[toxidRewriteUrlEncoded]" value="1" [{if $toxidRewriteUrlEncoded}]checked="checked"[{/if}]>
