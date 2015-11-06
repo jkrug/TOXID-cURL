@@ -259,6 +259,20 @@ class toxidCurl
     }
 
     /**
+     * @param string $page
+     *
+     * @return string
+     */
+    protected function postProcessPageString($page)
+    {
+        if (method_exists(get_parent_class(), 'postProcessPageString')) {
+            $page = parent::postProcessPageString($page);
+        }
+
+        return $page;
+    }
+
+    /**
      * returns SimpleXMLElement object from Typo3 xml
      *
      * @param bool $blReset
@@ -307,8 +321,8 @@ class toxidCurl
         }
 
         $source = $this->_getToxidLangSource();
-        $lang = oxRegistry::getLang()->getLanguageAbbr();
-        $page   = $this->getConfig()->getConfigParam('sToxidCurlPage') ? : $lang;
+        $page   = $this->getConfig()->getConfigParam('sToxidCurlPage');
+        $page   = $this->postProcessPageString($page);
         $param  = $this->_getToxidLangUrlParam();
         $custom = $this->_getToxidCustomPage();
         $sUrl   = $source . $custom . $page . $param;

@@ -87,7 +87,8 @@ class toxid_curl_oxseodecoder extends toxid_curl_oxseodecoder_parent
         $decodedToxidUrl = $this->detectToxidAndLang($sSeoUrl);
         if (false !== $decodedToxidUrl) {
             $this->decodedUrl['toxidUrl'] = $decodedToxidUrl['url'];
-            $this->decodedUrl['toxidLang'] = $this->getLanguageId($this->decodedUrl['toxidUrl']);
+            $languageId = oxRegistry::getLang()->getBaseLanguage();
+            $this->decodedUrl['toxidLang'] = $this->processToxidLangByUrl($languageId, $this->decodedUrl['toxidUrl']);
 
             return true;
         }
@@ -111,30 +112,39 @@ class toxid_curl_oxseodecoder extends toxid_curl_oxseodecoder_parent
         }
 
         $this->decodedUrl['toxidUrl'] = $this->postProcessToxidUrl($sSeoUrl);
-        $this->decodedUrl['toxidLang'] = $this->getLanguageId($this->decodedUrl['toxidUrl']);
+        $languageId = oxRegistry::getLang()->getBaseLanguage();
+        $this->decodedUrl['toxidLang'] = $this->processToxidLangByUrl($languageId, $this->decodedUrl['toxidUrl']);
 
         return true;
     }
 
+    /**
+     * @param string $sSeoUrl
+     *
+     * @return string
+     */
     protected function postProcessToxidUrl($sSeoUrl)
     {
         /* Waving chicken... */
         if (method_exists(get_parent_class(), 'postProcessToxidUrl')) {
             $sSeoUrl = parent::postProcessToxidUrl($sSeoUrl);
         }
+
         return $sSeoUrl;
     }
 
-    private function getLanguageId($sUrl = null)
+    /**
+     * @param int    $languageId
+     * @param string $sSeoUrl
+     *
+     * @return int
+     */
+    protected function processToxidLangByUrl($languageId, $sSeoUrl)
     {
-        if ($sUrl !== null) {
-            foreach (oxRegistry::getLang()->getLanguageIds() as $key => $abbr) {
-                if (strpos($sUrl, $abbr . '?') === 0 || strpos($sUrl, $abbr . '/') === 0) {
-                    return $key;
-                }
-            }
+        if (method_exists(get_parent_class(), 'processToxidLangByUrl')) {
+            $languageId = parent::processToxidLangByUrl($languageId, $sSeoUrl);
         }
 
-        return oxRegistry::getLang()->getBaseLanguage();
+        return (int) $languageId;
     }
 }
