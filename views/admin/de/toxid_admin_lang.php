@@ -21,12 +21,17 @@ $aLang = array(
     'TOXID_DONT_PASSTHROUGH'                       => 'POST-Parameter <b><u>nicht</u></b> an CMS durchreichen',
     'TOXID_DONT_REWRITE_REL_URLS'                  => 'URLs für bestimmte "rel" Attributwerte nicht umschreiben (kommaseparierte Liste)',
     'TOXID_DONT_REWRITE_URLS_WITH_FILE_EXTENSIONS' => 'URLs für bestimmte Dateiendungen nicht umschreiben (kommaseparierte Liste)',
+    'TOXID_ERROR_404_LINK'                         => 'User will be redirected to this URL on 404 error (optional)',
     'TOXID_REWRITE_URLENCODED'                     => 'URLs die "url encoded" sind umschreiben (URL muss sich im "src" attribut befindet)',
     'TOXID_REDIRECT_301_TO_STARTPAGE'              => 'Auf Startseite weiterleiten wenn das CMS den HTTP-Statuscode 301 liefert',
     'TOXID_LOOKING_FOR'                            => 'gesucht!',
     'TOXID_GENERAL'                                => 'Allgemein',
     'TOXID_BECOME_PARTNER'                         => 'Partner werden',
     'TOXID_INTEGRATIONPARTNER'                     => 'Integrationspartner',
+    'TOXID_CACHE'                                  => 'Cache',
+    'TOXID_CACHE_TTL'                              => 'Cache-Lebenszeit (TTL) in Sekunden',
+    'HELP_TOXID_CACHE_TTL'                         => '0 => unendlich<br>kein Wert => default Cache deaktiviert',
+
 );
 
 if (oxRegistry::getConfig()->getConfigParam('iUtfMode') === 0) {

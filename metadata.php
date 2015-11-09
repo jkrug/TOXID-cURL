@@ -28,7 +28,7 @@ $aModule = array(
     'email'         => 'support@marmalade.de',
     'url'           => 'http://www.marmalade.de',
     'thumbnail'     => 'toxid.jpg',
-    'version'       => '2.0',
+    'version'       => '2.3.2',
     'author'        => 'marmalade GmbH :: Joscha Krug',
     'extend' => array(
         'oxseodecoder'              => 'toxid_curl/core/toxid_curl_oxseodecoder',
@@ -56,6 +56,7 @@ $aModule = array(
         'toxid_setup_main'          => 'toxid_curl/controller/admin/toxid_setup_main.php',
         'toxid_setup_list'          => 'toxid_curl/controller/admin/toxid_setup_list.php',
         'toxid_curl_events'         => 'toxid_curl/core/toxid_curl_events.php',
+        'toxid_curl_smarty_parser'  => 'toxid_curl/core/facades/toxid_curl_smarty_parser.php',
     ),
     'settings' => array(
         array(
