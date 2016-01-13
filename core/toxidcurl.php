@@ -616,6 +616,7 @@ class toxidCurl
                 }
                 break;
             case 302:
+            case 303:
             case 307:
                 $redirectUrl = $aPage['info']['redirect_url'];
                 $aPage       = $this->getRemoteContentAndHandleStatusCodes($redirectUrl);
