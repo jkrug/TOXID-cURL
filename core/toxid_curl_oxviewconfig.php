@@ -45,7 +45,7 @@ class toxid_curl_oxviewconfig extends toxid_curl_oxviewconfig_parent
     {
         $toxidCurl = oxRegistry::get('toxidcurl');
         if (!$toxidCurl->getInitialized()) {
-            $smartyParser = new toxid_curl_smarty_parser();
+            $smartyParser = oxNew('toxid_curl_smarty_parser');
             $toxidCurl->init(
                 $smartyParser
             );
