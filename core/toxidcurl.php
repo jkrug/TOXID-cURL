@@ -593,7 +593,7 @@ class toxidCurl
      *
      * @return array
      */
-    private function getRemoteContentAndHandleStatusCodes($sUrl)
+    protected function getRemoteContentAndHandleStatusCodes($sUrl)
     {
         $aPage = $this->_getRemoteContent($sUrl);
         switch ($aPage['info']['http_code']) {
@@ -712,7 +712,7 @@ class toxidCurl
      * @param integer $statusCode
      * @param string  $sUrl
      */
-    private function handleError($statusCode, $sUrl = '')
+    protected function handleError($statusCode, $sUrl = '')
     {
         $this->cmsAvailable = false;
 
