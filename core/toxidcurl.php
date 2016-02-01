@@ -637,7 +637,7 @@ class toxidCurl
      *
      * @return string
      */
-    private function prepareRedirectUrl($sUrl)
+    protected function prepareRedirectUrl($sUrl)
     {
         $aLangSource = $this->getConfig()->getConfigParam('aToxidCurlSource');
         $iLangId     = $this->getBaseLanguage();
@@ -654,7 +654,7 @@ class toxidCurl
      *
      * @return bool
      */
-    private function isToxidCurlPage()
+    protected function isToxidCurlPage()
     {
         return 'toxid_curl' == $this->getConfig()->getActiveView()->getClassName();
     }
@@ -664,7 +664,7 @@ class toxidCurl
      *
      * @return integer
      */
-    private function getBaseLanguage()
+    protected function getBaseLanguage()
     {
         if ($this->iLangId === null) {
             $this->iLangId = oxRegistry::getLang()->getBaseLanguage();
@@ -682,7 +682,7 @@ class toxidCurl
      *
      * @return string
      */
-    private function replaceNonSslUrls($sText, $sSslUrl, $oldSrc)
+    protected function replaceNonSslUrls($sText, $sSslUrl, $oldSrc)
     {
         if (!empty($sSslUrl)) {
 
@@ -701,7 +701,7 @@ class toxidCurl
      *
      * @return oxConfig
      */
-    private function getConfig()
+    protected function getConfig()
     {
         return oxRegistry::getConfig();
     }
@@ -728,7 +728,7 @@ class toxidCurl
 
     }
 
-    private function getCacheLifetime($iCacheTtl)
+    protected function getCacheLifetime($iCacheTtl)
     {
         if (null === $iCacheTtl) {
             $defaultCacheTtl = $this->getConfig()->getConfigParam('toxidCacheTtl');
@@ -740,7 +740,7 @@ class toxidCurl
         return $iCacheTtl;
     }
 
-    private function getCacheIdent($snippet, $sShopId, $sLangId, $blGlobalSnippet)
+    protected function getCacheIdent($snippet, $sShopId, $sLangId, $blGlobalSnippet)
     {
         $identString = $snippet;
         if (!$blGlobalSnippet) {
