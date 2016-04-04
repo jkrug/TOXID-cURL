@@ -593,7 +593,7 @@ class toxidCurl
      *
      * @return array
      */
-    private function getRemoteContentAndHandleStatusCodes($sUrl)
+    protected function getRemoteContentAndHandleStatusCodes($sUrl)
     {
         $aPage = $this->_getRemoteContent($sUrl);
         switch ($aPage['info']['http_code']) {
@@ -616,6 +616,7 @@ class toxidCurl
                 }
                 break;
             case 302:
+            case 303:
             case 307:
                 $redirectUrl = $aPage['info']['redirect_url'];
                 $aPage       = $this->getRemoteContentAndHandleStatusCodes($redirectUrl);
@@ -711,7 +712,7 @@ class toxidCurl
      * @param integer $statusCode
      * @param string  $sUrl
      */
-    private function handleError($statusCode, $sUrl = '')
+    protected function handleError($statusCode, $sUrl = '')
     {
         $this->cmsAvailable = false;
 
