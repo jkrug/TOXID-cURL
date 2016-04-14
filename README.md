@@ -55,7 +55,7 @@ It is STRONGLY recommended to wrap your snippets/parts in CDATA to prevent XML-m
 
 For Wordpress, change the "Permalinks" settings to use SEO URLs, e.g. by entry name (http://blog.mysite.com/content1) and make sure to adjust the Wordpress .htaccess to allow URL Rewriting.
 
-**5 Configure your System in Extensions > TOXID Configuration**
+**4 Configure your System in Extensions > TOXID Configuration**
 
 Specifically, add the URLs to your CMS and enter a URL in "URL Identifier / SEO-Snippet:", e.g. "Blog".
 Even if you only use one language, enter a value for the other language, too! Otherwise, the internet might explode, 
@@ -64,7 +64,7 @@ or at least you will get the blog contents for every page in your shop. :)
 Also, make sure you add a "/" at the end of your CMS URL, e.g. "http://blog.mysite.com/", otherwise you will get double-slashes
 in your blog URLs ("../Blog//foo-bar").
 
-**6 now you can call your snippets via the component like this**
+**5 now you can call your snippets via the component like this**
 
     [{assign var='toxid' value=$oViewConf->getToxid()}]
     [{ $toxid->getCmsSnippet(part1) }]
@@ -81,7 +81,7 @@ and in tpl/search.tpl (if you use basic theme), or tpl/page/search/search.tpl ad
         </div>
     [{/if}]
 
-**7 Use OXIDs file cache for integrating snippets into navigation**
+**6 Use OXIDs file cache for integrating snippets into navigation**
 
 When using snippets in omnipresent parts of the OXID eShop you probably don't want TOXID to request your CMS on every shop request. In this case you can use the TTL parameter to cache the parsed snippet markup for a given amount of time:
 
@@ -97,7 +97,7 @@ This stores the requested snippet in OXIDs file cache for 30 minutes (1800 secon
 
 For further information about TTL handling see `oxUtils::toFileCache()`
 
-**8 Adjust your templates!**
+**7 Adjust your templates!**
 
 
 What we already implemented
