@@ -422,7 +422,7 @@ class toxidCurl
         }
 
         foreach ($aLanguages as $iLangId) {
-            if( $this->getConfig()->isSssl() ){
+            if( $this->getConfig()->isSsl() ){
                 $sShopUrl = $this->getConfig()->getSslShopUrl();
             }else{
                 $sShopUrl = $this->getConfig()->getShopUrl();
