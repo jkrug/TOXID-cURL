@@ -381,6 +381,8 @@ class toxidCurl
             $sUrl = rtrim($sUrl, '&') . "&{$params}";
         }
 
+        $sUrl = rtrim($sUrl, '&?');
+
         curl_setopt($curl_handle, CURLOPT_URL, $sUrl);
         curl_setopt($curl_handle, CURLOPT_RETURNTRANSFER, 1);
         if (!$this->isToxidCurlPage()) {
