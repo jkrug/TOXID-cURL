@@ -90,6 +90,12 @@ class toxidCurl
      * @var string
      */
     protected $_sFileExtensionValuesForNoRewrite = null;
+    /**
+     * stores not found url by active language
+     *
+     * @var array
+     */
+    protected $_aNotFoundUrl = null;
     private   $_initialized                      = false;
     private   $smartyParser;
     /**
@@ -587,13 +593,35 @@ class toxidCurl
     }
 
     /**
+     * returns typo3 URL for not found page
+     *
+     * @param int $iLangId
+     * @param bool $blReset reset object value, and get url again
+     *
+     * @return null|string
+     */
+    protected function _getToxidNotFoundUrl($iLangId = null, $blReset = false)
+    {
+        if ($this->_aNotFoundUrl === null || $blReset) {
+            $this->_aNotFoundUrl = $this->getConfig()->getConfigParam('aToxidNotFoundUrl');
+        }
+
+        if ($iLangId === null) {
+            $iLangId = oxRegistry::getLang()->getBaseLanguage();
+        }
+
+        return array_key_exists($iLangId, (array)$this->_aNotFoundUrl) ? $this->_aNotFoundUrl[$iLangId] : null;
+    }
+
+    /**
      * Handles HTTP status codes for toxid response
      *
      * @param $sUrl
+     * @param $notFound404
      *
      * @return array
      */
-    protected function getRemoteContentAndHandleStatusCodes($sUrl)
+    private function getRemoteContentAndHandleStatusCodes($sUrl, $notFound404 = false)
     {
         $aPage = $this->_getRemoteContent($sUrl);
         switch ($aPage['info']['http_code']) {
@@ -603,6 +631,10 @@ class toxidCurl
                 oxRegistry::getUtils()->showMessageAndExit('');
                 break;
             case 404:
+                if($this->_getToxidNotFoundUrl() && !$notFound404) {
+                    $aPage = $this->getRemoteContentAndHandleStatusCodes($this->_getToxidNotFoundUrl(), true);
+                    break;
+                }
                 $this->handleError(404, $aPage['info']['url']);
                 break;
             case 301:
@@ -712,7 +744,7 @@ class toxidCurl
      * @param integer $statusCode
      * @param string  $sUrl
      */
-    protected function handleError($statusCode, $sUrl = '')
+    private function handleError($statusCode, $sUrl = '')
     {
         $this->cmsAvailable = false;
 
