@@ -1,13 +1,13 @@
 [{include file="headitem.tpl" title="GENERAL_ADMIN_TITLE"|oxmultilangassign}]
 <script type="text/javascript">
-<!--
-function _groupExp(el) {
-    var _cur = el.parentNode;
+    <!--
+    function _groupExp(el) {
+        var _cur = el.parentNode;
 
-    if (_cur.className == "exp") _cur.className = "";
-      else _cur.className = "exp";
-}
-//-->
+        if (_cur.className == "exp") _cur.className = "";
+        else _cur.className = "exp";
+    }
+    //-->
 </script>
 
 [{ if $readonly }]
@@ -16,7 +16,7 @@ function _groupExp(el) {
 [{assign var="readonly" value=""}]
 [{/if}]
 <form name="transfer" id="transfer" action="[{ $oViewConf->getSelfLink() }]" method="post">
-    [{ $oViewConf->getHiddenSid() }]    
+    [{ $oViewConf->getHiddenSid() }]
     <input type="hidden" name="oxid" value="[{ $oxid }]">
     <input type="hidden" name="cl" value="toxid_setup_main">
     <input type="hidden" name="fnc" value="">
@@ -73,7 +73,7 @@ function _groupExp(el) {
                                     <li>[{oxmultilang ident='TOXID_LOOKING_FOR'}]</li>
                                 </ul>
                             </td>
-                         </tr>
+                        </tr>
                     </table>
                 </dd>
             </dl>
@@ -90,43 +90,58 @@ function _groupExp(el) {
                             <table>
                                 <tr>
                                     <td valign="top" class="edittext">
-                                        [{oxmultilang ident="TOXID_SOURCE"}]: 
+                                        [{oxmultilang ident="TOXID_SOURCE"}]:
                                     </td>
                                     <td valign="top" class="edittext">
-                                            <input type="text" name="editval[aToxidCurlSource][[{ $lang }]]" value="[{$aToxidCurlSource.$lang}]">
+                                        <input type="text" name="editval[aToxidCurlSource][[{ $lang }]]" value="[{$aToxidCurlSource.$lang}]">
                                     </td>
                                 </tr>
                                 <tr>
                                     <td valign="top" class="edittext">
-                                        [{oxmultilang ident="TOXID_SOURCE_SSL"}]: 
+                                        [{oxmultilang ident="TOXID_SOURCE_SSL"}]:
                                     </td>
                                     <td valign="top" class="edittext">
-                                            <input type="text" name="editval[aToxidCurlSourceSsl][[{ $lang }]]" value="[{$aToxidCurlSourceSsl.$lang}]">
+                                        <input type="text" name="editval[aToxidCurlSourceSsl][[{ $lang }]]" value="[{$aToxidCurlSourceSsl.$lang}]">
                                     </td>
                                 </tr>
                                 <tr>
                                     <td valign="top" class="edittext">
-                                        [{oxmultilang ident="TOXID_SEARCH_URL"}]: 
+                                        [{oxmultilang ident="TOXID_SEARCH_URL"}]:
                                     </td>
                                     <td valign="top" class="edittext">
-                                            <input type="text" name="editval[aToxidSearchUrl][[{ $lang }]]" value="[{$aToxidSearchUrl.$lang}]">
+                                        <input type="text" name="editval[aToxidSearchUrl][[{ $lang }]]" value="[{$aToxidSearchUrl.$lang}]">
                                     </td>
                                 </tr>
                                 <tr>
                                     <td valign="top" class="edittext">
-                                        [{oxmultilang ident="TOXID_PARAM"}]: 
+                                        [{oxmultilang ident="TOXID_PARAM"}]:
                                     </td>
                                     <td valign="top" class="edittext">
-                                            <input type="text" name="editval[aToxidCurlUrlParams][[{ $lang }]]" value="[{$aToxidCurlUrlParams.$lang}]">
+                                        <input type="text" name="editval[aToxidCurlUrlParams][[{ $lang }]]" value="[{$aToxidCurlUrlParams.$lang}]">
                                     </td>
                                 </tr>
                                 <tr>
                                     <td valign="top" class="edittext">
-                                        [{oxmultilang ident="TOXID_SEO_SNIPPET"}]: 
+                                        [{oxmultilang ident="TOXID_SEO_SNIPPET"}]:
                                     </td>
                                     <td valign="top" class="edittext">
-                                            <input type="text" name="editval[aToxidCurlSeoSnippets][[{ $lang }]]" value="[{$aToxidCurlSeoSnippets.$lang}]">
+                                        <input type="text" name="editval[aToxidCurlSeoSnippets][[{ $lang }]]" value="[{$aToxidCurlSeoSnippets.$lang}]">
                                     </td>
+                                </tr>
+                                <tr>
+                                    <td valign="top" class="edittext">
+                                        [{oxmultilang ident="TOXID_NOT_FOUND_URL"}]:
+                                    </td>
+                                    <td valign="top" class="edittext">
+                                        <input type="text" name="editval[aToxidNotFoundUrl][[{ $lang }]]" value="[{$aToxidNotFoundUrl.$lang}]">
+                                    </td>
+                                </tr>
+                                <td valign="top" class="edittext">
+                                    [{oxmultilang ident="TOXID_PREVIEW_PARAM"}]:
+                                </td>
+                                <td valign="top" class="edittext">
+                                    <input type="text" name="editval[aToxidCurlPreviewUrlParams][[{ $lang }]]" value="[{$aToxidCurlPreviewUrlParams.$lang}]">
+                                </td>
                                 </tr>
                             </table>
                         </fieldset>
