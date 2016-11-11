@@ -60,6 +60,13 @@ class toxidCurl
      * @var array
      */
     protected $_aToxidLangUrlParam = null;
+
+    /**
+     * array of string with admin specific toxidUrlParam
+     *
+     * @var array
+     */
+    protected $_aToxidAdminUrlParam = null;
     /**
      * stores search url by active language
      *
@@ -90,6 +97,12 @@ class toxidCurl
      * @var string
      */
     protected $_sFileExtensionValuesForNoRewrite = null;
+    /**
+     * stores not found url by active language
+     *
+     * @var array
+     */
+    protected $_aNotFoundUrl = null;
     private   $_initialized                      = false;
     private   $smartyParser;
     /**
@@ -166,6 +179,7 @@ class toxidCurl
         }
 
         $sText = $this->_getSnippetFromXml($snippet);
+
         $sText = $this->_rewriteUrls($sText, null, $blMultiLang);
 
         $sPageTitle = $this->_rewriteUrls($this->_getSnippetFromXml('//metadata//title', null, $blMultiLang));
@@ -320,13 +334,21 @@ class toxidCurl
             return $this->_sPageContent;
         }
 
-        $source = $this->_getToxidLangSource();
-        $page   = $this->getConfig()->getConfigParam('sToxidCurlPage');
-        $page   = $this->postProcessPageString($page);
-        $param  = $this->_getToxidLangUrlParam();
-        $custom = $this->_getToxidCustomPage();
-        $sUrl   = $source . $custom . $page . $param;
-        $aPage  = $this->getRemoteContentAndHandleStatusCodes($sUrl);
+        $source     = $this->_getToxidLangSource();
+        $page       = $this->getConfig()->getConfigParam('sToxidCurlPage');
+        $page       = $this->postProcessPageString($page);
+        $custom     = $this->_getToxidCustomPage();
+        $params     = $this->_getToxidUrlParams();
+
+        $sUrl = $source . $custom . $page . $params;
+
+        // Add the post ID to as GET param to url if trying to get a post preview
+        if ($this->isAdminLoggedIn() && !$page && $_GET['p'])
+        {
+            $sUrl = $sUrl . '&p=' . $_GET['p'];
+        }
+
+        $aPage = $this->getRemoteContentAndHandleStatusCodes($sUrl);
 
         // Especially for Wordpress-Frickel-Heinze
         // Kill everything before the <?xml
@@ -367,13 +389,14 @@ class toxidCurl
     {
         $aResult     = array();
         $curl_handle = curl_init();
-
         $params = http_build_query($this->additionalUrlParams);
         if (false === strpos($sUrl, '?')) {
             $sUrl .= "?{$params}";
         } else {
             $sUrl = rtrim($sUrl, '&') . "&{$params}";
         }
+
+        $sUrl = rtrim($sUrl, '&?');
 
         curl_setopt($curl_handle, CURLOPT_URL, $sUrl);
         curl_setopt($curl_handle, CURLOPT_RETURNTRANSFER, 1);
@@ -491,6 +514,27 @@ class toxidCurl
     }
 
     /**
+     *
+     */
+    protected function _getToxidUrlParams()
+    {
+        $langParam  = $this->_getToxidLangUrlParam();
+
+        if ($this->isAdminLoggedIn())
+        {
+            $adminParam = $this->_getToxidAdminUrlParam();
+        }
+        else {
+            $adminParam = '';
+        }
+
+        $params = $langParam . $adminParam;
+
+        return $params;
+
+    }
+
+    /**
      * returns string with language specific toxidUrlParam
      *
      * @param int  $iLangId
@@ -508,6 +552,18 @@ class toxidCurl
         }
 
         return '?' . ltrim($this->_aToxidLangUrlParam[$iLangId], '?');
+    }
+
+    /**
+     * returns string with admin specific toxidUrlParam
+     * @return mixed|string
+     * @internal param bool $param
+     */
+    protected function _getToxidAdminUrlParam()
+    {
+        $this->_aToxidAdminUrlParam = $this->getConfig()->getConfigParam('aToxidCurlUrlAdminParams');
+
+        return '&' . ltrim($this->_aToxidAdminUrlParam[0], '?');
     }
 
     /**
@@ -587,13 +643,35 @@ class toxidCurl
     }
 
     /**
+     * returns typo3 URL for not found page
+     *
+     * @param int $iLangId
+     * @param bool $blReset reset object value, and get url again
+     *
+     * @return null|string
+     */
+    protected function _getToxidNotFoundUrl($iLangId = null, $blReset = false)
+    {
+        if ($this->_aNotFoundUrl === null || $blReset) {
+            $this->_aNotFoundUrl = $this->getConfig()->getConfigParam('aToxidNotFoundUrl');
+        }
+
+        if ($iLangId === null) {
+            $iLangId = oxRegistry::getLang()->getBaseLanguage();
+        }
+
+        return array_key_exists($iLangId, (array)$this->_aNotFoundUrl) ? $this->_aNotFoundUrl[$iLangId] : null;
+    }
+
+    /**
      * Handles HTTP status codes for toxid response
      *
      * @param $sUrl
+     * @param $notFound404
      *
      * @return array
      */
-    protected function getRemoteContentAndHandleStatusCodes($sUrl)
+    private function getRemoteContentAndHandleStatusCodes($sUrl, $notFound404 = false)
     {
         $aPage = $this->_getRemoteContent($sUrl);
         switch ($aPage['info']['http_code']) {
@@ -603,6 +681,10 @@ class toxidCurl
                 oxRegistry::getUtils()->showMessageAndExit('');
                 break;
             case 404:
+                if($this->_getToxidNotFoundUrl() && !$notFound404) {
+                    $aPage = $this->getRemoteContentAndHandleStatusCodes($this->_getToxidNotFoundUrl(), true);
+                    break;
+                }
                 $this->handleError(404, $aPage['info']['url']);
                 break;
             case 301:
@@ -712,7 +794,7 @@ class toxidCurl
      * @param integer $statusCode
      * @param string  $sUrl
      */
-    protected function handleError($statusCode, $sUrl = '')
+    private function handleError($statusCode, $sUrl = '')
     {
         $this->cmsAvailable = false;
 
@@ -749,4 +831,22 @@ class toxidCurl
         $identHash = md5($identString);
         return "toxid_snippet_{$identHash}_{$sShopId}_{$sLangId}";
     }
+
+    /**
+     * @return bool
+     */
+    private function isAdminLoggedIn()
+    {
+        $user = oxRegistry::getConfig()->getUser();
+
+        if ($user && $user->oxuser__oxrights->value != 'user') {
+
+            return true;
+
+        }
+
+        return false;
+    }
 }
+
+
