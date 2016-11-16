@@ -531,9 +531,8 @@ class toxidCurl
 
         if ($this->isAdminLoggedIn())
         {
-            $adminParam = $this->_getToxidAdminUrlParam();
-            $cmsParams = $this->_getToxidCmsUrlParams();
-            $params .= $adminParam . $cmsParams;
+            $params .= $this->_getToxidAdminUrlParam();
+            $params .= $this->_getToxidCmsUrlParams();
         }
 
         return $params;
@@ -562,7 +561,9 @@ class toxidCurl
 
         foreach ($params as $param) {
 
-            if ( $paramValue = oxRegistry::getConfig()->getRequestParameter($param) ) {
+            $paramValue = oxRegistry::getConfig()->getRequestParameter($param);
+
+            if (isset($paramValue) && $paramValue !== '') {
                 $cmsParams .= '&' . $param . '=' . $paramValue;
             }
         }
@@ -817,12 +818,6 @@ class toxidCurl
     {
         $user = oxRegistry::getConfig()->getUser();
 
-        if ($user && $user->oxuser__oxrights->value != 'user') {
-
-            return true;
-
-        }
-
-        return false;
+        return ($user && $user->oxuser__oxrights->value != 'user');
     }
 }
