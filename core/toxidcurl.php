@@ -61,6 +61,12 @@ class toxidCurl
      */
     protected $_aToxidLangUrlParam = null;
     /**
+     * array of string with admin specific toxidUrlParam
+     *
+     * @var array
+     */
+    protected $_aToxidAdminUrlParam = null;
+    /**
      * stores search url by active language
      *
      * @var array
@@ -320,12 +326,14 @@ class toxidCurl
             return $this->_sPageContent;
         }
 
-        $source = $this->_getToxidLangSource();
-        $page   = $this->getConfig()->getConfigParam('sToxidCurlPage');
-        $page   = $this->postProcessPageString($page);
-        $param  = $this->_getToxidLangUrlParam();
-        $custom = $this->_getToxidCustomPage();
-        $sUrl   = $source . $custom . $page . $param;
+        $source     = $this->_getToxidLangSource();
+        $page       = $this->getConfig()->getConfigParam('sToxidCurlPage');
+        $page       = $this->postProcessPageString($page);
+        $custom     = $this->_getToxidCustomPage();
+        $params     = $this->_getToxidUrlParams();
+
+        $sUrl   = $source . $custom . $page . $params;
+
         $aPage  = $this->getRemoteContentAndHandleStatusCodes($sUrl);
 
         // Especially for Wordpress-Frickel-Heinze
@@ -508,6 +516,59 @@ class toxidCurl
         }
 
         return '?' . ltrim($this->_aToxidLangUrlParam[$iLangId], '?');
+    }
+
+    /**
+     * returns string with toxid specific url params
+     *
+     * @return string
+     */
+    protected function _getToxidUrlParams()
+    {
+        $langParam  = $this->_getToxidLangUrlParam();
+
+        $params = $langParam;
+
+        if ($this->isAdminLoggedIn())
+        {
+            $params .= $this->_getToxidAdminUrlParam();
+            $params .= $this->_getToxidCmsUrlParams();
+        }
+
+        return $params;
+    }
+
+    /**
+     * returns string with admin specific toxidUrlParam
+     * @return mixed|string
+     * @internal param bool $param
+     */
+    protected function _getToxidAdminUrlParam()
+    {
+        $this->_aToxidAdminUrlParam = $this->getConfig()->getConfigParam('aToxidCurlUrlAdminParams');
+
+        return '&' . ltrim($this->_aToxidAdminUrlParam[0], '?');
+    }
+
+    /**
+     * returns string with cms specific url params
+     * @return string
+     */
+    protected function _getToxidCmsUrlParams()
+    {
+        $params  = explode(",", $this->getConfig()->getConfigParam('toxidAllowedCmsRequestParams'));
+        $cmsParams = '';
+
+        foreach ($params as $param) {
+
+            $paramValue = oxRegistry::getConfig()->getRequestParameter($param);
+
+            if (isset($paramValue) && $paramValue !== '') {
+                $cmsParams .= '&' . $param . '=' . $paramValue;
+            }
+        }
+
+        return $cmsParams;
     }
 
     /**
@@ -748,5 +809,15 @@ class toxidCurl
         }
         $identHash = md5($identString);
         return "toxid_snippet_{$identHash}_{$sShopId}_{$sLangId}";
+    }
+
+    /**
+     * @return bool
+     */
+    private function isAdminLoggedIn()
+    {
+        $user = oxRegistry::getConfig()->getUser();
+
+        return ($user && $user->oxuser__oxrights->value != 'user');
     }
 }
