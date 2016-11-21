@@ -97,7 +97,20 @@ This stores the requested snippet in OXIDs file cache for 30 minutes (1800 secon
 
 For further information about TTL handling see `oxUtils::toFileCache()`
 
-**7 Adjust your templates!**
+**7 Set up preview functionality for Wordpress!**
+
+Install the toxid-preview Wordpress-Plugin from this repository https://github.com/jkrug/wordpress-toxid
+After setting up yor preview-password in Wordpress-Dashboard->Settings->General "password for previews" , go to Toxid-Settings in Oxid Admin.
+
+In the input-field "Admin URL-Parameter" paste "preview=true&toxid-preview=" while "toxid-preview" gets the value of the password you set up in Wordpress before.
+
+Add the cms-specific url-params to the input field "Allowed cms specific parameters", i.e "p" for wordpress.
+
+Finally, log in in the shop frontend with an admin user and in your blog you will also see posts that are drafts currently.
+
+**8 Adjust your templates!**
+
+
 
 
 What we already implemented

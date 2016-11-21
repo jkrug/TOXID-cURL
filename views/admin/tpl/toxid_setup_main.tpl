@@ -128,12 +128,28 @@ function _groupExp(el) {
                                             <input type="text" name="editval[aToxidCurlSeoSnippets][[{ $lang }]]" value="[{$aToxidCurlSeoSnippets.$lang}]">
                                     </td>
                                 </tr>
+                                <tr>
+                                    <td valign="top" class="edittext">
+                                        [{oxmultilang ident="TOXID_PREVIEW_PARAM"}]:
+                                    </td>
+                                    <td valign="top" class="edittext">
+                                        <input type="text" name="editval[aToxidCurlUrlAdminParams][[{ $lang }]]" value="[{$aToxidCurlUrlAdminParams.$lang}]">
+                                    </td>
+                                </tr>
                             </table>
                         </fieldset>
                     [{/foreach}]
                     <fieldset>
                         <legend>[{oxmultilang ident="TOXID_GENERAL"}]</legend>
                         <table>
+                            <tr>
+                                <td class="edittext">
+                                    [{ oxmultilang ident="TOXID_CMS_PARAMS" }]
+                                </td>
+                                <td class="edittext">
+                                    <input type="text"  name="editval[toxidAllowedCmsRequestParams]" value="[{$toxidAllowedCmsRequestParams}]">
+                                </td>
+                            </tr>
                             <tr>
                                 <td class="edittext">
                                     [{oxmultilang ident="TOXID_DONT_REWRITE_REL_URLS"}]:
