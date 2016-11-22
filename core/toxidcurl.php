@@ -305,6 +305,9 @@ class toxidCurl
      */
     protected function _getSnippetFromXml($sSnippet)
     {
+        if(str_replace("/","",$this->_getToxidLangSource()) == '')
+           return '';
+		
         $oTypo3Xml      = $this->_getXmlObject();
         $aXpathSnippets = $oTypo3Xml->xpath('//' . $sSnippet . '[1]');
         $sText          = $aXpathSnippets[0];
