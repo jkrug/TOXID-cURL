@@ -13,13 +13,13 @@
  * @copyright (C) marmalade.de 2011
  */
 
-class toxid_curl_sticky_teaser extends oxWidget
+class toxid_curl_cms_content extends oxWidget
 {
     /**
      * Current class template name.
      * @var string
      */
-    protected $_sThisTemplate = 'sticky_posts_teaser.tpl';
+    protected $_sThisTemplate = 'toxid_cms_content.tpl';
 
     /**
      * Executes parent::render().
@@ -36,11 +36,11 @@ class toxid_curl_sticky_teaser extends oxWidget
             $toxid->init(oxNew('Toxid_Curl_Smarty_Parser'));
         }
 
-        $teaser = $toxid->getCmsSnippet('content', true, 'toxid-teaser');
+        $cmsSnippet = $toxid->getCmsSnippet('content', true, 'toxid-teaser');
 
         parent::render();
 
-        $this->_aViewData['teaser'] = $teaser;
+        $this->_aViewData['cmsContent'] = $cmsSnippet;
 
         return $this->_sThisTemplate;
 
