@@ -12,14 +12,13 @@
  * @package   core
  * @copyright (C) marmalade.de 2011
  */
-
-class toxid_curl_cms_content extends oxWidget
+class toxid_curl_content_widget extends oxWidget
 {
     /**
      * Current class template name.
      * @var string
      */
-    protected $_sThisTemplate = 'toxid_cms_content.tpl';
+    protected $_sThisTemplate = 'toxid_content_widget.tpl';
 
     /**
      * Executes parent::render().
@@ -40,7 +39,7 @@ class toxid_curl_cms_content extends oxWidget
 
         parent::render();
 
-        $this->_aViewData['cmsContent'] = $cmsSnippet;
+        $this->_aViewData['content'] = $cmsSnippet;
 
         return $this->_sThisTemplate;
 

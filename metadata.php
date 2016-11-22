@@ -39,7 +39,7 @@ $aModule = array(
         'toxid_curl.tpl'            => 'toxid_curl/views/azure/toxid_curl.tpl',
         'product.tpl'               => 'toxid_curl/views/azure/product.tpl',
         'toxid_setup_main.tpl'      => 'toxid_curl/views/admin/tpl/toxid_setup_main.tpl',
-        'toxid_cms_content.tpl'     => 'toxid_curl/views/widget/toxid_cms_content.tpl',
+        'toxid_content_widget.tpl'  => 'toxid_curl/views/widget/toxid_content_widget.tpl',
     ),
     'blocks' => array(
         array(
@@ -58,7 +58,7 @@ $aModule = array(
         'toxid_setup_list'          => 'toxid_curl/controller/admin/toxid_setup_list.php',
         'toxid_curl_events'         => 'toxid_curl/core/toxid_curl_events.php',
         'toxid_curl_smarty_parser'  => 'toxid_curl/core/facades/toxid_curl_smarty_parser.php',
-        'toxid_curl_cms_content'    => 'toxid_curl/widget/toxid_curl_cms_content.php',
+        'toxid_curl_content_widget' => 'toxid_curl/widget/toxid_curl_content_widget.php',
     ),
     'settings' => array(
         array(
