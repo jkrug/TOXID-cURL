@@ -108,7 +108,19 @@ Add the cms-specific url-params to the input field "Allowed cms specific paramet
 
 Finally, log in in the shop frontend with an admin user and in your blog you will also see posts that are drafts currently.
 
-**8 Adjust your templates!**
+
+**8 Implement the content-widget for Wordpress!**
+
+Create a new Wordpress page called 'toxid-teaser' and a new template file called "page-toxid-teaser.php"
+
+Adjust this template however you want.
+
+In your shop template implement this code snippet to show the content from the new teaser-page:
+
+[{oxid_include_widget cl='toxid_curl_content_widget'}]
+
+
+**9 Adjust your templates!**
 
 
 
