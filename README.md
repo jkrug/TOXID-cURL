@@ -111,11 +111,11 @@ Finally, log in in the shop frontend with an admin user and in your blog you wil
 
 **8 Implement the content-widget for Wordpress!**
 
-Create a new Wordpress page called 'toxid-teaser' and a new template file called "page-toxid-teaser.php"
+Create a new Wordpress page called 'toxid-content-widget' and a new template file called "page-toxid-content-widget.php"
 
 Adjust this template however you want.
 
-In your shop template implement this code snippet to show the content from the new teaser-page:
+In your shop template implement this code snippet to show the content from the new content-page:
 
 [{oxid_include_widget cl='toxid_curl_content_widget'}]
 
