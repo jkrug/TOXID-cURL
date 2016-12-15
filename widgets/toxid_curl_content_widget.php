@@ -35,7 +35,7 @@ class toxid_curl_content_widget extends oxWidget
             $toxid->init(oxNew('Toxid_Curl_Smarty_Parser'));
         }
 
-        $cmsSnippet = $toxid->getCmsSnippet('content', true, 'toxid-teaser');
+        $cmsSnippet = $toxid->getCmsSnippet('content', true, 'toxid-content-widget');
 
         parent::render();
 
