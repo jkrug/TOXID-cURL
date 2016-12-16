@@ -376,12 +376,7 @@ class toxidCurl
         $aResult     = array();
         $curl_handle = curl_init();
 
-        $params = http_build_query($this->additionalUrlParams);
-        if (false === strpos($sUrl, '?')) {
-            $sUrl .= "?{$params}";
-        } else {
-            $sUrl = rtrim($sUrl, '&') . "&{$params}";
-        }
+        $sUrl = $this->_appendAdditionalUrlParams($sUrl);
 
         $sUrl = rtrim($sUrl, '&?');
 
@@ -403,6 +398,30 @@ class toxidCurl
         curl_close($curl_handle);
 
         return $aResult;
+    }
+    
+    /**
+     * Returns the given $sUrl with the appended parameters, if any.
+     * 
+     * @param $sUrl
+     * 
+     * @return string
+     */
+    protected function _appendAdditionalUrlParams($sUrl)
+    {
+        if (!$this->additionalUrlParams) {
+            return $sUrl;
+        }
+
+        $params = http_build_query($this->additionalUrlParams);
+
+        if (false === strpos($sUrl, '?')) {
+            $sUrl .= "?{$params}";
+        } else {
+            $sUrl = rtrim($sUrl, '&') . "&{$params}";
+        }
+
+        return $sUrl;
     }
 
     /**
@@ -516,8 +535,12 @@ class toxidCurl
         if ($iLangId === null) {
             $iLangId = oxRegistry::getLang()->getBaseLanguage();
         }
+        
+        if ($param = $this->_aToxidLangUrlParam[$iLangId]) {
+            return '?' . ltrim($param, '?');
+        }
 
-        return '?' . ltrim($this->_aToxidLangUrlParam[$iLangId], '?');
+        return '';
     }
 
     /**
