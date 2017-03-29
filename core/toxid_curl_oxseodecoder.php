@@ -87,7 +87,7 @@ class toxid_curl_oxseodecoder extends toxid_curl_oxseodecoder_parent
         $decodedToxidUrl = $this->detectToxidAndLang($sSeoUrl);
         if (false !== $decodedToxidUrl) {
             $this->decodedUrl['toxidUrl'] = $decodedToxidUrl['url'];
-            $languageId = oxRegistry::getLang()->getBaseLanguage();
+            $languageId = $decodedToxidUrl['lang'];
             $this->decodedUrl['toxidLang'] = $this->processToxidLangByUrl($languageId, $this->decodedUrl['toxidUrl']);
 
             return true;
