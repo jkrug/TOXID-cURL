@@ -488,12 +488,22 @@ class toxidCurl
      */
     protected function _getToxidLangSource($iLangId = null, $blReset = false)
     {
-        if ($this->_aSourceUrlByLang === null || $blReset) {
-            $this->_aSourceUrlByLang = $this->getConfig()->getConfigParam('aToxidCurlSource');
-        }
         if ($iLangId === null) {
             $iLangId = oxRegistry::getLang()->getBaseLanguage();
         }
+                
+        if ($this->_aSourceUrlByLang === null || $blReset) {
+            
+            $oConf = $this->getConfig();   
+            if ($oConf->isSsl() && $this->getConfig()->getConfigParam('aToxidCurlSourceSsl')[$iLangId]!="") {
+              $this->_aSourceUrlByLang = $this->getConfig()->getConfigParam('aToxidCurlSourceSsl');
+            } else {
+              $this->_aSourceUrlByLang = $this->getConfig()->getConfigParam('aToxidCurlSource');
+            }
+             
+            
+        }
+        
 
         $source = $this->_aSourceUrlByLang[$iLangId];
         if (substr($source, -1) !== '/') {
