@@ -390,6 +390,12 @@ class toxidCurl
 
         curl_setopt($curl_handle, CURLOPT_URL, $sUrl);
         curl_setopt($curl_handle, CURLOPT_RETURNTRANSFER, 1);
+	
+	if ($this->getConfig()->getActiveShop()->getFieldData('OXPRODUCTIVE') == 0) {
+            curl_setopt($curl_handle, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($curl_handle, CURLOPT_SSL_VERIFYHOST, false);
+        }    
+	    
         if (!$this->isToxidCurlPage()) {
             curl_setopt($curl_handle, CURLOPT_FOLLOWLOCATION, true);
         }
