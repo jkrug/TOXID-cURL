@@ -444,7 +444,7 @@ class toxidCurl
             $sShopUrl = $this->getConfig()->getShopUrl();
 	    $oConf = $this->getConfig();
             if ($oConf->isSsl()) {
-              $sShopUrl = str_replace('http','https',$sShopUrl);
+              $sShopUrl = str_replace('http:','https:',$sShopUrl);
             }
 
             if (substr($sShopUrl, -1) !== '/') {
