@@ -33,7 +33,7 @@ $aLang = [
     'TOXID_CACHE'                                  => 'Cache',
     'TOXID_CACHE_TTL'                              => 'Cache lifetime (TTL) in seconds',
     'HELP_TOXID_CACHE_TTL'                         => '0 => forever<br>no value => default cache deactivated',
-    'TOXID_DONT_VERIFY_SSL_CERTIFICATE'            => 'SSL-Zertifikat nicht überprüfen',
+    'TOXID_DONT_VERIFY_SSL_CERTIFICATE'            => 'Don\'t verify SSL certificate (e.g. if it is self-signed).',
 ];
 
 if (oxRegistry::getConfig()->getConfigParam('iUtfMode') === 0) {
