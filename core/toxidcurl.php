@@ -138,6 +138,7 @@ class toxidCurl
      * @param bool   $blMultiLang
      * @param string $customPage
      * @param int    $iCacheTtl
+     * @param bool   $blGlobalSnippet
      *
      * @return string
      */
@@ -190,7 +191,6 @@ class toxidCurl
         $this->_sPageDescription = $this->smartyParser->parse($sPageDescription);
 
         $this->_sPageKeywords = $this->smartyParser->parse($sPageKeywords);
-        $this->_aCustomPage   = null;
 
         /* if actual site is ssl-site, replace all image-sources with ssl-urls */
         if ($oConf->isSsl()) {
@@ -287,13 +287,38 @@ class toxidCurl
      */
     protected function _getXmlObject($blReset = false)
     {
-        if ($this->_oSxToxid !== null && !$blReset) {
-            return $this->_oSxToxid;
+        $customPage = $this->_getToxidCustomPage();
+
+        if (
+            isset($this->_oSxToxid[$customPage]) &&
+            ($this->_oSxToxid[$customPage] instanceof SimpleXMLElement) &&
+            !$blReset
+        ) {
+            return $this->_oSxToxid[$customPage];
         }
-        $this->_oSxToxid = simplexml_load_string($this->_getXmlFromTypo3($blReset));
 
-        return $this->_oSxToxid;
+        $xml = $this->_getXmlFromTypo3($blReset);
 
+        if (!$this->isXml($xml)) {
+            return new SimpleXMLElement("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<toxid/>");
+        }
+
+        $this->_oSxToxid[$customPage] = new SimpleXMLElement($xml);
+
+        return $this->_oSxToxid[$customPage];
+
+    }
+
+    /**
+     * Determines if we got XML from Typo3 or not.
+     *
+     * @param string $response
+     *
+     * @return bool
+     */
+    protected function isXml($response)
+    {
+        return (0 === strpos($response, '<?xml '));
     }
 
     /**
@@ -326,13 +351,7 @@ class toxidCurl
             return $this->_sPageContent;
         }
 
-        $source     = $this->_getToxidLangSource();
-        $page       = $this->getConfig()->getConfigParam('sToxidCurlPage');
-        $page       = $this->postProcessPageString($page);
-        $custom     = $this->_getToxidCustomPage();
-        $params     = $this->_getToxidUrlParams();
-
-        $sUrl   = $source . $custom . $page . $params;
+        $sUrl = $this->buildBaseUrl();
 
         $aPage  = $this->getRemoteContentAndHandleStatusCodes($sUrl);
 
@@ -376,19 +395,17 @@ class toxidCurl
         $aResult     = array();
         $curl_handle = curl_init();
 
-        $params = http_build_query($this->additionalUrlParams);
-        if (false === strpos($sUrl, '?')) {
-            $sUrl .= "?{$params}";
-        } else {
-            $sUrl = rtrim($sUrl, '&') . "&{$params}";
-        }
-
-        $sUrl = rtrim($sUrl, '&?');
+        $sUrl = $this->buildRequestUrl($sUrl);
 
         curl_setopt($curl_handle, CURLOPT_URL, $sUrl);
         curl_setopt($curl_handle, CURLOPT_RETURNTRANSFER, 1);
         if (!$this->isToxidCurlPage()) {
             curl_setopt($curl_handle, CURLOPT_FOLLOWLOCATION, true);
+        }
+
+        if ($this->getConfig()->getConfigParam('toxidDontVerifySSLCert')) {
+            curl_setopt($curl_handle, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($curl_handle, CURLOPT_SSL_VERIFYHOST, false);
         }
 
         /* Forward POST requests like a boss */
@@ -805,11 +822,14 @@ class toxidCurl
 
     private function getCacheIdent($snippet, $sShopId, $sLangId, $blGlobalSnippet)
     {
-        $identString = $snippet;
+        $identString = $snippet . $this->buildRequestUrl($this->buildBaseUrl());
+
         if (!$blGlobalSnippet) {
             $identString .= $this->getConfig()->getConfigParam('sToxidCurlPage');
         }
+
         $identHash = md5($identString);
+
         return "toxid_snippet_{$identHash}_{$sShopId}_{$sLangId}";
     }
 
@@ -821,5 +841,40 @@ class toxidCurl
         $user = oxRegistry::getConfig()->getUser();
 
         return ($user && $user->oxuser__oxrights->value != 'user');
+    }
+
+    /**
+     * @param $baseUrl
+     *
+     * @return string
+     */
+    protected function buildRequestUrl($baseUrl)
+    {
+        $params = http_build_query($this->additionalUrlParams);
+        if (false === strpos($baseUrl, '?')) {
+            $baseUrl .= "?{$params}";
+        } else {
+            $baseUrl = rtrim($baseUrl, '&') . "&{$params}";
+        }
+
+        $baseUrl = rtrim($baseUrl, '&?');
+
+        return $baseUrl;
+    }
+
+    /**
+     * @return string
+     */
+    protected function buildBaseUrl()
+    {
+        $source = $this->_getToxidLangSource();
+        $page   = $this->getConfig()->getConfigParam('sToxidCurlPage');
+        $page   = $this->postProcessPageString($page);
+        $custom = $this->_getToxidCustomPage();
+        $params = $this->_getToxidUrlParams();
+
+        $sUrl = $source . $custom . $page . $params;
+
+        return $sUrl;
     }
 }
