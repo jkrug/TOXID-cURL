@@ -439,19 +439,26 @@ class toxidCurl
             }
             $target  = rtrim($sShopUrl . $this->_getToxidLangSeoSnippet($iLangId), '/') . '/';
             $source  = $this->_getToxidLangSource($iLangId);
-            $pattern = '%[^<>]*(action|href)=[\'"]' . $source . '[^"\']*?(?:/|\.html|\.php|\.asp)?(?:\?[^"\']*)?[\'"][^<>]*%';
+            $pattern = '%(action|href)=[\'"]' . $source . '[^"\']*?(?:/|\.html|\.php|\.asp)?(?:\?[^"\']*)?[\'"]%';
 
             preg_match_all($pattern, $sContent, $matches, PREG_SET_ORDER);
             foreach ($matches as $match) {
-                // skip rewrite for defined rel values
-                if ($this->_getRelValuesForNoRewrite()) {
-                    if (preg_match('%rel=["\'](' . $this->_getRelValuesForNoRewrite() . ')["\']%', $match[0])) {
-                        continue;
-                    }
-                }
+
                 // skip rewrite for defined file extensions
                 if ($this->_getFileExtensionValuesForNoRewrite()) {
                     if (preg_match('%\.(' . $this->_getFileExtensionValuesForNoRewrite() . ')[\'"]*%i', $match[0])) {
+                        continue;
+                    }
+                }
+
+                if ('src' == $match[1] && $this->getConfig()->getConfigParam('toxidRewriteUrlEncoded') == true) {
+                    $sContent = str_replace($match[0], str_replace(urlencode($source), urlencode($target), $match[0]), $sContent);
+                    continue;
+                }
+
+                // skip rewrite for defined rel values
+                if ($this->_getRelValuesForNoRewrite()) {
+                    if (preg_match('%rel=["\'](' . $this->_getRelValuesForNoRewrite() . ')["\']%', $match[0])) {
                         continue;
                     }
                 }
@@ -460,16 +467,6 @@ class toxidCurl
             }
             unset($match);
 
-            if ($this->getConfig()->getConfigParam('toxidRewriteUrlEncoded') == true) {
-                // rewrite url encoded url in src attribut
-                $patternUrlEncoded = '%[^<>]*src=[\'"][^\'"]+' . preg_quote(urlencode($source), '%') . '[^"\']*?(?:/|\.html|\.php|\.asp)?(?:\?[^"\']*)?[\'"][^<>]*%';
-                preg_match_all($patternUrlEncoded, $sContent, $matches, PREG_SET_ORDER);
-                foreach ($matches as $match) {
-                    $sContent = str_replace($match[0], str_replace(urlencode($source), urlencode($target), $match[0]), $sContent);
-                }
-
-                unset($match);
-            }
         }
 
         return $sContent;
