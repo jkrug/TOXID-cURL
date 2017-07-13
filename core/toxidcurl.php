@@ -444,6 +444,13 @@ class toxidCurl
             preg_match_all($pattern, $sContent, $matches, PREG_SET_ORDER);
             foreach ($matches as $match) {
 
+                // skip rewrite for defined file extensions
+                if ($this->_getFileExtensionValuesForNoRewrite()) {
+                    if (preg_match('%\.(' . $this->_getFileExtensionValuesForNoRewrite() . ')[\'"]*%i', $match[0])) {
+                        continue;
+                    }
+                }
+
                 if ('src' == $match[1] && $this->getConfig()->getConfigParam('toxidRewriteUrlEncoded') == true) {
                     $sContent = str_replace($match[0], str_replace(urlencode($source), urlencode($target), $match[0]), $sContent);
                     continue;
@@ -452,12 +459,6 @@ class toxidCurl
                 // skip rewrite for defined rel values
                 if ($this->_getRelValuesForNoRewrite()) {
                     if (preg_match('%rel=["\'](' . $this->_getRelValuesForNoRewrite() . ')["\']%', $match[0])) {
-                        continue;
-                    }
-                }
-                // skip rewrite for defined file extensions
-                if ($this->_getFileExtensionValuesForNoRewrite()) {
-                    if (preg_match('%\.(' . $this->_getFileExtensionValuesForNoRewrite() . ')[\'"]*%i', $match[0])) {
                         continue;
                     }
                 }
