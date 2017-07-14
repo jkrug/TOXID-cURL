@@ -379,7 +379,7 @@ class toxidCurl
         $params = http_build_query($this->additionalUrlParams);
         if (false === strpos($sUrl, '?')) {
             $sUrl .= "?{$params}";
-        } else {
+        } elseif ($params!=='') {
             $sUrl = rtrim($sUrl, '&') . "&{$params}";
         }
 
