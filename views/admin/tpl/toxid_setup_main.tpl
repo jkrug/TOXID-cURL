@@ -16,7 +16,7 @@ function _groupExp(el) {
 [{assign var="readonly" value=""}]
 [{/if}]
 <form name="transfer" id="transfer" action="[{ $oViewConf->getSelfLink() }]" method="post">
-    [{ $oViewConf->getHiddenSid() }]    
+    [{ $oViewConf->getHiddenSid() }]
     <input type="hidden" name="oxid" value="[{ $oxid }]">
     <input type="hidden" name="cl" value="toxid_setup_main">
     <input type="hidden" name="fnc" value="">
@@ -90,7 +90,7 @@ function _groupExp(el) {
                             <table>
                                 <tr>
                                     <td valign="top" class="edittext">
-                                        [{oxmultilang ident="TOXID_SOURCE"}]: 
+                                        [{oxmultilang ident="TOXID_SOURCE"}]:
                                     </td>
                                     <td valign="top" class="edittext">
                                             <input type="text" name="editval[aToxidCurlSource][[{ $lang }]]" value="[{$aToxidCurlSource.$lang}]">
@@ -98,7 +98,7 @@ function _groupExp(el) {
                                 </tr>
                                 <tr>
                                     <td valign="top" class="edittext">
-                                        [{oxmultilang ident="TOXID_SOURCE_SSL"}]: 
+                                        [{oxmultilang ident="TOXID_SOURCE_SSL"}]:
                                     </td>
                                     <td valign="top" class="edittext">
                                             <input type="text" name="editval[aToxidCurlSourceSsl][[{ $lang }]]" value="[{$aToxidCurlSourceSsl.$lang}]">
@@ -106,7 +106,7 @@ function _groupExp(el) {
                                 </tr>
                                 <tr>
                                     <td valign="top" class="edittext">
-                                        [{oxmultilang ident="TOXID_SEARCH_URL"}]: 
+                                        [{oxmultilang ident="TOXID_SEARCH_URL"}]:
                                     </td>
                                     <td valign="top" class="edittext">
                                             <input type="text" name="editval[aToxidSearchUrl][[{ $lang }]]" value="[{$aToxidSearchUrl.$lang}]">
@@ -114,7 +114,7 @@ function _groupExp(el) {
                                 </tr>
                                 <tr>
                                     <td valign="top" class="edittext">
-                                        [{oxmultilang ident="TOXID_PARAM"}]: 
+                                        [{oxmultilang ident="TOXID_PARAM"}]:
                                     </td>
                                     <td valign="top" class="edittext">
                                             <input type="text" name="editval[aToxidCurlUrlParams][[{ $lang }]]" value="[{$aToxidCurlUrlParams.$lang}]">
@@ -122,7 +122,7 @@ function _groupExp(el) {
                                 </tr>
                                 <tr>
                                     <td valign="top" class="edittext">
-                                        [{oxmultilang ident="TOXID_SEO_SNIPPET"}]: 
+                                        [{oxmultilang ident="TOXID_SEO_SNIPPET"}]:
                                     </td>
                                     <td valign="top" class="edittext">
                                             <input type="text" name="editval[aToxidCurlSeoSnippets][[{ $lang }]]" value="[{$aToxidCurlSeoSnippets.$lang}]">
@@ -200,6 +200,13 @@ function _groupExp(el) {
                                     <input type="hidden" name="editval[bToxidRedirect301ToStartpage]" value="0">
                                     <input type="checkbox" name="editval[bToxidRedirect301ToStartpage]" value="1" [{if $bToxidRedirect301ToStartpage}]checked="checked"[{/if}]>
                                     [{oxmultilang ident="TOXID_REDIRECT_301_TO_STARTPAGE"}]
+                                </td>
+                            </tr>
+                            <tr>
+                                <td valign="top" class="edittext">
+                                    <input type="hidden" name="editval[toxidDontVerifySSLCert]" value="0">
+                                    <input type="checkbox" name="editval[toxidDontVerifySSLCert]" value="1" [{if $bToxidRedirect301ToStartpage}]checked="checked"[{/if}]>
+                                    [{oxmultilang ident="TOXID_DONT_VERIFY_SSL_CERTIFICATE"}]
                                 </td>
                             </tr>
                         </table>

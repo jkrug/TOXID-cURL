@@ -24,6 +24,7 @@ class toxid_setup_main extends oxAdminView
         $this->_aViewData['toxidError404Link']             = $oConf->getShopConfVar('toxidError404Link');
         $this->_aViewData['aToxidCurlUrlAdminParams']      = $oConf->getShopConfVar('aToxidCurlUrlAdminParams');
         $this->_aViewData['toxidAllowedCmsRequestParams']  = $oConf->getShopConfVar('toxidAllowedCmsRequestParams');
+        $this->_aViewData['toxidDontVerifySSLCert'] = $oConf->getShopConfVar('toxidDontVerifySSLCert');
 
         return parent::render();
     }
@@ -54,5 +55,6 @@ class toxid_setup_main extends oxAdminView
         $oConf->saveShopConfVar('bl', 'bToxidRedirect301ToStartpage', $aParams['bToxidRedirect301ToStartpage'], $sShopId, self::CONFIG_MODULE_NAME);
         $oConf->saveShopConfVar('arr', 'aToxidCurlUrlAdminParams', $aParams['aToxidCurlUrlAdminParams'], $sShopId, self::CONFIG_MODULE_NAME);
         $oConf->saveShopConfVar('str', 'toxidAllowedCmsRequestParams', $aParams['toxidAllowedCmsRequestParams'], $sShopId, self::CONFIG_MODULE_NAME);
+        $oConf->saveShopConfVar('bl', 'toxidDontVerifySSLCert', $aParams['toxidDontVerifySSLCert'], $sShopId, self::CONFIG_MODULE_NAME);
     }
 }
