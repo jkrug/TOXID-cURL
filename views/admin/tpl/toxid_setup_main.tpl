@@ -136,6 +136,14 @@ function _groupExp(el) {
                                         <input type="text" name="editval[aToxidCurlUrlAdminParams][[{ $lang }]]" value="[{$aToxidCurlUrlAdminParams.$lang}]">
                                     </td>
                                 </tr>
+                                <tr>
+                                    <td valign="top" class="edittext">
+                                        [{oxmultilang ident="TOXID_NOT_FOUND_URL"}]:
+                                    </td>
+                                    <td valign="top" class="edittext">
+                                        <input type="text" name="editval[aToxidNotFoundUrl][[{ $lang }]]" value="[{$aToxidNotFoundUrl.$lang}]">
+                                    </td>
+                                </tr>
                             </table>
                         </fieldset>
                     [{/foreach}]
