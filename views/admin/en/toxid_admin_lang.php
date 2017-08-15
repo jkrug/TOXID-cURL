@@ -1,8 +1,8 @@
 <?php
 
-$sLangName  = "Deutsch";
+$sLangName = "Deutsch";
 
-$aLang = array(
+$aLang = [
     'charset'                                      => 'UTF-8',
     'toxid_setup'                                  => 'TOXID Configuration',
     'toxid_setup_main'                             => 'TOXID Basic settings',
@@ -33,10 +33,11 @@ $aLang = array(
     'TOXID_CACHE'                                  => 'Cache',
     'TOXID_CACHE_TTL'                              => 'Cache lifetime (TTL) in seconds',
     'HELP_TOXID_CACHE_TTL'                         => '0 => forever<br>no value => default cache deactivated',
-);
+    'TOXID_DONT_VERIFY_SSL_CERTIFICATE'            => 'Don\'t verify SSL certificate (e.g. if it is self-signed).',
+];
 
 if (oxRegistry::getConfig()->getConfigParam('iUtfMode') === 0) {
-    foreach ($aLang as $k=>$v) {
+    foreach ($aLang as $k => $v) {
         $aLang[$k] = utf8_decode($v);
     }
 }
