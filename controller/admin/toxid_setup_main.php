@@ -22,9 +22,10 @@ class toxid_setup_main extends oxAdminView
         $this->_aViewData['bToxidRedirect301ToStartpage']  = $oConf->getShopConfVar('bToxidRedirect301ToStartpage');
         $this->_aViewData['toxidCacheTtl']                 = $oConf->getShopConfVar('toxidCacheTtl');
         $this->_aViewData['toxidError404Link']             = $oConf->getShopConfVar('toxidError404Link');
+        $this->_aViewData['aToxidNotFoundUrl']             = $oConf->getShopConfVar('aToxidNotFoundUrl');
         $this->_aViewData['aToxidCurlUrlAdminParams']      = $oConf->getShopConfVar('aToxidCurlUrlAdminParams');
         $this->_aViewData['toxidAllowedCmsRequestParams']  = $oConf->getShopConfVar('toxidAllowedCmsRequestParams');
-        $this->_aViewData['toxidDontVerifySSLCert'] = $oConf->getShopConfVar('toxidDontVerifySSLCert');
+        $this->_aViewData['toxidDontVerifySSLCert']        = $oConf->getShopConfVar('toxidDontVerifySSLCert');
 
         return parent::render();
     }
@@ -49,6 +50,7 @@ class toxid_setup_main extends oxAdminView
         $oConf->saveShopConfVar('str', 'toxidDontRewriteFileExtension', $aParams['toxidDontRewriteFileExtension'], $sShopId, self::CONFIG_MODULE_NAME);
         $oConf->saveShopConfVar('str', 'toxidCacheTtl', $aParams['toxidCacheTtl'], $sShopId, self::CONFIG_MODULE_NAME);
         $oConf->saveShopConfVar('str', 'toxidError404Link', $aParams['toxidError404Link'], $sShopId, self::CONFIG_MODULE_NAME);
+        $oConf->saveShopConfVar('arr', 'aToxidNotFoundUrl', $aParams['aToxidNotFoundUrl'], $sShopId, self::CONFIG_MODULE_NAME);
         $oConf->saveShopConfVar('bl', 'toxidRewriteUrlEncoded', $aParams['toxidRewriteUrlEncoded'], $sShopId, self::CONFIG_MODULE_NAME);
         $oConf->saveShopConfVar('bl', 'toxidDontRewriteUrls', $aParams['toxidDontRewriteUrls'], $sShopId, self::CONFIG_MODULE_NAME);
         $oConf->saveShopConfVar('bl', 'bToxidDontPassPostVarsToCms', $aParams['bToxidDontPassPostVarsToCms'], $sShopId, self::CONFIG_MODULE_NAME);

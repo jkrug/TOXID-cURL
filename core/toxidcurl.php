@@ -96,7 +96,13 @@ class toxidCurl
      * @var string
      */
     protected $_sFileExtensionValuesForNoRewrite = null;
-    private   $_initialized                      = false;
+    /**
+     * stores not found url by active language
+     *
+     * @var array
+     */
+    protected $_aNotFoundUrl = null;
+    private   $_initialized = false;
     private   $smartyParser;
     /**
      * object
@@ -392,7 +398,7 @@ class toxidCurl
      */
     protected function _getRemoteContent($sUrl)
     {
-        $aResult     = array();
+        $aResult     = [];
         $curl_handle = curl_init();
 
         $sUrl = $this->buildRequestUrl($sUrl);
@@ -664,13 +670,33 @@ class toxidCurl
     }
 
     /**
+     * returns typo3 URL for not found page
+     *
+     * @param int $iLangId
+     * @param bool $blReset reset object value, and get url again
+     *
+     * @return null|string
+     */
+    protected function _getToxidNotFoundUrl($iLangId = null, $blReset = false)
+    {
+        if ($this->_aNotFoundUrl === null || $blReset) {
+            $this->_aNotFoundUrl = $this->getConfig()->getConfigParam('aToxidNotFoundUrl');
+        }
+        if ($iLangId === null) {
+            $iLangId = oxRegistry::getLang()->getBaseLanguage();
+        }
+
+        return array_key_exists($iLangId, (array)$this->_aNotFoundUrl) ? $this->_aNotFoundUrl[$iLangId] : null;
+    }
+
+    /**
      * Handles HTTP status codes for toxid response
      *
      * @param $sUrl
-     *
+     * @param $notFound404
      * @return array
      */
-    protected function getRemoteContentAndHandleStatusCodes($sUrl)
+    protected function getRemoteContentAndHandleStatusCodes($sUrl, $notFound404 = false)
     {
         $aPage = $this->_getRemoteContent($sUrl);
         switch ($aPage['info']['http_code']) {
@@ -680,6 +706,11 @@ class toxidCurl
                 oxRegistry::getUtils()->showMessageAndExit('');
                 break;
             case 404:
+                if($this->_getToxidNotFoundUrl() && !$notFound404) {
+                    header("HTTP/1.0 404 Not Found");
+                    $aPage = $this->getRemoteContentAndHandleStatusCodes($this->_getToxidNotFoundUrl(), true);
+                    break;
+                }
                 $this->handleError(404, $aPage['info']['url']);
                 break;
             case 301:
