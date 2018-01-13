@@ -8,7 +8,7 @@ $aLang = [
     'toxid_setup_main'                             => 'TOXID Grundeinstellungen',
     'TOXID_SUPPORT_HEADLINE'                       => 'TOXID unterstützen',
     'TOXID_SUPPORT_DESC'                           => 'TOXID cURL ist ein OpenSource Projekt, ursprünglich entwickelt von Joscha Krug. 
-                                                       Die Entwicklung wird von seiner Agentur, der <b><a href="http://www.marmalade.de/?pk_campaign=toxidBackend&pk_kwd=Textlink" target="_blank">marmalade GmbH</a></b>, fortgesetzt.
+                                                       Die Entwicklung wird von seiner Agentur, der <b><a href="http://www.marmalade.de/" target="_blank">marmalade GmbH</a></b>, fortgesetzt.
                                                        Wir freuen uns über Unterstützung, am liebsten <b><a href="https://github.com/jkrug/TOXID-cURL/" target="_blank">in Form von Code</a></b>,
                                                        aber natürlich trägt auch ein finanzielle Unterstützung zur Wartung, 
                                                        Pflege und Entwicklung neuer Features bei.',
@@ -27,7 +27,6 @@ $aLang = [
     'TOXID_ERROR_404_LINK'                         => 'User will be redirected to this URL on 404 error, when no other 404 url is specified for specific language (optional)',
     'TOXID_REWRITE_URLENCODED'                     => 'URLs die "url encoded" sind umschreiben (URL muss sich im "src" attribut befindet)',
     'TOXID_REDIRECT_301_TO_STARTPAGE'              => 'Auf Startseite weiterleiten wenn das CMS den HTTP-Statuscode 301 liefert',
-    'TOXID_LOOKING_FOR'                            => 'gesucht!',
     'TOXID_GENERAL'                                => 'Allgemein',
     'TOXID_BECOME_PARTNER'                         => 'Partner werden',
     'TOXID_INTEGRATIONPARTNER'                     => 'Integrationspartner',

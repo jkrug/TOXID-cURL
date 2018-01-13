@@ -37,40 +37,35 @@ function _groupExp(el) {
                     <table>
                         <tr>
                             <td valign="top" style="width:500px;padding-right:30px;">
-                                <a href="http://www.marmalade.de/?pk_campaign=toxidBackend&pk_kwd=Imagelink" target="_blank" style="float:left;margin:0 20px 10px 0">
+                                <a href="http://www.marmalade.de/" target="_blank" style="float:left;margin:0 20px 10px 0">
                                     <img src="../modules/toxid_curl/toxid.jpg" width="90px" />
                                 </a>
                                 [{oxmultilang ident='TOXID_SUPPORT_DESC'}]
-                                <br />
-                                <br />
-                                <br />
-                                <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=shop%40marmalade%2ede&lc=DE&item_name=marmalade%20GmbH&item_number=TOXID%20Support&no_note=0&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHostedGuest" target="_blank">
-                                    <img alt="" border="0" src="https://www.paypalobjects.com/de_DE/DE/i/btn/btn_donate_SM.gif">
-                                </a>
                             </td>
                             <td valign="top" style="padding-right:30px">
                                 <b>[{oxmultilang ident='TOXID_INTEGRATIONPARTNER'}]</b>
                                 <ul>
-                                    <li><a href="http://www.marmalade.de/?pk_campaign=toxidBackend&pk_kwd=Integrationpartner" target="_blank">marmalade GmbH</a></li>
+                                    <li><a href="http://www.marmalade.de/" target="_blank">marmalade GmbH</a></li>
                                     <li><a href="http://www.gn2-netwerk.de/" target="_blank">GN2 Netwerk</a></li>
-                                    <li><a href="http://www.marmalade.de/agentur/impressum/?pk_campaign=toxidBackend&pk_kwd=IntegrationpartnerGesucht" target="_blank">[{oxmultilang ident='TOXID_BECOME_PARTNER'}]</a></li>
+                                    <li><a href="https://www.kuehlhaus.com/" target="_blank">kuehlhaus AG</a></li>
                                 </ul>
                             </td>
                             <td valign="top" style="padding-right:30px">
                                 <b>Contributors</b>
                                 <ul>
-                                    <li><a href="https://github.com/dajoho" target="_blank">dajoho</a></li>
-                                    <li><a href="https://github.com/vanilla-thunder" target="_blank">vanilla-thunder</a></li>
+                                    <li><a href="https://github.com/dajoho" target="_blank">Dave Holloway</a></li>
+                                    <li><a href="https://github.com/vanilla-thunder" target="_blank">Marat</a></li>
                                     <li><a href="https://github.com/Tr0nYx" target="_blank">Tr0nYx</a></li>
                                     <li><a href="https://github.com/pixelkrieg" target="_blank">pixelkrieg</a></li>
-                                    <li><a href="https://github.com/wanis" target="_blank">wanis</a></li>
-                                    <li><a href="https://github.com/adriankirchner" target="_blank">adriankirchner</a></li>
+                                    <li><a href="https://github.com/wanis" target="_blank">Mažvydas Skuodas</a></li>
+                                    <li><a href="https://github.com/adriankirchner" target="_blank">Adrian Kirchner</a></li>
                                 </ul>
                             </td>
                             <td valign="top">
-                                <b>Supporter</b>
+                                <b>&nbsp;</b>
                                 <ul>
-                                    <li>[{oxmultilang ident='TOXID_LOOKING_FOR'}]</li>
+                                    <li><a href="https://github.com/jkrug" target="_blank">Joscha Krug</a></li>
+                                    <li><a href="https://github.com/elflein" target="_blank">Jan Elflein</a></li>
                                 </ul>
                             </td>
                          </tr>
