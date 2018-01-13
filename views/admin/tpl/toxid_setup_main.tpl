@@ -46,7 +46,7 @@ function _groupExp(el) {
                                 <b>[{oxmultilang ident='TOXID_INTEGRATIONPARTNER'}]</b>
                                 <ul>
                                     <li><a href="http://www.marmalade.de/" target="_blank">marmalade GmbH</a></li>
-                                    <li><a href="https://www.makaira.io/" target="_blank">Makaira Marketing Suite</a></li>
+                                    <li><a href="https://www.makaira.io/" target="_blank">Makaira - E-Commerce Marketing Suite</a></li>
                                     <li><a href="https://scale.sc/" target="_blank">ScaleCommerce GmbH</a></li>
                                     <li><a href="http://www.gn2-netwerk.de/" target="_blank">GN2 Netwerk</a></li>
                                     <li><a href="https://www.kuehlhaus.com/" target="_blank">kuehlhaus AG</a></li>
