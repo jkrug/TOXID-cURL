@@ -123,6 +123,19 @@ In your shop template implement this code snippet to show the content from the n
 **9 Adjust your templates!**
 
 
+Test Data
+---------
+
+For testing purposes we added some testing data.
+
+Of cause, you could also use that for debugging.
+
+It's pretty simple to use. Configure as toxid-source:
+
+german: http://localhost/modules/toxid_curl/tests/data/de/
+
+english: http://localhost/modules/toxid_curl/tests/data/en/
+
 
 
 What we already implemented
