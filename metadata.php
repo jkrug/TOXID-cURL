@@ -50,8 +50,6 @@ $aModule = array(
     ),
     'files' => array(
         'toxid_curl'                => 'toxid_curl/controller/toxid_curl.php',
-        'toxid_curl_oxseodecoder'   => 'toxid_curl/core/toxid_curl_oxseodecoder.php',
-        'toxid_curl_oxviewconfig'   => 'toxid_curl/core/toxid_curl_oxviewconfig.php',
         'toxidcurl'                 => 'toxid_curl/core/toxidcurl.php',
         'toxid_setup'               => 'toxid_curl/controller/admin/toxid_setup.php',
         'toxid_setup_main'          => 'toxid_curl/controller/admin/toxid_setup_main.php',

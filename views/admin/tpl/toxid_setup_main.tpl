@@ -238,6 +238,10 @@ function _groupExp(el) {
     <br />
     <input type="submit" class="edittext" id="oLockButton" value="[{ oxmultilang ident="GENERAL_SAVE" }]" onclick="Javascript:document.myedit.fnc.value='save'"" [{ $readonly }]>
     <br>
+    <br>
+    <br>
+    <br>
+    <br>
 
 </form>
 
