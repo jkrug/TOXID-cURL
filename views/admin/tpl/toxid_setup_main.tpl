@@ -46,6 +46,8 @@ function _groupExp(el) {
                                 <b>[{oxmultilang ident='TOXID_INTEGRATIONPARTNER'}]</b>
                                 <ul>
                                     <li><a href="http://www.marmalade.de/" target="_blank">marmalade GmbH</a></li>
+                                    <li><a href="https://www.makaira.io/" target="_blank">Makaira Marketing Suite</a></li>
+                                    <li><a href="https://scale.sc/" target="_blank">ScaleCommerce GmbH</a></li>
                                     <li><a href="http://www.gn2-netwerk.de/" target="_blank">GN2 Netwerk</a></li>
                                     <li><a href="https://www.kuehlhaus.com/" target="_blank">kuehlhaus AG</a></li>
                                 </ul>
@@ -66,6 +68,8 @@ function _groupExp(el) {
                                 <ul>
                                     <li><a href="https://github.com/jkrug" target="_blank">Joscha Krug</a></li>
                                     <li><a href="https://github.com/elflein" target="_blank">Jan Elflein</a></li>
+                                    <li><a href="https://github.com/danielliebig" target="_blank">Daniel Liebig</a></li>
+                                    <li><a href="https://github.com/web-xpression" target="_blank">Dirk Kühne</a></li>
                                 </ul>
                             </td>
                          </tr>
