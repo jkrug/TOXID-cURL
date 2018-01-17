@@ -336,6 +336,9 @@ class toxidCurl
      */
     protected function _getSnippetFromXml($sSnippet)
     {
+        if(str_replace("/","",$this->_getToxidLangSource()) == '')
+           return '';
+		
         $oTypo3Xml      = $this->_getXmlObject();
         $aXpathSnippets = $oTypo3Xml->xpath('//' . $sSnippet . '[1]');
         $sText          = $aXpathSnippets[0];
@@ -405,6 +408,12 @@ class toxidCurl
 
         curl_setopt($curl_handle, CURLOPT_URL, $sUrl);
         curl_setopt($curl_handle, CURLOPT_RETURNTRANSFER, 1);
+	
+	if ($this->getConfig()->getActiveShop()->getFieldData('OXPRODUCTIVE') == 0) {
+            curl_setopt($curl_handle, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($curl_handle, CURLOPT_SSL_VERIFYHOST, false);
+        }    
+	    
         if (!$this->isToxidCurlPage()) {
             curl_setopt($curl_handle, CURLOPT_FOLLOWLOCATION, true);
         }
@@ -456,6 +465,10 @@ class toxidCurl
 
         foreach ($aLanguages as $iLangId) {
             $sShopUrl = $this->getConfig()->getShopUrl();
+	    $oConf = $this->getConfig();
+            if ($oConf->isSsl()) {
+              $sShopUrl = str_replace('http:','https:',$sShopUrl);
+            }
 
             if (substr($sShopUrl, -1) !== '/') {
                 $sShopUrl = $sShopUrl . '/';
@@ -505,12 +518,22 @@ class toxidCurl
      */
     protected function _getToxidLangSource($iLangId = null, $blReset = false)
     {
-        if ($this->_aSourceUrlByLang === null || $blReset) {
-            $this->_aSourceUrlByLang = $this->getConfig()->getConfigParam('aToxidCurlSource');
-        }
         if ($iLangId === null) {
             $iLangId = oxRegistry::getLang()->getBaseLanguage();
         }
+                
+        if ($this->_aSourceUrlByLang === null || $blReset) {
+            
+            $oConf = $this->getConfig();   
+            if ($oConf->isSsl() && $this->getConfig()->getConfigParam('aToxidCurlSourceSsl')[$iLangId]!="") {
+              $this->_aSourceUrlByLang = $this->getConfig()->getConfigParam('aToxidCurlSourceSsl');
+            } else {
+              $this->_aSourceUrlByLang = $this->getConfig()->getConfigParam('aToxidCurlSource');
+            }
+             
+            
+        }
+        
 
         $source = $this->_aSourceUrlByLang[$iLangId];
         if (substr($source, -1) !== '/') {
