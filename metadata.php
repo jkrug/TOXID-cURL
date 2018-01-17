@@ -36,8 +36,8 @@ $aModule = array(
         'oxutilsview'               => 'toxid_curl/core/toxid_curl_oxutilsview'
     ),
     'templates' => array(
-        'toxid_curl.tpl'            => 'toxid_curl/views/azure/toxid_curl.tpl',
-        'product.tpl'               => 'toxid_curl/views/azure/product.tpl',
+        'toxid_curl.tpl'            => 'toxid_curl/views/flow/toxid_curl.tpl',
+        'product.tpl'               => 'toxid_curl/views/flow/product.tpl',
         'toxid_setup_main.tpl'      => 'toxid_curl/views/admin/tpl/toxid_setup_main.tpl',
         'toxid_content_widget.tpl'  => 'toxid_curl/views/widgets/toxid_content_widget.tpl',
     ),
