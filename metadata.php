@@ -1,71 +1,48 @@
 <?php
-/**
- * OXID_Module_TOXID
- *
- * PHP version 5
- *
- * @category TOXID
- * @package  TOXID
- * @author   Joscha Krug <support@marmalade.de>
- * @license  MIT License http://www.opensource.org/licenses/mit-license.html
- * @version  2.0
- * @link     http://toxid.org
- * @link     https://github.com/jkrug/TOXID-cURL
- */
 
 /**
- * Metadata version
+ * TOXID cURL - CMS Integration for OXID eShop
+ *
+ * Ported to OXID eShop 6.5+ with metadata 2.1, PSR-4 namespaces and PHP 8 compatibility.
+ *
+ * @license MIT License http://www.opensource.org/licenses/mit-license.html
+ * @link    https://github.com/jkrug/TOXID-cURL
  */
-$sMetadataVersion = '1.1';
 
-$aModule = array(
+$sMetadataVersion = '2.1';
+
+$aModule = [
     'id'          => 'toxid_curl',
-    'title'       => 'marmalade :: TOXID cURL',
-    'description' => array(
-        'de'    => 'Integriert CMS-Inhalte in OXID eShop',
-        'en'    => 'Renders pages form CMS and navigation in OXID.',
-    ),
-    'email'         => 'support@marmalade.de',
-    'url'           => 'http://www.marmalade.de',
-    'thumbnail'     => 'toxid.jpg',
-    'version'       => '2.3.3',
-    'author'        => 'marmalade GmbH :: Joscha Krug',
-    'extend' => array(
-        'oxseodecoder'              => 'toxid_curl/core/toxid_curl_oxseodecoder',
-        'oxviewconfig'              => 'toxid_curl/core/toxid_curl_oxviewconfig',
-        'oxutilsview'               => 'toxid_curl/core/toxid_curl_oxutilsview'
-    ),
-    'templates' => array(
-        'toxid_curl.tpl'            => 'toxid_curl/views/azure/toxid_curl.tpl',
-        'product.tpl'               => 'toxid_curl/views/azure/product.tpl',
-        'toxid_setup_main.tpl'      => 'toxid_curl/views/admin/tpl/toxid_setup_main.tpl',
-        'toxid_content_widget.tpl'  => 'toxid_curl/views/widgets/toxid_content_widget.tpl',
-    ),
-    'blocks' => array(
-        array(
-            'template' => '_formparams.tpl',
-            'block'=>'admin_formparams',
-            'file'=>'/views/admin/blocks/_formparams_admin_formparams.tpl'
-        ),
-    ),
-    'files' => array(
-        'toxid_curl'                => 'toxid_curl/controller/toxid_curl.php',
-        'toxidcurl'                 => 'toxid_curl/core/toxidcurl.php',
-        'toxid_setup'               => 'toxid_curl/controller/admin/toxid_setup.php',
-        'toxid_setup_main'          => 'toxid_curl/controller/admin/toxid_setup_main.php',
-        'toxid_setup_list'          => 'toxid_curl/controller/admin/toxid_setup_list.php',
-        'toxid_curl_events'         => 'toxid_curl/core/toxid_curl_events.php',
-        'toxid_curl_smarty_parser'  => 'toxid_curl/core/facades/toxid_curl_smarty_parser.php',
-        'toxid_curl_content_widget' => 'toxid_curl/widgets/toxid_curl_content_widget.php',
-    ),
-    'settings' => array(
-        array(
-            'group' => 'toxid_config_not_here',
-            'name'  => 'noConfigHere',
-        ),
-    ),
-    'events' => array(
-        'onActivate'    => 'toxid_curl_events::onActivate',
-        'onDeactivate'  => 'toxid_curl_events::onDeactivate'
-    )
-);
+    'title'       => 'TOXID cURL',
+    'description' => [
+        'de' => 'Integriert CMS-Inhalte (WordPress, TYPO3 etc.) per cURL/XML in OXID eShop.',
+        'en' => 'Renders CMS pages and navigation in OXID eShop via cURL/XML.',
+    ],
+    'thumbnail'   => 'toxid.jpg',
+    'version'     => '3.0.0',
+    'author'      => 'marmalade GmbH / Community',
+    'url'         => 'https://github.com/jkrug/TOXID-cURL',
+    'email'       => 'support@marmalade.de',
+
+    'extend' => [
+        \OxidEsales\Eshop\Core\ViewConfig::class  => \Toxid\Core\ViewConfig::class,
+        \OxidEsales\Eshop\Core\SeoDecoder::class  => \Toxid\Core\SeoDecoder::class,
+        \OxidEsales\Eshop\Core\UtilsView::class   => \Toxid\Core\UtilsView::class,
+    ],
+
+    'controllers' => [
+        'toxid'            => \Toxid\Application\Controller\ToxidController::class,
+        'toxid_setup'      => \Toxid\Application\Controller\Admin\ToxidSetup::class,
+        'toxid_setup_main' => \Toxid\Application\Controller\Admin\ToxidSetupMain::class,
+        'toxid_setup_list' => \Toxid\Application\Controller\Admin\ToxidSetupList::class,
+    ],
+
+    'templates' => [
+        'page/toxid/toxid.tpl'       => 'toxid_curl/Application/views/tpl/page/toxid/toxid.tpl',
+        'admin/toxid_setup_main.tpl' => 'toxid_curl/Application/views/admin/tpl/toxid_setup_main.tpl',
+    ],
+
+    'smartyPluginDirectories' => [
+        'smarty/plugins',
+    ],
+];

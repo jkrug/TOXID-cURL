@@ -1,16 +1,20 @@
 {
-  "name": "jkrug/toxid_curl",
-  "description": "",
-  "type": "oxid-module",
-  "license": "GPL-3.0",
-  "require": {
-    "composer/installers": "~1.0"
-  },
-  "require-dev": {
-    "phpunit/phpunit": "@stable",
-    "phpmd/oxmd": "@stable"
-  },
-  "autoload": {
-    "classmap": ["controller/", "core/"]
-  }
+    "name": "jkrug/toxid-curl",
+    "description": "TOXID cURL - CMS Integration for OXID eShop 6.5+",
+    "type": "oxideshop-module",
+    "license": "MIT",
+    "homepage": "https://github.com/jkrug/TOXID-cURL",
+    "require": {
+        "php": ">=7.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "Toxid\\": ""
+        }
+    },
+    "extra": {
+        "oxideshop": {
+            "target-directory": "toxid_curl"
+        }
+    }
 }
